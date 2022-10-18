@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
 export const H1 = styled.h1`
   font-size: 35px;
@@ -22,4 +23,35 @@ export const H4 = styled.h4`
   font-size: 20px;
   font-weight: 500;
   line-height: 1.5;
+`;
+
+export const Input = styled.input`
+  width: ${({ width }) => width || '100%'};
+  height: ${({ height }) => height || '100%'};
+  border: solid 1px rgba(0, 0, 0, 0.5);
+  padding: 0 10px;
+  &:focus {
+    outline: none;
+    border: solid 2px;
+    border-color: var(--main-color);
+  }
+`;
+
+interface ButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  width?: string;
+  height?: string;
+}
+
+export const Button = styled.button<ButtonProps>`
+  width: ${({ width }) => width || '100%'};
+  height: ${({ height }) => height || '100%'};
+  background: var(--main-color);
+  color: white;
+  border-color: white;
+  border-width: 0;
+  font-size: 20px;
 `;
