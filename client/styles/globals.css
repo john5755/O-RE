@@ -9,3 +9,25 @@ body {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --main-color: #48a3a9;
+  --body-s: 12px;
+  --body-m: 14px;
+  --body-l: 16px;
+  --body-xl: 18px;
+  --font-size-15: 8px;
+  --font-size-25: 10px;
+  --font-size-50: 11px;
+  --font-size-75: 12px;
+  --font-size-100: 13px;
+  --font-size-200: 15px;
+  --font-size-300: 17px;
+  --font-size-400: 19px;
+  --font-size-500: 21px;
+  --font-size-600: 24px;
+  --font-size-700: 27px;
+  --font-size-800: 30px;
+  --font-size-900: 34px;
+  --font-size-1000: 38px;
+}
