@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { H1, Input, Button } from '../styles';
+import { H1, Input, Button, Label } from '../styles';
 import Link from 'next/link';
 
 const LayoutContainer = styled.div`
@@ -12,23 +12,23 @@ const LayoutContainer = styled.div`
 
 const Container = styled.div`
   width: 400px;
-  height: 400px;
+  height: 450px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const LoginContainer = styled.div`
+const FindContainer = styled.div`
   width: 100%;
-  height: 400px;
+  height: 100%;
 `;
 
 const InputContainer = styled.div`
   margin: 20px 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
 `;
 
 const TextContainer = styled.div`
@@ -46,13 +46,13 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const CantLoginContainer = styled.ul`
+const CantFindContainer = styled.ul`
   width: 100%;
   text-align: center;
   padding: 0;
 `;
 
-const CantLoginOptions = styled.li`
+const CantFindOptions = styled.li`
   display: inline-block;
   list-style: none;
   :first-child {
@@ -70,35 +70,47 @@ const CantLoginOptions = styled.li`
   }
 `;
 
-export default function LoginTemplate() {
+export default function PwFindTemplate() {
   return (
     <LayoutContainer>
       <Container>
-        <LoginContainer>
+        <FindContainer>
           <TextContainer>
             <H1 style={{ color: 'var(--main-color)' }}>O:RE</H1>
           </TextContainer>
           <InputContainer>
-            <Input placeholder="email" type="text" height="60px"></Input>
+            <Label htmlFor="nameInput">이름</Label>
+            <Input
+              id="nameInput"
+              placeholder="홍길동"
+              type="text"
+              height="60px"
+            ></Input>
           </InputContainer>
           <InputContainer>
-            <Input placeholder="password" type="password" height="60px"></Input>
+            <Label htmlFor="emailInput">이메일</Label>
+            <Input
+              id="emailInput"
+              placeholder="example@example.com"
+              type="text"
+              height="60px"
+            ></Input>
           </InputContainer>
           <ButtonContainer>
-            <Button height="60px">로그인</Button>
+            <Button height="60px">비밀번호 찾기</Button>
           </ButtonContainer>
-          <CantLoginContainer>
-            <CantLoginOptions>
+          <CantFindContainer>
+            <CantFindOptions>
               <Link href="/">메인페이지로</Link>
-            </CantLoginOptions>
-            <CantLoginOptions>
+            </CantFindOptions>
+            <CantFindOptions>
+              <Link href="/login">로그인</Link>
+            </CantFindOptions>
+            <CantFindOptions>
               <Link href="#">회원가입</Link>
-            </CantLoginOptions>
-            <CantLoginOptions>
-              <Link href="/find-password">비밀번호 찾기</Link>
-            </CantLoginOptions>
-          </CantLoginContainer>
-        </LoginContainer>
+            </CantFindOptions>
+          </CantFindContainer>
+        </FindContainer>
       </Container>
     </LayoutContainer>
   );

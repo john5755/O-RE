@@ -30,10 +30,15 @@ export const Input = styled.input`
   height: ${({ height }) => height || '100%'};
   border: solid 1px rgba(0, 0, 0, 0.5);
   padding: 0 10px;
+  font-size: 18px;
   &:focus {
     outline: none;
     border: solid 2px;
     border-color: var(--main-color);
+  }
+  ::placeholder {
+    font-size: 16px;
+    vertical-align: middle;
   }
 `;
 
@@ -44,6 +49,7 @@ interface ButtonProps
   > {
   width?: string;
   height?: string;
+  fontSize?: string;
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -53,5 +59,10 @@ export const Button = styled.button<ButtonProps>`
   color: white;
   border-color: white;
   border-width: 0;
-  font-size: 20px;
+  font-size: ${({ fontSize }) => fontSize || '20px'};
+`;
+
+export const Label = styled.label`
+  padding: 10px 0;
+  font-weight: bold;
 `;
