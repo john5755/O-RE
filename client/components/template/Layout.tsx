@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 import React, { PropsWithChildren } from 'react';
 import HeaderNav from '../molecule/HeaderNav';
 
@@ -13,11 +14,15 @@ const BaseLayout = styled.div`
   }
 `;
 
+const noNavbarPathnames = ['/login'];
+
 export default function Layout({ children }: PropsWithChildren<{}>) {
+  const { pathname } = useRouter();
+
   return (
-    <BaseLayout>
-      <HeaderNav></HeaderNav>
-      <div>{children}</div>;
-    </BaseLayout>
+    <>
+      {!noNavbarPathnames.includes(pathname) && <HeaderNav></HeaderNav>}
+      <BaseLayout>{children}</BaseLayout>
+    </>
   );
 }
