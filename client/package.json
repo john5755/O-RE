@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
   "main": "app/background.js",
+  "homepage": "./",
   "scripts": {
     "dev": "nextron --port 3000",
     "build": "nextron build",
