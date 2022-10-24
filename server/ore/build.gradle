@@ -7,7 +7,7 @@ plugins {
 
 group = 'io.ssafy.p.k7a504'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
