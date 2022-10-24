@@ -1,0 +1,4 @@
+{
+  "presets": ["next/babel", "nextron/babel"],
+  "plugins": ["@emotion"]
+}
