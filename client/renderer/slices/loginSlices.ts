@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface LoginState {
   isLogin: boolean;
@@ -7,20 +7,20 @@ export interface LoginState {
 
 const initialState: LoginState = {
   isLogin: true,
-  name: '홍길동',
+  name: "홍길동",
 };
 
 export const loginSlice = createSlice({
-  name: 'login',
+  name: "login",
   initialState,
   reducers: {
     setLogIn: (state, action: PayloadAction<String>) => {
       state.isLogin = true;
       state.name = action.payload;
     },
-    setLogOut: state => {
+    setLogOut: (state) => {
       state.isLogin = false;
-      state.name = '';
+      state.name = "";
     },
   },
 });
