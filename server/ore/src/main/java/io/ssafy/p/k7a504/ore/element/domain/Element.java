@@ -22,7 +22,8 @@ public class Element {
     @JoinColumn(name="page_id")
     private Page page;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ElementType type;
     private int size;
     private int fontSize;
     private String title;
