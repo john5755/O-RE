@@ -1,16 +1,24 @@
-import { screen, BrowserWindow, BrowserWindowConstructorOptions } from "electron";
+import {
+  screen,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  Rectangle,
+} from "electron";
 import Store from "electron-store";
 
-export default (windowName: string, options: BrowserWindowConstructorOptions): BrowserWindow => {
+export default (
+  windowName: string,
+  options: BrowserWindowConstructorOptions
+): BrowserWindow => {
   const key = "window-state";
   const name = `window-state-${windowName}`;
   const store = new Store({ name });
   const defaultSize = {
-    width: options.width,
-    height: options.height,
+    width: options.width as number,
+    height: options.height as number,
   };
   let state = {};
-  let win;
+  let win: BrowserWindow;
 
   const restore = () => store.get(key, defaultSize);
 
@@ -25,7 +33,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     };
   };
 
-  const windowWithinBounds = (windowState, bounds) => {
+  const windowWithinBounds = (windowState: Rectangle, bounds: Rectangle) => {
     return (
       windowState.x >= bounds.x &&
       windowState.y >= bounds.y &&
@@ -42,7 +50,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     });
   };
 
-  const ensureVisibleOnSomeDisplay = (windowState) => {
+  const ensureVisibleOnSomeDisplay = (windowState: Rectangle) => {
     const visible = screen.getAllDisplays().some((display) => {
       return windowWithinBounds(windowState, display.bounds);
     });
@@ -61,7 +69,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     store.set(key, state);
   };
 
-  state = ensureVisibleOnSomeDisplay(restore());
+  state = ensureVisibleOnSomeDisplay(restore() as any);
 
   const browserOptions: BrowserWindowConstructorOptions = {
     ...options,
@@ -71,6 +79,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
       contextIsolation: false,
       ...options.webPreferences,
     },
+    frame: false,
   };
   win = new BrowserWindow(browserOptions);
 

@@ -1,4 +1,4 @@
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 
@@ -25,6 +25,19 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/`);
     mainWindow.webContents.openDevTools();
   }
+  ipcMain.on("closeApp", () => {
+    mainWindow.close();
+  });
+  ipcMain.on("window-toggle-maximize", () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+  ipcMain.on("window-minimize", () => {
+    mainWindow.minimize();
+  });
 })();
 
 app.on("window-all-closed", () => {
