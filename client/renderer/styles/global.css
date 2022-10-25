@@ -11,6 +11,10 @@ body {
 
 :root {
   --main-color: #48a3a9;
+  --light-main-color: #87c3c7;
+  --super-light-main-color: #e0eaeb;
+  --light-gray-color: #c6c6c6;
+  --dark-gray-color: #3c3c3c;
   --body-s: 12px;
   --body-m: 14px;
   --body-l: 16px;
