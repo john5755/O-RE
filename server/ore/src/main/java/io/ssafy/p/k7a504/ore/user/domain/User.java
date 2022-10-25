@@ -1,9 +1,6 @@
 package io.ssafy.p.k7a504.ore.user.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -18,10 +15,22 @@ public class User {
 
     private String email;
     private String password;
+
+    private String name;
     private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     private String profileImage;
+
+    @Builder
+    public User(String email, String password, String name, String nickname, UserRole role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.role = role;
+        this.profileImage = "defaultImageUrl";
+    }
 }
