@@ -18,13 +18,19 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping("/api/users/verification")
-    public ResponseEntity<? extends BasicResponse> verifyEmail(@Valid @RequestParam String email) {
+    public ResponseEntity<? extends BasicResponse> sendCertificationEmail(@Valid @RequestParam String email) {
+        userService.sendCertificationEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/api/users/verificaation")
+    public ResponseEntity<? extends BasicResponse> verifyEmail(@Valid @RequestParam String code) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(userService.verifyEmail(email)));
+                .body(new CommonResponse<>(userService.verifyEmail(code)));
     }
 
     @PostMapping("/api/users/signup")
-    public ResponseEntity<? extends BasicResponse> signUp(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
+    public ResponseEntity<? extends BasicResponse> signUp(@Valid @RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.signUp(userSignUpRequestDto)));
     }
