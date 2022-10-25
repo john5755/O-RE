@@ -1,12 +1,10 @@
 package io.ssafy.p.k7a504.ore.teamUser.domain;
 
-import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -29,4 +27,11 @@ public class TeamUser {
 
     @Enumerated(EnumType.STRING)
     private TeamUserRole role;
+
+    public boolean checkTeamUserCanCreatePage() {
+        if (this.role == TeamUserRole.LEADER || this.role == TeamUserRole.MANAGER) {
+            return true;
+        }
+        return false;
+    }
 }

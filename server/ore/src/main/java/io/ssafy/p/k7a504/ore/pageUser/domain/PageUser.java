@@ -1,8 +1,8 @@
 package io.ssafy.p.k7a504.ore.pageUser.domain;
 
 import io.ssafy.p.k7a504.ore.page.domain.Page;
-import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
+import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +28,65 @@ public class PageUser {
     @JoinColumn(name="team_user_id")
     private TeamUser teamUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Enumerated(EnumType.STRING)
     private PageUserRole pageUserRole;
+
+    /**
+     * TeamUser가 해당 Page에 참가하는 메서드
+     * @param page
+     * @param teamUser
+     * @return PageUser
+     */
+    public static PageUser enrollPage(Page page, TeamUser teamUser) {
+        return new PageUser(page, teamUser, PageUserRole.VIEWER);
+    }
+
+    private PageUser(Page page, TeamUser teamUser, PageUserRole pageUserRole) {
+        this.page = page;
+        this.teamUser = teamUser;
+        this.user = teamUser.getUser();
+        this.pageUserRole = pageUserRole;
+    }
+
+    /**
+     * Maintainer 또는 Editor 권한의 PageUser가 다른 PageUser의 권한을 승급
+     * @param pageUser
+     * @param pageUserRole
+     */
+    public void grantRole(PageUser pageUser, PageUserRole pageUserRole) {
+        if (!checkCanChangeRole(pageUser)) {
+            // TODO 권한을 변경할 수 없다는 예외 처리
+        }
+        pageUser.setPageUserRole(pageUserRole);
+    }
+
+    /**
+     * Maintainer 권한의 PageUser가 다른 PageUser의 권한 조정하는 메소드
+     * @param pageUser
+     * @param pageUserRole
+     */
+    public void adjustRoleByMaintainer(PageUser pageUser, PageUserRole pageUserRole) {
+        if (this.pageUserRole != PageUserRole.MAINTAINER) {
+            // TODO 권한이 없다는 예외처리
+        }
+        pageUser.setPageUserRole(pageUserRole);
+    }
+
+    private boolean checkCanChangeRole(PageUser pageUser) {
+        if(this.pageUserRole == PageUserRole.VIEWER) {
+            return false;
+        }
+        if(this.pageUserRole.getPriority() <= pageUser.getPageUserRole().getPriority()) {
+            return false;
+        }
+        return true;
+    }
+
+    private void setPageUserRole(PageUserRole pageUserRole) {
+        this.pageUserRole = pageUserRole;
+    }
 }
