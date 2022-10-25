@@ -2,7 +2,6 @@ package io.ssafy.p.k7a504.ore.user.service.impl;
 
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
-import io.ssafy.p.k7a504.ore.user.dto.EmailResponseDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
@@ -24,13 +23,15 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder encoder;
 
     @Override
-    public EmailResponseDto verifyEmail(String email) {
+    public void sendCertificationEmail(String email) {
         if(userRepository.existsByEmail(email))
             throw new CustomException(ErrorCode.DUPLICATE_USER_EMAIL);
+        emailService.sendCertificationMail(email);
+    }
 
-        return EmailResponseDto.builder()
-                .email(email)
-                .code(emailService.sendCertificationMail(email)).build();
+    @Override
+    public String verifyEmail(String code) {
+        return emailService.verifyEmail(code);
     }
 
     @Transactional
