@@ -10,6 +10,8 @@ import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class Page {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @JoinColumn(name="team_id")
     private Team team;
 

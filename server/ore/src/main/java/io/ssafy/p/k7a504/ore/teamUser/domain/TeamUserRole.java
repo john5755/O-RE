@@ -11,5 +11,4 @@ public enum TeamUserRole {
     MEMBER(1);
 
     private final int priority;
-
 }
