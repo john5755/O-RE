@@ -9,4 +9,5 @@ export const pageInfo = {
 pageInfo.account.add(PATH.LOGIN);
 pageInfo.account.add(PATH.FIND_PASSWORD);
 pageInfo.createGroup.add("/그룹생성페이지명");
+pageInfo.createGroup.add(PATH.CREATE_PAGE);
 pageInfo.creatPage.add(PATH.CREATE_PAGE);

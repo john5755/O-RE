@@ -29,7 +29,7 @@ export default function TagList() {
   return (
     <Container>
       {TAG_LIST.map((v) => (
-        <ItemButton>
+        <ItemButton key={v.type}>
           <Item key={v.type}>{v.type}</Item>
         </ItemButton>
       ))}
