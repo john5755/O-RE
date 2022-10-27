@@ -17,8 +17,8 @@ public enum ErrorCode {
     PAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40005, " 페이지 정보를 찾을 수 없습니다."),
     TEAM_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40006, "팀 유저 정보를 찾을 수 없습니다."),
     PAGE_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40007, "페이지 유저 정보를 찾을 수 없습니다."),
-    ;
 
+    NOT_FOUND_CREDENTIALS(HttpStatus.UNAUTHORIZED, 40101, "인증정보가 없습니다.");
 
     private final HttpStatus status;
     private final int code;

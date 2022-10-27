@@ -2,6 +2,7 @@ package io.ssafy.p.k7a504.ore.user.api;
 
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
+import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,12 @@ public class UserApiController {
     public ResponseEntity<? extends BasicResponse> signUp(@Valid @RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.signUp(userSignUpRequestDto)));
+    }
+
+    @PostMapping("/api/users/signin")
+    public ResponseEntity<? extends BasicResponse> signIn(@Valid @RequestBody UserSignInRequestDto userSignInRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.signIn(userSignInRequestDto)));
     }
 
 }

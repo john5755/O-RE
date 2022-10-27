@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class UserSignUpRequestDto {
 
-    @NotBlank @Email(message = "올바른 이메일 형식이 아닙니다.")
+    @NotBlank @Email(message = "올바른 이메일 형식을 사용해야합니다.")
     private String email;
 
     @NotBlank @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{8,20}", message = "비밀번호는 영문, 숫자를 포함한 8~20자입니다.")
