@@ -49,15 +49,13 @@ public class TeamUserServiceImpl implements TeamUserService {
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        TeamUser teamUserCheck = teamUserRepository.findByUserIdAndTeamId(user.getId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(teamUserRepository.existsById(teamUserCheck.getId())){
+        if(teamUserRepository.existsByUserAndTeam(user, team)){
             throw new CustomException(ErrorCode.DUPLICATE_USER);
         }
-        TeamUserRole teamUserRole = TeamUserRole.valueOf("MEMBER");
         TeamUser teamUser = TeamUser.builder()
                 .user(user)
                 .team(team)
-                .role(teamUserRole)
+                .role(TeamUserRole.valueOf("MEMBER"))
                 .build();
         return teamUserRepository.save(teamUser).getId();
     }
@@ -81,28 +79,27 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     @Transactional
     public Long changeAuthority(Long id, Long userId, Long teamId, String role) {
-        System.out.println(role);
-        checkAuthority(id, userId, teamId);
-        TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        try {
-            TeamUserRole teamUserRole = TeamUserRole.valueOf(role);
-            if(teamUserRole.getPriority()>user.getRole().getPriority()){
-                throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
-            }
-            user.update(teamUserRole);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        if(modifier.getRole().getPriority()<=user.getRole().getPriority()||getRolePriority(role)>modifier.getRole().getPriority()){
+            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
         }
+        TeamUserRole teamUserRole = setAuthority(role, modifier);
+        user.update(teamUserRole);
         return userId;
     }
 
     @Override
     @Transactional
     public Long removeMember(Long id, Long userId, Long teamId) {
-        if(checkAuthority(id, userId, teamId)) {
-            TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-            teamUserRepository.delete(teamUser);
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        if(modifier.getRole().getPriority()<=user.getRole().getPriority()){
+            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
         }
+        teamUserRepository.delete(user);
         return userId;
     }
 
@@ -113,13 +110,33 @@ public class TeamUserServiceImpl implements TeamUserService {
         teamUserRepository.delete(teamUser);
         return userId;
     }
-    public boolean checkAuthority(Long id, Long userId, Long teamId){
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(modifier.getRole().getPriority()<=user.getRole().getPriority()){
-            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
+
+    public TeamUserRole setAuthority(String role, TeamUser teamUser){
+        TeamUserRole teamUserRole;
+        int modifier = teamUser.getRole().getPriority();
+        if(role.equals("LEADER")){
+            teamUserRole = TeamUserRole.LEADER;
+        }else if(role.equals("MANAGER")){
+            teamUserRole = TeamUserRole.MANAGER;
+        }else if(role.equals("MEMBER")){
+            teamUserRole = TeamUserRole.MEMBER;
+        }else{
+            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
         }
-        return true;
+        return teamUserRole;
+    }
+
+    public int getRolePriority(String role){
+        int priority = 0;
+        if(role.equals("LEADER")){
+            priority =3;
+        }else if(role.equals("MANAGER")){
+            priority =2;
+        }else if(role.equals("MEMBER")){
+            priority =1;
+        }else{
+            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
+        }
+        return priority;
     }
 }
