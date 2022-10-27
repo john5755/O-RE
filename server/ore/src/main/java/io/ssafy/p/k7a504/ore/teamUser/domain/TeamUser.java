@@ -43,8 +43,7 @@ public class TeamUser {
         this.team=team;
         this.role=role;
     }
-    public void update(User user, TeamUserRole role){
-        this.user=user;
+    public void update(TeamUserRole role){
         this.role = role;
     }
 
