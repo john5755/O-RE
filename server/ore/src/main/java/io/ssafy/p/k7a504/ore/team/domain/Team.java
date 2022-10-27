@@ -1,6 +1,7 @@
 package io.ssafy.p.k7a504.ore.team.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
@@ -18,4 +19,15 @@ public class Team {
 
     private String name;
     private String imageUrl;
+
+    @Builder
+    public Team(String name, String imageUrl){
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
+
+    public void update(String name, String imageUrl){
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 }
