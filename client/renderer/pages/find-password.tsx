@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { H1, Input, Button, Label } from "../styles";
 import Link from "next/link";
+import { PATH } from "../constants";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -101,10 +102,10 @@ export default function FindPassword() {
           </ButtonContainer>
           <CantFindContainer>
             <CantFindOptions>
-              <Link href="/">메인페이지로</Link>
+              <Link href={PATH.MAIN}>메인페이지로</Link>
             </CantFindOptions>
             <CantFindOptions>
-              <Link href="/login">로그인</Link>
+              <Link href={PATH.LOGIN}>로그인</Link>
             </CantFindOptions>
             <CantFindOptions>
               <Link href="#">회원가입</Link>

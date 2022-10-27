@@ -44,10 +44,17 @@ const ButtonClose = styled.div`
   }
 `;
 
-type IpcRenderProps = {
-  ipcRenderer: undefined | Electron.IpcRenderer;
-};
-export default function TopBar({ ipcRenderer }: IpcRenderProps) {
+export default function TopBar() {
+  const [ipcRenderer, setIpcRenderer] = useState<
+    undefined | Electron.IpcRenderer
+  >(undefined);
+
+  useEffect(() => {
+    if (window.require !== undefined) {
+      setIpcRenderer(window.require("electron").ipcRenderer);
+    }
+  }, []);
+
   return (
     <>
       {ipcRenderer !== undefined ? (
