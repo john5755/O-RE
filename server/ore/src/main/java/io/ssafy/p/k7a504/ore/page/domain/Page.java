@@ -1,5 +1,6 @@
 package io.ssafy.p.k7a504.ore.page.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ssafy.p.k7a504.ore.element.domain.Element;
 import io.ssafy.p.k7a504.ore.element.domain.ElementType;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
@@ -33,9 +34,11 @@ public class Page {
     @Enumerated(EnumType.STRING)
     private PageStatus pageStatus;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
     private List<Element> elements = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
     private List<PageUser> pageUserList = new ArrayList<>();
 
@@ -57,7 +60,7 @@ public class Page {
         }
 
         Page page = new Page(teamUser.getTeam(), name, PageStatus.EXCLUDE_INPUT);
-        PageUser pageUser = PageUser.enrollPage(page, teamUser);
+        PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
         pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
         page.pageUserList.add(pageUser);
 

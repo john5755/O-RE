@@ -3,14 +3,10 @@ package io.ssafy.p.k7a504.ore.pageUser.domain;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.user.domain.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
-@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -25,10 +21,6 @@ public class PageUser {
     private Page page;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_user_id")
-    private TeamUser teamUser;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -38,17 +30,16 @@ public class PageUser {
     /**
      * TeamUser가 해당 Page에 참가하는 메서드
      * @param page
-     * @param teamUser
+     * @param user
      * @return PageUser
      */
-    public static PageUser enrollPage(Page page, TeamUser teamUser) {
-        return new PageUser(page, teamUser, PageUserRole.VIEWER);
+    public static PageUser enrollPage(Page page, User user) {
+        return new PageUser(page, user, PageUserRole.VIEWER);
     }
 
-    private PageUser(Page page, TeamUser teamUser, PageUserRole pageUserRole) {
+    private PageUser(Page page, User user, PageUserRole pageUserRole) {
         this.page = page;
-        this.teamUser = teamUser;
-        this.user = teamUser.getUser();
+        this.user = user;
         this.pageUserRole = pageUserRole;
     }
 
@@ -89,4 +80,5 @@ public class PageUser {
     private void setPageUserRole(PageUserRole pageUserRole) {
         this.pageUserRole = pageUserRole;
     }
+
 }
