@@ -6,6 +6,7 @@ import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     void sendCertificationEmail(String email);
@@ -14,4 +15,5 @@ public interface UserService {
     TokenDto signIn(UserSignInRequestDto userSignInRequestDto);
     void findUserPassword(UserInfoRequestDto userInfoRequestDto);
     Long changeUserPassword(UserPasswordRequestDto userPasswordRequestDto);
+    int addUserList(MultipartFile file);
 }

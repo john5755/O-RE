@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.user.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @ToString
 @Getter
@@ -37,4 +38,15 @@ public class User {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public static User mapToUser(Map<String, Object> map) {
+        return User.builder()
+                .email(map.get("email").toString())
+                .password(map.get("password").toString())
+                .name(map.get("name").toString())
+                .nickname(map.get("name").toString())
+                .role(UserRole.valueOf(map.get("role").toString()))
+                .build();
+    }
+
 }
