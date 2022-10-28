@@ -9,7 +9,9 @@ import io.ssafy.p.k7a504.ore.teamUser.service.impl.TeamUserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -21,14 +23,14 @@ public class TeamApiController {
     private final TeamServiceImpl teamService;
     private final TeamUserServiceImpl teamUserService;
 
-    //TODO: 권한부여 필요 preAuthorize("hasRole(ADMIN)")
+
     //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
-    //TODO: header - userId 가져오는 걸로 수정필요
-    @PostMapping("/{userId}")
-    public ResponseEntity<CommonResponse<Long>> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamRequestDto teamReqDTO){
-        Long teamId = teamService.saveTeam(userId, teamReqDTO);
+    @PostMapping("")
+    //@PreAuthorize("hasRole(ADMIN)")
+    public ResponseEntity<CommonResponse<Long>> createTeam(@Valid @RequestBody TeamRequestDto teamReqDTO){
+        Long teamId = teamService.saveTeam(teamReqDTO);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(teamUserService.beFirstMember(userId, teamId)));
+                .body(new CommonResponse<>(teamUserService.beFirstMember(teamId)));
     }
 
     @GetMapping("/{teamId}")
@@ -36,15 +38,16 @@ public class TeamApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamService.getTeam(teamId)));
     }
 
-    //TODO: 권한부여 필요 preAuthorize("hasRole(ADMIN)")
-    @PatchMapping("/{teamId}")
-    public ResponseEntity<CommonResponse<TeamResponseDto>> modifyTeam(@PathVariable Long teamId, @RequestBody TeamEditRequestDto TeamEditReqDTO ){
+    //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
+    @PostMapping("/edit")
+    //@PreAuthorize("hasRole(ADMIN)")
+    public ResponseEntity<CommonResponse<TeamResponseDto>> modifyTeam(@RequestPart(value="info") TeamEditRequestDto TeamEditReqDTO, @RequestPart(value = "image", required = false) MultipartFile file ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(teamService.editTeam(teamId, TeamEditReqDTO )));
+                .body(new CommonResponse<>(teamService.editTeam(TeamEditReqDTO , file)));
     }
 
-    //TODO: 권한부여 필요 preAuthorize("hasRole(ADMIN)")
     @DeleteMapping("/{teamId}")
+    //@PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<CommonResponse<Long>> deleteTeam(@PathVariable Long teamId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamService.removeTeam(teamId)));

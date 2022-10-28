@@ -19,7 +19,11 @@ public enum ErrorCode {
     PAGE_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40007, "페이지 유저 정보를 찾을 수 없습니다."),
 
     NOT_FOUND_CREDENTIALS(HttpStatus.UNAUTHORIZED, 40101, "인증정보가 없습니다."),
-    NOT_VALID_AUTHORITY(HttpStatus.BAD_REQUEST, 40005, "권한이 없습니다.");
+    NOT_VALID_AUTHORITY(HttpStatus.BAD_REQUEST, 40005, "권한이 없습니다."),
+    IMG_NOT_FOUND(HttpStatus.BAD_REQUEST, 400010, "이미지를 찾을 수 없습니다."),
+    IMG_NOT_UPLOAD(HttpStatus.BAD_REQUEST, 400011, "이미지를 업로드할 수 없습니다."),
+    FILE_SIZE_EXCEED(HttpStatus.BAD_REQUEST, 400012, "업로드 가능한 용량을 초과하였습니다."),
+    NOT_VALID_FILE_TYPE(HttpStatus.BAD_REQUEST, 400013, "업로드 가능한 파일 형식이 아닙니다.");
 
     private final HttpStatus status;
     private final int code;
