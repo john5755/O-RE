@@ -12,8 +12,5 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class PageUserDeleteRequestDto {
     @NotNull
-    private Long pageId;
-
-    @NotNull
-    private Long userId;
+    private Long pageUserId;
 }

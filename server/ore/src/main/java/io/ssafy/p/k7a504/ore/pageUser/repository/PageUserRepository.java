@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface PageUserRepository extends JpaRepository<PageUser, Long> {
     Optional<PageUser> findByPageIdAndUserId(Long pageId, Long userId);
     Optional<List<PageUser>> findAllByPageId(Long pageId);
-    Boolean existsByPageIdAndUserId(Long pageId, Long userId);
+    boolean existsByPageIdAndUserId(Long pageId, Long userId);
 }
