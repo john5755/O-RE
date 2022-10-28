@@ -12,6 +12,6 @@ public interface PageUserService {
     Long leavePageUser(Long pageId);
     Long deletePageUser(PageUserDeleteRequestDto pageUserDeleteDto );
     PageUserResponseDto invitePageUser(PageUserInviteRequestDto pageUserInviteDto);
-    PageUserResponseDto getPageUser(PageUserGetRequestDto pageUserGetDto);
+    PageUserResponseDto getPageUser(Long pageId, Long userId);
     List<PageUserResponseDto> getPageUserList(Long pageId);
 }

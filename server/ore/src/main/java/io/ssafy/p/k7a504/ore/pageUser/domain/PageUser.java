@@ -4,6 +4,8 @@ import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,10 +19,12 @@ public class PageUser {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @JoinColumn(name="page_id")
     private Page page;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 

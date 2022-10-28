@@ -26,10 +26,10 @@ public class PageUserApiController {
                 .body(new CommonResponse<>(pageUserService.getPageUserList(pageId)));
     }
 
-    @PostMapping("")
-    public ResponseEntity<? extends BasicResponse> pageUserGet(@RequestBody @Valid PageUserGetRequestDto pageUserGetDto) {
+    @GetMapping("/{pageId}")
+    public ResponseEntity<? extends BasicResponse> pageUserGet(@PathVariable Long pageId, @RequestParam("user-id") Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(pageUserService.getPageUser(pageUserGetDto)));
+                .body(new CommonResponse<>(pageUserService.getPageUser(pageId, userId)));
     }
 
     @PostMapping("/invite")
