@@ -4,6 +4,7 @@ import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
+import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
@@ -38,8 +39,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verifyEmail(String code) {
-        return emailService.verifyEmail(code);
+    public boolean verifyEmail(UserEmailVerificationRequestDto emailVerificationRequestDto) {
+        return emailService.verifyEmail(emailVerificationRequestDto);
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package io.ssafy.p.k7a504.ore.user.api;
 
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
+import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
@@ -24,10 +25,10 @@ public class UserApiController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/api/users/verificaation")
-    public ResponseEntity<? extends BasicResponse> verifyEmail(@Valid @RequestParam String code) {
+    @PostMapping("/api/users/verification")
+    public ResponseEntity<? extends BasicResponse> verifyEmail(@Valid @RequestBody UserEmailVerificationRequestDto emailVerificationRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(userService.verifyEmail(code)));
+                .body(new CommonResponse<>(userService.verifyEmail(emailVerificationRequestDto)));
     }
 
     @PostMapping("/api/users/signup")

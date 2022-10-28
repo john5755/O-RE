@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.user.service.impl;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.redis.RedisUtil;
+import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,12 +48,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String verifyEmail(String code) {
-        String email = redisUtil.getData(code);
-        if(email == null)
+    @Transactional
+    public boolean verifyEmail(UserEmailVerificationRequestDto requestDto) {
+        String email = redisUtil.getData(requestDto.getCode());
+        if(email == null || !email.equals(requestDto.getEmail()))
             throw new CustomException(ErrorCode.NOT_VALID_CERTIFICATION_CODE);
-        redisUtil.deleteData(code);
-        return email;
+        redisUtil.deleteData(requestDto.getCode());
+        return true;
     }
 
     @Override
