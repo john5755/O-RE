@@ -2,16 +2,13 @@ package io.ssafy.p.k7a504.ore.user.api;
 
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
-import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserInfoRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -55,6 +52,13 @@ public class UserApiController {
     public ResponseEntity<? extends BasicResponse> changeUserPassword(@Valid @RequestBody UserPasswordRequestDto userPasswordRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.changeUserPassword(userPasswordRequestDto)));
+    }
+
+    // TODO: PreAuthorize() 설정 필요
+    @PostMapping("/api/users/list")
+    public ResponseEntity<? extends BasicResponse> addUserList(@RequestPart(name = "file")MultipartFile file) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.addUserList(file)));
     }
 
 

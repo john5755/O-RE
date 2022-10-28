@@ -1,27 +1,29 @@
 package io.ssafy.p.k7a504.ore.user.service.impl;
 
+import io.ssafy.p.k7a504.ore.common.excel.ExcelUtil;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
 import io.ssafy.p.k7a504.ore.user.domain.User;
-import io.ssafy.p.k7a504.ore.user.dto.UserInfoRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
-import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder encoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final ExcelUtil excelUtil;
 
     @Override
     public void sendCertificationEmail(String email) {
@@ -83,6 +86,24 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         user.changePassword(encoder.encode(userPasswordRequestDto.getPassword()));
         return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public int addUserList(MultipartFile file) {
+        if(file.isEmpty())
+            throw new CustomException(ErrorCode.FILE_NOT_FOUND);
+
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        if(!extension.equals("xls") && !extension.equals("xlsx"))
+            throw new CustomException(ErrorCode.NOT_EXCEL_FILE);
+
+        List<User> userList = excelUtil.getListData(file, 1, 4, encoder)
+                .stream().map(User::mapToUser)
+                .filter(user -> userRepository.existsByEmail(user.getEmail()) == false)
+                .collect(Collectors.toList());
+
+        return userRepository.saveAll(userList).size();
     }
 
     private String generateTempPassword() {
