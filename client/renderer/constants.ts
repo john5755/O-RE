@@ -3,6 +3,7 @@ export const PATH = {
   LOGIN: "/login",
   FIND_PASSWORD: "/find-password",
   CREATE_PAGE: "/create-page",
+  SIGNUP: "/signup",
 };
 
 export const TAG_LIST = [

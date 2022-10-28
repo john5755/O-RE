@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { H1, Input, Button, Label } from "../styles";
-import Link from "next/link";
 import { PATH } from "../constants";
+import UserFormLink from "../molecule/UserFormLink";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -71,6 +71,12 @@ const CantFindOptions = styled.li`
   }
 `;
 
+const LinkOptions = [
+  { pathLink: PATH.MAIN, pathName: "메인페이지로" },
+  { pathLink: PATH.LOGIN, pathName: "로그인" },
+  { pathLink: PATH.SIGNUP, pathName: "회원가입" },
+];
+
 export default function FindPassword() {
   return (
     <LayoutContainer>
@@ -100,17 +106,14 @@ export default function FindPassword() {
           <ButtonContainer>
             <Button height="60px">비밀번호 찾기</Button>
           </ButtonContainer>
-          <CantFindContainer>
-            <CantFindOptions>
-              <Link href={PATH.MAIN}>메인페이지로</Link>
-            </CantFindOptions>
-            <CantFindOptions>
-              <Link href={PATH.LOGIN}>로그인</Link>
-            </CantFindOptions>
-            <CantFindOptions>
-              <Link href="#">회원가입</Link>
-            </CantFindOptions>
-          </CantFindContainer>
+          <UserFormLink
+            firstPath={LinkOptions[0].pathLink}
+            firstPathName={LinkOptions[0].pathName}
+            secondPath={LinkOptions[1].pathLink}
+            secondPathName={LinkOptions[1].pathName}
+            thirdPath={LinkOptions[2].pathLink}
+            thirdPathName={LinkOptions[2].pathName}
+          ></UserFormLink>
         </FindContainer>
       </Container>
     </LayoutContainer>

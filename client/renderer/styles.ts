@@ -54,6 +54,7 @@ interface ButtonProps
   width?: string;
   height?: string;
   fontSize?: string;
+  borderRadius?: string;
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -63,10 +64,18 @@ export const Button = styled.button<ButtonProps>`
   color: white;
   border-color: white;
   border-width: 0;
-  font-size: ${({ fontSize }) => fontSize || "20px"};
+  font-size: ${({ fontSize }) => fontSize || "15px"};
+  border-radius: ${({ borderRadius }) => borderRadius || 0};
+  cursor: pointer;
+  :disabled {
+    background-color: var(--light-gray-color);
+    cursor: none;
+  }
 `;
 
 export const Label = styled.label`
   padding: 10px 0;
   font-weight: bold;
+  color: ${({ color }) => color || "black"};
+  font-size: 13px;
 `;
