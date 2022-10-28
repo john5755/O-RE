@@ -1,6 +1,5 @@
 package io.ssafy.p.k7a504.ore.pageUser.dto;
 
-import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.user.domain.User;
@@ -11,14 +10,22 @@ import lombok.*;
 @AllArgsConstructor
 public class PageUserResponseDto {
 
-    private Long id;
-    private User user;
-    private PageUserRole role;
+    private Long pageUserId;
+    private Long userId;
+    private String email;
+    private String name;
+    private String nickname;
+    private String profileImage;
+    private PageUserRole pageUserRole;
 
     @Builder
     public PageUserResponseDto(PageUser pageUser){
-        this.id = pageUser.getId();
-        this.user = pageUser.getUser();
-        this.role = pageUser.getPageUserRole();
+        this.pageUserId = pageUser.getId();
+        this.userId = pageUser.getUser().getId();
+        this.email = pageUser.getUser().getEmail();
+        this.name = pageUser.getUser().getName();
+        this.nickname = pageUser.getUser().getNickname();
+        this.profileImage = pageUser.getUser().getProfileImage();
+        this.pageUserRole = pageUser.getPageUserRole();
     }
 }

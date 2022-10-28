@@ -3,8 +3,8 @@ package io.ssafy.p.k7a504.ore.pageUser.api;
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
 import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserDeleteRequestDto;
-import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserGetRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserInviteRequestDto;
+import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserModifyAuthRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.service.PageUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,10 @@ public class PageUserApiController {
                 .body(new CommonResponse<>(pageUserService.getPageUserList(pageId)));
     }
 
-    @GetMapping("/{pageId}")
-    public ResponseEntity<? extends BasicResponse> pageUserGet(@PathVariable Long pageId, @RequestParam("user-id") Long userId) {
+    @GetMapping("")
+    public ResponseEntity<? extends BasicResponse> pageUserGet(@RequestParam("page-user-id") Long pageUserId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(pageUserService.getPageUser(pageId, userId)));
+                .body(new CommonResponse<>(pageUserService.getPageUser(pageUserId)));
     }
 
     @PostMapping("/invite")
@@ -50,8 +50,9 @@ public class PageUserApiController {
                 .body(new CommonResponse<>(pageUserService.deletePageUser(pageUserDeleteDto)));
     }
 
-//    @PutMapping("")
-//    public ResponseEntity<UserSigninDto> pageUserModify(@RequestBody Map<String, String> map) {
-//
-//    }
+    @PutMapping("")
+    public ResponseEntity<? extends BasicResponse> pageUserModifyAuth(@RequestBody PageUserModifyAuthRequestDto pageUserModifyAuthRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageUserService.changeAuth(pageUserModifyAuthRequestDto)));
+    }
 }

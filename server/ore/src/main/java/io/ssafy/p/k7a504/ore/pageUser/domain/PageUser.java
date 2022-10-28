@@ -1,7 +1,8 @@
 package io.ssafy.p.k7a504.ore.pageUser.domain;
 
+import io.ssafy.p.k7a504.ore.common.exception.CustomException;
+import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
-import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -53,8 +54,10 @@ public class PageUser {
      * @param pageUserRole
      */
     public void grantRole(PageUser pageUser, PageUserRole pageUserRole) {
-        if (!checkCanChangeRole(pageUser)) {
+        if (!checkCanChangeRole(pageUser, pageUserRole)) {
             // TODO 권한을 변경할 수 없다는 예외 처리
+            // 작성했는데 확인바람. -동윤-
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_PAGE_USER_AUTH);
         }
         pageUser.setPageUserRole(pageUserRole);
     }
@@ -67,11 +70,16 @@ public class PageUser {
     public void adjustRoleByMaintainer(PageUser pageUser, PageUserRole pageUserRole) {
         if (this.pageUserRole != PageUserRole.MAINTAINER) {
             // TODO 권한이 없다는 예외처리
+            // 작성했는데 확인바람. -동윤-
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_PAGE_USER_AUTH);
+        }
+        if(this.pageUserRole.getPriority() < pageUserRole.getPriority()){
+            throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
         }
         pageUser.setPageUserRole(pageUserRole);
     }
 
-    private boolean checkCanChangeRole(PageUser pageUser) {
+    private boolean checkCanChangeRole(PageUser pageUser, PageUserRole pageUserRole) {
         if(this.pageUserRole == PageUserRole.VIEWER) {
             return false;
         }
