@@ -21,15 +21,14 @@ public class TeamUserApiController {
 
     private final TeamUserServiceImpl teamUserService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<? extends BasicResponse> getTeams(@PathVariable Long userId){
-        //todo 임시부여 - header 관련 로직필요
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.getTeamList(userId)));
+    @GetMapping("")
+    public ResponseEntity<? extends BasicResponse> getTeams(){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.getTeamList()));
     }
 
     @GetMapping("/list/user")
-    public ResponseEntity<? extends BasicResponse> getUsersInTeam(@RequestParam Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.getUserList(id)));
+    public ResponseEntity<? extends BasicResponse> getUsersInTeam(@RequestParam Long teamId){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.getUserList(teamId)));
     }
 
     @PostMapping("")
@@ -38,20 +37,18 @@ public class TeamUserApiController {
     }
 
     @PatchMapping("")
-    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@Valid @RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
+    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.changeAuthority(modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId(), modifyAuthorityRequestDto.getRole())));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<CommonResponse<Long>> deleteMember(@Valid @RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
+    public ResponseEntity<CommonResponse<Long>> deleteMember(@RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMember(deleteMemberRequestDto.getUserId(), deleteMemberRequestDto.getTeamId())));
     }
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<CommonResponse<Long>> leaveTeam(@PathVariable Long teamId){
-        //todo 임시부여 - header 관련 로직필요
-        Long userId = 3L;
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.leaveTeam(userId, teamId)));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.leaveTeam(teamId)));
     }
 
 

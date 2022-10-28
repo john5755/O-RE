@@ -2,6 +2,7 @@ package io.ssafy.p.k7a504.ore.teamUser.service.impl;
 
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
@@ -30,8 +31,8 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long beFirstMember(Long userId, Long teamId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    public Long beFirstMember(Long teamId) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         TeamUser teamUser = TeamUser.builder()
                 .user(user)
@@ -42,8 +43,8 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
     @Override
     @Transactional
-    public Long inviteMember(Long id, Long userId, Long teamId) {
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+    public Long inviteMember(Long userId, Long teamId) {
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()==1){
             throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
         }
@@ -61,11 +62,11 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
 
     @Override
-    public List<TeamInfoResponseDto> getTeamList(final Long userId){
-        if(!userRepository.existsById(userId)){
+    public List<TeamInfoResponseDto> getTeamList(){
+        if(!userRepository.existsById(SecurityUtil.getCurrentUserId())){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return teamUserRepository.findByUserId(userId).stream().map(TeamInfoResponseDto::new).collect(Collectors.toList());
+        return teamUserRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(TeamInfoResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
@@ -78,9 +79,9 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long changeAuthority(Long id, Long userId, Long teamId, String role) {
+    public Long changeAuthority(Long userId, Long teamId, String role) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()<=user.getRole().getPriority()||getRolePriority(role)>modifier.getRole().getPriority()){
             throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
@@ -92,9 +93,9 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long removeMember(Long id, Long userId, Long teamId) {
+    public Long removeMember(Long userId, Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(id, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()<=user.getRole().getPriority()){
             throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
@@ -105,10 +106,10 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long leaveTeam(Long userId, Long teamId) {
-        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+    public Long leaveTeam(Long teamId) {
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         teamUserRepository.delete(teamUser);
-        return userId;
+        return SecurityUtil.getCurrentUserId();
     }
 
     public TeamUserRole setAuthority(String role, TeamUser teamUser){

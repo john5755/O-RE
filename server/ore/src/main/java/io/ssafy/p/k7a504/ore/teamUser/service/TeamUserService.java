@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface TeamUserService {
-    Long beFirstMember(Long userId, Long teamId);
-    Long inviteMember(Long id, Long userId, Long teamId);
-    List<TeamInfoResponseDto> getTeamList(final Long userId);
-    List<UserInfoResponseDto> getUserList(final Long teamId);
-    Long changeAuthority(final Long userId, final Long teamId, final TeamUserRole role);
-    Long removeMember(final Long userId, final  Long teamId);
-    Long leaveTeam(final Long teamId);
+    Long beFirstMember(Long teamId);
+    Long inviteMember(Long userId, Long teamId);
+    List<TeamInfoResponseDto> getTeamList();
+    List<UserInfoResponseDto> getUserList(Long teamId);
+    Long changeAuthority(Long userId, Long teamId, String role);
+    Long removeMember(Long userId, Long teamId);
+    Long leaveTeam(Long teamId);
 
 
 }
