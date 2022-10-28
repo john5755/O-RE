@@ -33,4 +33,8 @@ public class User {
         this.role = role;
         this.profileImage = "defaultImageUrl";
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

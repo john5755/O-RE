@@ -25,13 +25,13 @@ public class EmailServiceImpl implements EmailService {
     private final RedisUtil redisUtil;
 
     @Override
-    public void sendMail(String to, String code) {
+    public void sendMail(String to, String sub, String text) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             mimeMessage.addRecipients(Message.RecipientType.TO, to);
             mimeMessage.setFrom(new InternetAddress("oreofficialcontact@naver.com", "ore_official"));
-            mimeMessage.setSubject("O:RE 회원가입 이메일 인증");
-            mimeMessage.setText(createMessage(code), "utf-8", "html");
+            mimeMessage.setSubject(sub);
+            mimeMessage.setText(text, "utf-8", "html");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException();
@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
     @Transactional
     public void sendCertificationMail(String email) {
         String code = UUID.randomUUID().toString().substring(0, 8);
-        sendMail(email, code);
+        sendMail(email, "O:RE 회원가입 이메일 인증", createMessage(code));
         redisUtil.setDataExpire(code, email, 60 * 10L);
     }
 
@@ -58,7 +58,132 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String createMessage(String code) {
+    public void sendTempPasswordMail(String email, String tempPassword) {
+        sendMail(email, "O:RE 임시 비밀번호 확인", createTempPasswordMessage(tempPassword));
+    }
+
+    private String createTempPasswordMessage(String tempPassword) {
+        return "<td width=\"520\" style=\"font-size: 0; line-height: 0; padding: 20\">\n" +
+                "      <table\n" +
+                "        cellpadding=\"0\"\n" +
+                "        cellspacing=\"0\"\n" +
+                "        width=\"100%\"\n" +
+                "        border=\"0\"\n" +
+                "        style=\"border-collapse: collapse\"\n" +
+                "      >\n" +
+                "        <!-- 헤더 시작 -->\n" +
+                "        <tbody>\n" +
+                "          <!-- //헤더 상단 여백 -->\n" +
+                "          <tr>\n" +
+                "            <td width=\"520\" style=\"font-size: 0\">\n" +
+                "              <span\n" +
+                "                style=\"\n" +
+                "                  font-family: 'Nanum Gothic', 'Malgun Gothic', 'dotum',\n" +
+                "                    'AppleGothic', Helvetica, Arial, Sans-Serif;\n" +
+                "                  font-size: 50px;\n" +
+                "                  line-height: 1.3;\n" +
+                "                  font-weight: bolder;\n" +
+                "                  letter-spacing: -1px;\n" +
+                "                  color: #48a3a9;\n" +
+                "                \"\n" +
+                "                ><b>O:RE</b></span\n" +
+                "              >\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "          <tr>\n" +
+                "            <td\n" +
+                "              width=\"520\"\n" +
+                "              height=\"10\"\n" +
+                "              style=\"font-size: 0; line-height: 0\"\n" +
+                "            ></td>\n" +
+                "          </tr>\n" +
+                "          <!-- //콘텐츠 영역 간 여백 -->\n" +
+                "          <tr>\n" +
+                "            <td width=\"520\" style=\"font-size: 0\">\n" +
+                "              <span\n" +
+                "                style=\"\n" +
+                "                  font-family: 'Nanum Gothic', 'Malgun Gothic', 'dotum',\n" +
+                "                    'AppleGothic', Helvetica, Arial, Sans-Serif;\n" +
+                "                  font-size: 22px;\n" +
+                "                  line-height: 1.3;\n" +
+                "                  letter-spacing: -1px;\n" +
+                "                  color: rgba(0, 0, 0, 0.8);\n" +
+                "                \"\n" +
+                "                ><b>임시 비밀번호</b></span\n" +
+                "              >\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "          <!-- //헤더 타이틀 -->\n" +
+                "          <tr>\n" +
+                "            <td\n" +
+                "              width=\"520\"\n" +
+                "              height=\"25\"\n" +
+                "              style=\"\n" +
+                "                font-size: 0;\n" +
+                "                line-height: 0;\n" +
+                "                border-bottom: 2px solid rgba(0, 0, 0, 0.3);\n" +
+                "              \"\n" +
+                "            ></td>\n" +
+                "          </tr>\n" +
+                "          <!-- //콘텐츠 영역 간 여백 -->\n" +
+                "          <!-- //헤더 끝 -->\n" +
+                "          <!-- 본문 시작 -->\n" +
+                "          <tr>\n" +
+                "            <td\n" +
+                "              width=\"520\"\n" +
+                "              height=\"50\"\n" +
+                "              style=\"font-size: 0; line-height: 0\"\n" +
+                "            ></td>\n" +
+                "          </tr>\n" +
+                "          <!-- //콘텐츠 영역 간 여백 -->\n" +
+                "          <tr>\n" +
+                "            <td width=\"520\" style=\"font-size: 0\">\n" +
+                "              <span\n" +
+                "                style=\"\n" +
+                "                  font-family: 'Nanum Gothic', 'Malgun Gothic', 'dotum',\n" +
+                "                    'AppleGothic', Helvetica, Arial, Sans-Serif;\n" +
+                "                  font-size: 16px;\n" +
+                "                  line-height: 1.6;\n" +
+                "                  letter-spacing: -1px;\n" +
+                "                \"\n" +
+                "                >O:RE 임시 비밀번호는 아래와 같습니다.<br />\n" +
+                "                <br />로그인한 뒤에 반드시 비밀번호를 변경해 주시기 바랍니다.\n" +
+                "              </span>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "          <tr>\n" +
+                "            <td\n" +
+                "              width=\"520\"\n" +
+                "              height=\"50\"\n" +
+                "              style=\"font-size: 0; line-height: 0\"\n" +
+                "            ></td>\n" +
+                "          </tr>\n" +
+                "          <!-- //콘텐츠 영역 간 여백 -->\n" +
+                "          <tr>\n" +
+                "            <td\n" +
+                "              align=\"center\"\n" +
+                "              width=\"200\"\n" +
+                "              height=\"50\"\n" +
+                "              colspan=\"3\"\n" +
+                "              bgcolor=\"#efefef\"\n" +
+                "              style=\"\n" +
+                "                font-family: 'Nanum Gothic', 'Malgun Gothic', 'dotum',\n" +
+                "                  'AppleGothic', Helvetica, Arial, Sans-Serif;\n" +
+                "                font-size: 22px;\n" +
+                "                line-height: 1.6;\n" +
+                "                letter-spacing: -1px;\n" +
+                "                font-weight: bold;\n" +
+                "              \"\n" +
+                "            >\n" +
+                tempPassword + "\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </td>";
+    }
+
+    private String createMessage(String code) {
         return "<td width=\"520\" style=\"font-size: 0; line-height: 0; padding: 20\">\n" +
                 "      <table\n" +
                 "        cellpadding=\"0\"\n" +

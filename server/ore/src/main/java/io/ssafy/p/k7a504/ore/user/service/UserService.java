@@ -1,6 +1,8 @@
 package io.ssafy.p.k7a504.ore.user.service;
 
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
+import io.ssafy.p.k7a504.ore.user.dto.UserInfoRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
@@ -10,4 +12,6 @@ public interface UserService {
     boolean verifyEmail(UserEmailVerificationRequestDto emailVerificationRequestDto);
     String signUp(UserSignUpRequestDto userSignUpRequestDto);
     TokenDto signIn(UserSignInRequestDto userSignInRequestDto);
+    void findUserPassword(UserInfoRequestDto userInfoRequestDto);
+    Long changeUserPassword(UserPasswordRequestDto userPasswordRequestDto);
 }

@@ -3,6 +3,8 @@ package io.ssafy.p.k7a504.ore.user.api;
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
 import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.UserInfoRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
@@ -42,5 +44,19 @@ public class UserApiController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.signIn(userSignInRequestDto)));
     }
+
+    @PostMapping("/api/users/password")
+    public ResponseEntity<? extends BasicResponse> findUserPassword(@Valid @RequestBody UserInfoRequestDto userInfoRequestDto) {
+        userService.findUserPassword(userInfoRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/api/users/password")
+    public ResponseEntity<? extends BasicResponse> changeUserPassword(@Valid @RequestBody UserPasswordRequestDto userPasswordRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.changeUserPassword(userPasswordRequestDto)));
+    }
+
+
 
 }
