@@ -9,7 +9,10 @@ import io.ssafy.p.k7a504.ore.teamUser.service.impl.TeamUserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,22 +32,19 @@ public class TeamUserApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.getUserList(id)));
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<? extends BasicResponse> addMember(@PathVariable Long userId, @RequestBody TeamMemberAddRequestDto teamMemberAddRequestDto){
-        //todo 임시부여 - header 관련 로직필요
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.inviteMember(userId, teamMemberAddRequestDto.getUserId(), teamMemberAddRequestDto.getTeamId())));
+    @PostMapping("")
+    public ResponseEntity<? extends BasicResponse> addMember(@Valid @RequestBody TeamMemberAddRequestDto teamMemberAddRequestDto){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.inviteMember(teamMemberAddRequestDto.getUserId(), teamMemberAddRequestDto.getTeamId())));
     }
 
-    @PatchMapping("/{userId}")
-    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@PathVariable Long userId, @RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
-        //todo 임시부여 - header 관련 로직필요
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.changeAuthority(userId, modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId(), modifyAuthorityRequestDto.getRole())));
+    @PatchMapping("")
+    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@Valid @RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.changeAuthority(modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId(), modifyAuthorityRequestDto.getRole())));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<CommonResponse<Long>> deleteMember(@PathVariable Long id, @RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
-        //todo 임시부여 - header 관련 로직필요
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMember(id, deleteMemberRequestDto.getUserId(), deleteMemberRequestDto.getTeamId())));
+    @DeleteMapping("/delete")
+    public ResponseEntity<CommonResponse<Long>> deleteMember(@Valid @RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMember(deleteMemberRequestDto.getUserId(), deleteMemberRequestDto.getTeamId())));
     }
 
     @DeleteMapping("/{teamId}")
