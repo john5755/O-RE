@@ -2,8 +2,12 @@ package io.ssafy.p.k7a504.ore.user.service.impl;
 
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
+import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.dto.UserInfoRequestDto;
+import io.ssafy.p.k7a504.ore.user.dto.UserPasswordRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserEmailVerificationRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignInRequestDto;
 import io.ssafy.p.k7a504.ore.user.dto.UserSignUpRequestDto;
@@ -59,5 +63,39 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         return new TokenDto(tokenProvider.createToken(authentication));
+    }
+
+    @Override
+    @Transactional
+    public void findUserPassword(UserInfoRequestDto userInfoRequestDto) {
+        User user = userRepository.findByEmailAndName(userInfoRequestDto.getEmail(), userInfoRequestDto.getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String tempPassword = generateTempPassword();
+
+        user.changePassword(encoder.encode(tempPassword));
+        emailService.sendTempPasswordMail(user.getEmail(), tempPassword);
+    }
+
+    @Override
+    @Transactional
+    public Long changeUserPassword(UserPasswordRequestDto userPasswordRequestDto) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.changePassword(encoder.encode(userPasswordRequestDto.getPassword()));
+        return user.getId();
+    }
+
+    private String generateTempPassword() {
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+        String tempPassword = "";
+
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            tempPassword += charSet[idx];
+        }
+        return tempPassword;
     }
 }
