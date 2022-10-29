@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, H4, Button, Input, Label } from "../styles";
+import { H2, H3, Button, Input, Label } from "../styles";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -28,12 +28,12 @@ const Container = styled.div`
 const TextContainer = styled.div`
   width: 100%;
   height: 30px;
-  margin: 10px 0 30px 0;
+  margin: 10px 0 20px 0;
 `;
 
 const PhotoContainer = styled.div`
   width: 100%;
-  margin: 10px 0 30px 0;
+  margin: 10px 0 15px 0;
 `;
 
 const ProfilePhoto = styled.img`
@@ -139,12 +139,12 @@ export default function AccountOptions() {
             style={{ margin: "10px auto" }}
           ></Input>
           <Label>직책</Label>
-          <H3 style={{ margin: "10px auto" }}>팀원</H3>
-          <H4>탈퇴</H4>
+          <H3 style={{ margin: "5px auto" }}>팀원</H3>
+          <Label style={{display: 'block'}}>탈퇴</Label>
           <Button
             width="120px"
             height="35px"
-            style={{ background: "#C74E4E", margin: "10px 0 5px" }}
+            style={{ background: "#C74E4E", margin: "3px 0 3px" }}
           >
             그룹나가기
           </Button>
