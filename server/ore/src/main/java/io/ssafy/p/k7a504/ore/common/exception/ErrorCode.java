@@ -11,7 +11,7 @@ public enum ErrorCode {
     // User
     DUPLICATE_USER_EMAIL(HttpStatus.CONFLICT, 40901,"중복된 사용자 이메일입니다."),
     DUPLICATE_PAGE_USER(HttpStatus.CONFLICT, 40902,"이미 페이지에 존재하는 사용자입니다."),
-
+    DUPLICATE_TEAM_USER(HttpStatus.CONFLICT, 40903,"이미 팀에 존재하는 사용자입니다."),
     NOT_VALID_CERTIFICATION_CODE(HttpStatus.BAD_REQUEST, 40001, "유효하지 않은 인증코드입니다."),
 
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40002, " 유저 정보를 찾을 수 없습니다."),
@@ -20,6 +20,7 @@ public enum ErrorCode {
     NO_AUTH_TO_INVITE(HttpStatus.BAD_REQUEST, 40005, "초대할 수 있는 권한이 없습니다."),
     NO_AUTH_TO_DELETE(HttpStatus.BAD_REQUEST, 40006, "퇴출할 수 있는 권한이 없습니다."),
     NO_EMPTY_KEYWORD(HttpStatus.BAD_REQUEST, 40007, "검색어를 입력해야합니다."),
+    NO_AUTH_TO_MODIFY(HttpStatus.BAD_REQUEST, 40008, "수정할 수 있는 권한이 없습니다."),
 
     // Team
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, 40031, " 팀 정보를 찾을 수 없습니다."),

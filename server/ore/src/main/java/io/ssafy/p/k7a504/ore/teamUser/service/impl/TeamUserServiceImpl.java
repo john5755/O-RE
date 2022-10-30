@@ -46,12 +46,12 @@ public class TeamUserServiceImpl implements TeamUserService {
     public Long inviteMember(Long userId, Long teamId) {
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()==1){
-            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
+            throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE);
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         if(teamUserRepository.existsByUserAndTeam(user, team)){
-            throw new CustomException(ErrorCode.DUPLICATE_USER);
+            throw new CustomException(ErrorCode.DUPLICATE_TEAM_USER);
         }
         TeamUser teamUser = TeamUser.builder()
                 .user(user)
@@ -98,7 +98,7 @@ public class TeamUserServiceImpl implements TeamUserService {
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()<=user.getRole().getPriority()){
-            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
+            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
         }
         teamUserRepository.delete(user);
         return userId;
