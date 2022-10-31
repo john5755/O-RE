@@ -7,15 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ModifyAuthorityRequestDto {
-    @NotBlank
+    @NotNull
     private Long teamId;
-    @NotBlank
+    @NotNull
     private Long userId;
     @NotBlank
-    private TeamUserRole role;
+    private String role;
 }
