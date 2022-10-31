@@ -80,6 +80,11 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.searchAllUser(pageable)));
     }
 
+    @GetMapping("/api/users/mypage")
+    public ResponseEntity<? extends BasicResponse> findUserInfo() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.findUserInfo()));
+    }
 
 
 }

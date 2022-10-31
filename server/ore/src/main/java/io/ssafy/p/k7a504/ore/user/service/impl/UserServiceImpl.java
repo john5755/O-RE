@@ -131,6 +131,13 @@ public class UserServiceImpl implements UserService {
                 .map(UserSearchResponseDto::toResponseDto);
     }
 
+    @Override
+    public UserInfoResponseDto findUserInfo() {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return UserInfoResponseDto.toResponseDto(user);
+    }
+
     private String generateTempPassword() {
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
                 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };

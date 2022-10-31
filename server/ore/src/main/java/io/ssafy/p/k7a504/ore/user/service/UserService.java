@@ -17,4 +17,5 @@ public interface UserService {
     Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchUserByNickname(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchAllUser(Pageable pageable);
+    UserInfoResponseDto findUserInfo();
 }
