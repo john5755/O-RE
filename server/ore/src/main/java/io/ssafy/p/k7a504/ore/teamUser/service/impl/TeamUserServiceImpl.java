@@ -37,7 +37,7 @@ public class TeamUserServiceImpl implements TeamUserService {
         TeamUser teamUser = TeamUser.builder()
                 .user(user)
                 .team(team)
-                .role(TeamUserRole.valueOf("LEADER"))
+                .role(TeamUserRole.LEADER)
                 .build();
         return teamUserRepository.save(teamUser).getId();
     }
@@ -56,7 +56,7 @@ public class TeamUserServiceImpl implements TeamUserService {
         TeamUser teamUser = TeamUser.builder()
                 .user(user)
                 .team(team)
-                .role(TeamUserRole.valueOf("MEMBER"))
+                .role(TeamUserRole.MEMBER)
                 .build();
         return teamUserRepository.save(teamUser).getId();
     }
