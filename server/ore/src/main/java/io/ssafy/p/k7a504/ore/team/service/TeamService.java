@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface TeamService {
-    Long saveTeam(TeamRequestDto teamReqDTO);
+    Long saveTeam(TeamRequestDto teamReqDTO, MultipartFile file);
     TeamResponseDto getTeam(Long teamId);
     TeamResponseDto editTeam(TeamEditRequestDto teamEditReqDTO, MultipartFile file);
     Long removeTeam(Long teamId);

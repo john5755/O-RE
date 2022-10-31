@@ -50,9 +50,6 @@ public class S3Service {
         if(file.isEmpty()){
             throw new CustomException(ErrorCode.IMG_NOT_FOUND);
         }
-        if(file.getSize()>=10485760){
-            throw new CustomException(ErrorCode.FILE_SIZE_EXCEED);
-        }
         String originFileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         if (!originFileExtension.equalsIgnoreCase(".jpg") && !originFileExtension.equalsIgnoreCase(".png")
                 && !originFileExtension.equalsIgnoreCase(".jpeg")) {
@@ -61,24 +58,22 @@ public class S3Service {
 
         SimpleDateFormat date = new SimpleDateFormat("yyyymmdd");
         String fileName = date.format(new Date())+"-"+file.getOriginalFilename();
-//        byte[] bytes = IOUtils.toByteArray(inputStream);
-//        objectMetadata.setContentLength(bytes.length);
-//        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+        ObjectMetadata objMeta = new ObjectMetadata();
+        objMeta.setContentLength(file.getSize());
+
         try{
-            s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(),null)
+            s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(),objMeta)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         }catch(Exception e){
             throw new CustomException(ErrorCode.IMG_NOT_UPLOAD);
         }
-        System.out.println(s3Client.getUrl(bucket, fileName).toString());
+
         return s3Client.getUrl(bucket, fileName).toString();
     }
 
     public boolean delete(String currentFilePath){
-        if(!s3Client.doesObjectExist(bucket, currentFilePath)||currentFilePath.equals(null)){
-            throw new CustomException(ErrorCode.IMG_NOT_FOUND);
-        }
-        if(currentFilePath.equals("https://ore-s3.s3.ap-northeast-2.amazonaws.com/TeamDefaultImg.png")){
+        if(!s3Client.doesObjectExist(bucket, currentFilePath)||currentFilePath.equals(null)||currentFilePath.equals("https://ore-s3.s3.ap-northeast-2.amazonaws.com/TeamDefaultImg.png")){
             return true;
         }
         s3Client.deleteObject(bucket, currentFilePath);

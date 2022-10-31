@@ -23,12 +23,11 @@ public class TeamApiController {
     private final TeamServiceImpl teamService;
     private final TeamUserServiceImpl teamUserService;
 
-
-    //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
     @PostMapping("")
-    //@PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<CommonResponse<Long>> createTeam(@Valid @RequestBody TeamRequestDto teamReqDTO){
-        Long teamId = teamService.saveTeam(teamReqDTO);
+    //Todo: @PreAuthorize("hasRole(ADMIN)")
+    public ResponseEntity<CommonResponse<Long>> createTeam(@RequestPart(value="info")  TeamRequestDto teamReqDTO, @RequestPart(value = "image", required = false) MultipartFile file){
+        //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
+        Long teamId = teamService.saveTeam(teamReqDTO, file);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamUserService.beFirstMember(teamId)));
     }
@@ -38,16 +37,16 @@ public class TeamApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamService.getTeam(teamId)));
     }
 
-    //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
     @PostMapping("/edit")
-    //@PreAuthorize("hasRole(ADMIN)")
+    //Todo: @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<CommonResponse<TeamResponseDto>> modifyTeam(@RequestPart(value="info") TeamEditRequestDto TeamEditReqDTO, @RequestPart(value = "image", required = false) MultipartFile file ){
+        //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamService.editTeam(TeamEditReqDTO , file)));
     }
 
     @DeleteMapping("/{teamId}")
-    //@PreAuthorize("hasRole(ADMIN)")
+    //Todo: @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<CommonResponse<Long>> deleteTeam(@PathVariable Long teamId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamService.removeTeam(teamId)));
