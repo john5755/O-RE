@@ -7,6 +7,7 @@ import { PATH } from "../constants";
 import UserFormLink from "../molecule/UserFormLink";
 import axios from "../utils/axios";
 import { isAxiosError } from "../utils/axios";
+import { USERS_API } from "../constants";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -162,7 +163,7 @@ export default function Signup() {
       const params = {
         email: emailInput,
       };
-      const res = await axios.get(`api/users/verification`, { params });
+      const res = await axios.get(USERS_API.VERIFICATION, { params });
       setIsEmailDuplicated(false);
       setIsCodeSent(true);
       setOpenEmailModal(true);
@@ -188,7 +189,7 @@ export default function Signup() {
         code: verificationCode,
       };
       const { data } = await axios.post(
-        `api/users/verification`,
+        USERS_API.VERIFICATION,
         codeCredentials
       );
       if (data.success === true) {
@@ -244,7 +245,7 @@ export default function Signup() {
         password: pwInput,
         name: nameInput,
       };
-      const { data } = await axios.post(`api/users/signup`, credentials);
+      const { data } = await axios.post(USERS_API.SIGNUP, credentials);
       if (data.success === true) {
         setOpenSignupModal(true);
       }

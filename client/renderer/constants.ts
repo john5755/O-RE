@@ -20,3 +20,11 @@ export const TAG_LIST = [
   { type: "text area" },
   { type: "hyperlink" },
 ];
+
+// API
+const API = "api/";
+const USERS = "users/";
+export const USERS_API = {
+  VERIFICATION: API + USERS + "verification",
+  SIGNUP: API + USERS + "signup",
+};
