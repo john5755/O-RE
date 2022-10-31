@@ -4,6 +4,7 @@ export const PATH = {
   FIND_PASSWORD: "/find-password",
   CREATE_PAGE: "/create-page",
   SIGNUP: "/signup",
+  ACCOUNT_OPTIONS: "/account-options"
 };
 
 export const TAG_LIST = [
