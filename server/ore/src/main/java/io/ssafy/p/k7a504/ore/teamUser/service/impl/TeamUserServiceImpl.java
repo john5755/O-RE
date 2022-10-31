@@ -77,19 +77,25 @@ public class TeamUserServiceImpl implements TeamUserService {
         return teamUserRepository.findByTeamId(teamId).stream().map(UserInfoResponseDto::new).collect(Collectors.toList());
     }
 
+
     @Override
     @Transactional
-    public Long changeAuthority(Long userId, Long teamId, String role) {
+    public Long changeAuthority(final Long userId, final Long teamId, final TeamUserRole role) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(modifier.getRole().getPriority()<=user.getRole().getPriority()||getRolePriority(role)>modifier.getRole().getPriority()){
-            throw new CustomException(ErrorCode.NOT_VALID_AUTHORITY);
+        try{
+            TeamUserRole.valueOf(role.toString());
+        }catch(Exception e){
+            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
         }
-        TeamUserRole teamUserRole = setAuthority(role, modifier);
-        user.update(teamUserRole);
+        if(modifier.getRole().getPriority()<=user.getRole().getPriority()||role.getPriority()>modifier.getRole().getPriority()){
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+        }
+        user.update(role);
         return userId;
     }
+
 
     @Override
     @Transactional
@@ -110,34 +116,5 @@ public class TeamUserServiceImpl implements TeamUserService {
         TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         teamUserRepository.delete(teamUser);
         return SecurityUtil.getCurrentUserId();
-    }
-
-    public TeamUserRole setAuthority(String role, TeamUser teamUser){
-        TeamUserRole teamUserRole;
-        int modifier = teamUser.getRole().getPriority();
-        if(role.equals("LEADER")){
-            teamUserRole = TeamUserRole.LEADER;
-        }else if(role.equals("MANAGER")){
-            teamUserRole = TeamUserRole.MANAGER;
-        }else if(role.equals("MEMBER")){
-            teamUserRole = TeamUserRole.MEMBER;
-        }else{
-            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
-        }
-        return teamUserRole;
-    }
-
-    public int getRolePriority(String role){
-        int priority = 0;
-        if(role.equals("LEADER")){
-            priority =3;
-        }else if(role.equals("MANAGER")){
-            priority =2;
-        }else if(role.equals("MEMBER")){
-            priority =1;
-        }else{
-            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
-        }
-        return priority;
     }
 }

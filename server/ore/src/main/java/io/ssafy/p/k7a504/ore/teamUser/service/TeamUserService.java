@@ -12,7 +12,7 @@ public interface TeamUserService {
     Long inviteMember(Long userId, Long teamId);
     List<TeamInfoResponseDto> getTeamList();
     List<UserInfoResponseDto> getUserList(Long teamId);
-    Long changeAuthority(Long userId, Long teamId, String role);
+    Long changeAuthority(Long userId, Long teamId, TeamUserRole role);
     Long removeMember(Long userId, Long teamId);
     Long leaveTeam(Long teamId);
 
