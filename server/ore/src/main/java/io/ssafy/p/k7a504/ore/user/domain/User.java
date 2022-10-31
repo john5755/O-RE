@@ -32,11 +32,15 @@ public class User {
         this.name = name;
         this.nickname = nickname;
         this.role = role;
-        this.profileImage = "defaultImageUrl";
+        this.profileImage = "https://ore-s3.s3.ap-northeast-2.amazonaws.com/TeamDefaultImg.png";
     }
 
     public void changePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void initializeProfileImage() {
+        this.profileImage = "https://ore-s3.s3.ap-northeast-2.amazonaws.com/TeamDefaultImg.png";
     }
 
     public static User mapToUser(Map<String, Object> map) {
