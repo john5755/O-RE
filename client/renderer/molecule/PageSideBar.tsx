@@ -34,13 +34,9 @@ export default function PageSideBar() {
 
   return (
     <Container>
-      {layoutInfo.withOnlyNavBar.has(pathname) ? (
-        <>{listState ? <TagList></TagList> : <EditList></EditList>}</>
-      ) : (
-        <Link href={PATH.CREATE_PAGE}>
-          <Button>+</Button>
-        </Link>
-      )}
+      <Link href={PATH.CREATE_PAGE}>
+        <Button>+</Button>
+      </Link>
     </Container>
   );
 }
