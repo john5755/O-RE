@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren } from "react";
 import styled from "@emotion/styled";
 import TopBar from "../molecule/TopBar";
 import GroupSideBar from "../molecule/GroupSideBar";
