@@ -5,6 +5,7 @@ import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
 import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,24 @@ public class UserApiController {
     public ResponseEntity<? extends BasicResponse> addUserList(@RequestPart(name = "file")MultipartFile file) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.addUserList(file)));
+    }
+
+    @GetMapping("/api/users/name")
+    public ResponseEntity<? extends BasicResponse> searchUserByName(@Valid @RequestParam String keyword, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.searchUserByName(keyword, pageable)));
+    }
+
+    @GetMapping("/api/users/nickname")
+    public ResponseEntity<? extends BasicResponse> searchUserByNickname(@Valid @RequestParam String keyword, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.searchUserByNickname(keyword, pageable)));
+    }
+
+    @GetMapping("/api/users/list")
+    public ResponseEntity<? extends BasicResponse> searchAllUser(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.searchAllUser(pageable)));
     }
 
 

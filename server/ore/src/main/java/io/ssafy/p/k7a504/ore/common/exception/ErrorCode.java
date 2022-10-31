@@ -19,6 +19,7 @@ public enum ErrorCode {
     NOT_VALID_USER_ROLE(HttpStatus.BAD_REQUEST, 40004, "유효한 USER_ROLE이 아닙니다."),
     NO_AUTH_TO_INVITE(HttpStatus.BAD_REQUEST, 40005, "초대할 수 있는 권한이 없습니다."),
     NO_AUTH_TO_DELETE(HttpStatus.BAD_REQUEST, 40006, "퇴출할 수 있는 권한이 없습니다."),
+    NO_EMPTY_KEYWORD(HttpStatus.BAD_REQUEST, 40007, "검색어를 입력해야합니다."),
 
     // Team
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, 40031, " 팀 정보를 찾을 수 없습니다."),
