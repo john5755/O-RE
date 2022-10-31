@@ -22,8 +22,8 @@ public class TeamApiController {
     private final TeamUserServiceImpl teamUserService;
 
     @PostMapping("")
-    public ResponseEntity<CommonResponse<Long>> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamRequestDto teamReqDTO){
-        Long teamId = teamService.saveTeam(userId, teamReqDTO);
+    public ResponseEntity<CommonResponse<Long>> createTeam(@Valid @RequestBody TeamRequestDto teamReqDTO){
+        Long teamId = teamService.saveTeam(teamReqDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamUserService.beFirstMember(teamId)));
     }
