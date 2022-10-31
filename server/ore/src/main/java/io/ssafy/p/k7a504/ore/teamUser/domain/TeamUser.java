@@ -37,13 +37,16 @@ public class TeamUser {
         }
         return false;
     }
-    @Builder
-    public TeamUser(User user, Team team, TeamUserRole role){
-        this.user = user;
+    private TeamUser(User user, Team team, TeamUserRole role){
         this.team=team;
+        this.user =user;
         this.role=role;
     }
-    public void update(TeamUserRole role){
+    public TeamUser createTeamUser(User user, Team team, TeamUserRole role){
+        TeamUser teamUser = new TeamUser(user, team, role);
+        return teamUser;
+    }
+    public void modifyTeamUserAuthority(TeamUserRole role){
         this.role = role;
     }
 
