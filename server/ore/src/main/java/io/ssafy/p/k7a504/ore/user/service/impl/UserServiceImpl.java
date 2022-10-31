@@ -14,6 +14,8 @@ import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -104,6 +106,29 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
 
         return userRepository.saveAll(userList).size();
+    }
+
+    @Override
+    public Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable) {
+        if(keyword == null || keyword.equals(""))
+            throw new CustomException(ErrorCode.NO_EMPTY_KEYWORD);
+
+        return userRepository.findByNameContains(keyword, pageable)
+                .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
+    public Slice<UserSearchResponseDto> searchUserByNickname(String keyword, Pageable pageable) {
+        if(keyword == null || keyword.equals(""))
+            throw new CustomException(ErrorCode.NO_EMPTY_KEYWORD);
+        return userRepository.findByNicknameContains(keyword, pageable)
+                .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
+    public Slice<UserSearchResponseDto> searchAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(UserSearchResponseDto::toResponseDto);
     }
 
     private String generateTempPassword() {
