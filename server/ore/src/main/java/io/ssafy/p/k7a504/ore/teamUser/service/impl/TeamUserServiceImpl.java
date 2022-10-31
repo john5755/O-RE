@@ -6,6 +6,7 @@ import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
+import io.ssafy.p.k7a504.ore.teamUser.dto.ModifyAuthorityRequestDto;
 import io.ssafy.p.k7a504.ore.teamUser.dto.TeamInfoResponseDto;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
 import io.ssafy.p.k7a504.ore.teamUser.dto.UserInfoResponseDto;
@@ -80,20 +81,15 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long changeAuthority(final Long userId, final Long teamId, final TeamUserRole role) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+    public Long changeAuthority(ModifyAuthorityRequestDto modifyAuthorityRequestDto, TeamUserRole role) {
+        Team team = teamRepository.findById(modifyAuthorityRequestDto.getTeamId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser user = teamUserRepository.findByUserIdAndTeamId(userId, team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        try{
-            TeamUserRole.valueOf(role.toString());
-        }catch(Exception e){
-            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
-        }
+        TeamUser user = teamUserRepository.findByUserIdAndTeamId(modifyAuthorityRequestDto.getUserId(), team.getId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         if(modifier.getRole().getPriority()<=user.getRole().getPriority()||role.getPriority()>modifier.getRole().getPriority()){
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }
         user.update(role);
-        return userId;
+        return modifyAuthorityRequestDto.getUserId();
     }
 
 
