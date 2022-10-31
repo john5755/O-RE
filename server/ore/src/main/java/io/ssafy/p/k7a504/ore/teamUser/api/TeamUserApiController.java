@@ -1,7 +1,11 @@
 package io.ssafy.p.k7a504.ore.teamUser.api;
 
+import io.ssafy.p.k7a504.ore.common.exception.CustomException;
+import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
+import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
+import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
 import io.ssafy.p.k7a504.ore.teamUser.dto.DeleteMemberRequestDto;
 import io.ssafy.p.k7a504.ore.teamUser.dto.ModifyAuthorityRequestDto;
 import io.ssafy.p.k7a504.ore.teamUser.dto.TeamMemberAddRequestDto;
@@ -37,12 +41,22 @@ public class TeamUserApiController {
     }
 
     @PatchMapping("")
-    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.changeAuthority(modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId(), modifyAuthorityRequestDto.getRole())));
+    public  ResponseEntity<? extends BasicResponse> modifyAuthority(@Validated @RequestBody ModifyAuthorityRequestDto modifyAuthorityRequestDto){
+        TeamUserRole teamUserRole;
+        if(modifyAuthorityRequestDto.getRole().equals("LEADER")){
+            teamUserRole = TeamUserRole.LEADER;
+        }else if(modifyAuthorityRequestDto.getRole().equals("MANAGER")){
+            teamUserRole = TeamUserRole.MANAGER;
+        }else if(modifyAuthorityRequestDto.getRole().equals("MEMBER")){
+            teamUserRole = TeamUserRole.MEMBER;
+        }else{
+            throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.changeAuthority(modifyAuthorityRequestDto, teamUserRole)));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<CommonResponse<Long>> deleteMember(@RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
+    public ResponseEntity<CommonResponse<Long>> deleteMember(@Validated @RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMember(deleteMemberRequestDto.getUserId(), deleteMemberRequestDto.getTeamId())));
     }
 
