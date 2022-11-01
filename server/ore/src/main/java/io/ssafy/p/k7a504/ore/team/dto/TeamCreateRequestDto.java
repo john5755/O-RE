@@ -5,8 +5,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-public class TeamRequestDto {
+public class TeamCreateRequestDto {
     @NotBlank
     private String name;
-    private String imageUrl;
 }
