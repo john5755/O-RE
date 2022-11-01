@@ -46,6 +46,9 @@ dependencies {
 	// excel
 	implementation 'org.apache.poi:poi-ooxml:5.2.2' //.xlsx
 	implementation 'org.apache.poi:poi:5.2.2' //.xls
+
+	// AWS S3
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }
 
 tasks.named('test') {

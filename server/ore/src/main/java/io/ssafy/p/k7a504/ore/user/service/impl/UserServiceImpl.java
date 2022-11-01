@@ -6,6 +6,7 @@ import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
+import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ExcelUtil excelUtil;
+    private final S3Uploader s3Uploader;
 
     @Override
     public void sendCertificationEmail(String email) {
@@ -83,15 +86,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long changeUserPassword(UserPasswordRequestDto userPasswordRequestDto) {
-        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        user.changePassword(encoder.encode(userPasswordRequestDto.getPassword()));
-        return user.getId();
-    }
-
-    @Override
-    @Transactional
     public int addUserList(MultipartFile file) {
         if(file.isEmpty())
             throw new CustomException(ErrorCode.FILE_NOT_FOUND);
@@ -129,6 +123,42 @@ public class UserServiceImpl implements UserService {
     public Slice<UserSearchResponseDto> searchAllUser(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
+    public UserInfoResponseDto findUserInfo() {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return UserInfoResponseDto.toResponseDto(user);
+    }
+
+    @Override
+    @Transactional
+    public void initializeProfileImage() {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.initializeProfileImage();
+    }
+
+    @Override
+    @Transactional
+    public Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        try {
+            user.modifyProfileImage(profileImage, s3Uploader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(profileInfo.getPassword() != null && !profileInfo.getPassword().equals(""))
+            user.changePassword(encoder.encode(profileInfo.getPassword()));
+
+        if(profileInfo.getNickname() != null && !profileInfo.getNickname().equals(""))
+            user.modifyProfileNickname(profileInfo.getNickname());
+
+        return user.getId();
     }
 
     private String generateTempPassword() {

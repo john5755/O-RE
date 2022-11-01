@@ -15,71 +15,83 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/users")
 public class UserApiController {
 
     private final UserService userService;
 
-    @GetMapping("/api/users/verification")
+    @GetMapping("/verification")
     public ResponseEntity<? extends BasicResponse> sendCertificationEmail(@Valid @RequestParam String email) {
         userService.sendCertificationEmail(email);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/api/users/verification")
+    @PostMapping("/verification")
     public ResponseEntity<? extends BasicResponse> verifyEmail(@Valid @RequestBody UserEmailVerificationRequestDto emailVerificationRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.verifyEmail(emailVerificationRequestDto)));
     }
 
-    @PostMapping("/api/users/signup")
+    @PostMapping("/signup")
     public ResponseEntity<? extends BasicResponse> signUp(@Valid @RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.signUp(userSignUpRequestDto)));
     }
 
-    @PostMapping("/api/users/signin")
+    @PostMapping("/signin")
     public ResponseEntity<? extends BasicResponse> signIn(@Valid @RequestBody UserSignInRequestDto userSignInRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.signIn(userSignInRequestDto)));
     }
 
-    @PostMapping("/api/users/password")
+    @PostMapping("/password")
     public ResponseEntity<? extends BasicResponse> findUserPassword(@Valid @RequestBody UserInfoRequestDto userInfoRequestDto) {
         userService.findUserPassword(userInfoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PatchMapping("/api/users/password")
-    public ResponseEntity<? extends BasicResponse> changeUserPassword(@Valid @RequestBody UserPasswordRequestDto userPasswordRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(userService.changeUserPassword(userPasswordRequestDto)));
-    }
-
     // TODO: PreAuthorize() 설정 필요
-    @PostMapping("/api/users/list")
+    @PostMapping("/list")
     public ResponseEntity<? extends BasicResponse> addUserList(@RequestPart(name = "file")MultipartFile file) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.addUserList(file)));
     }
 
-    @GetMapping("/api/users/name")
+    @GetMapping("/name")
     public ResponseEntity<? extends BasicResponse> searchUserByName(@Valid @RequestParam String keyword, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.searchUserByName(keyword, pageable)));
     }
 
-    @GetMapping("/api/users/nickname")
+    @GetMapping("/nickname")
     public ResponseEntity<? extends BasicResponse> searchUserByNickname(@Valid @RequestParam String keyword, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.searchUserByNickname(keyword, pageable)));
     }
 
-    @GetMapping("/api/users/list")
+    @GetMapping("/list")
     public ResponseEntity<? extends BasicResponse> searchAllUser(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.searchAllUser(pageable)));
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity<? extends BasicResponse> findUserInfo() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.findUserInfo()));
+    }
+
+    @PostMapping("/default")
+    public ResponseEntity<? extends BasicResponse> initializeProfileImage() {
+        userService.initializeProfileImage();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/mypage")
+    public ResponseEntity<? extends BasicResponse> modifyUserInfo(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage, @RequestPart(value = "profileInfo") UserModifyReqeustDto profileInfo) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.modifyUserInfo(profileImage, profileInfo)));
+    }
 
 
 }
