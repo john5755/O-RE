@@ -25,20 +25,14 @@ export const TAG_LIST = [
 
 export const layoutInfo = {
   onlyPage: new Set<string>(),
-  WithOnlyNavBar: new Set<string>(),
+  withOnlyNavBar: new Set<string>(),
 };
 
 layoutInfo.onlyPage.add(PATH.LOGIN);
 layoutInfo.onlyPage.add(PATH.FIND_PASSWORD);
 layoutInfo.onlyPage.add(PATH.SIGNUP);
-layoutInfo.WithOnlyNavBar.add(PATH.CREATE_PAGE);
-layoutInfo.WithOnlyNavBar.add(PATH.CREATE_GROUP);
-layoutInfo.WithOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
+layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
+layoutInfo.withOnlyNavBar.add(PATH.CREATE_GROUP);
 
-// API
-const API = "api/";
-const USERS = "users/";
-export const USERS_API = {
-  VERIFICATION: API + USERS + "verification",
-  SIGNUP: API + USERS + "signup",
-};
+export const BASIC_PHOTO_URL: string =
+  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";

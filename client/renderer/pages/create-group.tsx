@@ -1,6 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Button, Input, Label } from "../styles";
+import { H2, Input, Button, Label } from "../styles";
+import { useAppDispatch } from "../hooks/reduxHook";
+import { addGroupState } from "../slices/myGroupsState";
 import { BASIC_PHOTO_URL } from "../constants";
 
 const LayoutContainer = styled.div`
@@ -42,10 +44,10 @@ const ProfilePhoto = styled.img`
   width: 120px;
   height: 120px;
   max-width: 150px;
-  margin: 8px auto 0 auto;
+  margin: 8px 3px 0 auto;
 `;
 
-const ExtraContainer = styled.div`
+const NameContainer = styled.div`
   width: 100%;
   margin-bottom: 15px;
 `;
@@ -55,7 +57,8 @@ const ButtonContainer = styled.div`
   margin: 5px auto;
 `;
 
-export default function AccountOptions() {
+export default function CreateGroup() {
+  const dispatch = useAppDispatch();
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
@@ -83,18 +86,17 @@ export default function AccountOptions() {
     setPhotoUrl(BASIC_PHOTO_URL);
   };
 
-  // nickname 변경
-  const [nickname, setNickName] = useState<string>("");
-
-  function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setNickName(event.target.value);
+  // groupname 변경
+  const [groupName, setGroupName] = useState<string>("");
+  function handleGroupNameInput(event: React.ChangeEvent<HTMLInputElement>) {
+    setGroupName(event.target.value);
   }
 
   return (
     <LayoutContainer>
       <Container>
         <TextContainer>
-          <H2 style={{ fontWeight: "bold" }}>계정 설정</H2>
+          <H2 style={{ fontWeight: "bold" }}>그룹 생성</H2>
         </TextContainer>
         <PhotoContainer>
           <Label>프로필 이미지</Label>
@@ -136,41 +138,28 @@ export default function AccountOptions() {
             </Button>
           </div>
         </PhotoContainer>
-        <ExtraContainer>
-          <Label htmlFor="nicknameInput">닉네임</Label>
+        <NameContainer>
+          <Label htmlFor="groupNameInput">그룹명</Label>
           <Input
-            id="nicknameInput"
-            name="nickname"
-            height="50px"
-            onChange={handleNicknameInput}
+            id="groupNameInput"
+            name="groupName"
             style={{ margin: "10px auto" }}
-          ></Input>
-          <Label>직책</Label>
-          <H3 style={{ margin: "5px auto" }}>팀원</H3>
-          <Label style={{ display: "block" }}>탈퇴</Label>
-          <Button
-            width="120px"
-            height="35px"
-            style={{ background: "#C74E4E", margin: "3px 0 3px" }}
-          >
-            그룹나가기
-          </Button>
-        </ExtraContainer>
-        <ButtonContainer>
-          <Button
             height="50px"
-            style={{
-              background: "white",
-              color: "#C74E4E",
-              border: "2px solid #C74E4E",
-            }}
-          >
-            로그아웃
-          </Button>
-        </ButtonContainer>
-        <ButtonContainer>
-          <Button height="50px">저장</Button>
-        </ButtonContainer>
+            onChange={handleGroupNameInput}
+          ></Input>
+          <ButtonContainer>
+            <Button
+              height="50px"
+              onClick={() => {
+                dispatch(
+                  addGroupState({ name: groupName, profileUrl: photoUrl })
+                );
+              }}
+            >
+              저장
+            </Button>
+          </ButtonContainer>
+        </NameContainer>
       </Container>
     </LayoutContainer>
   );
