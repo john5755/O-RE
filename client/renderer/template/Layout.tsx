@@ -5,7 +5,7 @@ import GroupSideBar from "../molecule/GroupSideBar";
 import PageSideBar from "../molecule/PageSideBar";
 import NavBar from "../molecule/NavBar";
 import { useRouter } from "next/router";
-import { pageInfo } from "../hooks/pageHook";
+import { layoutInfo } from "../constants";
 
 const Container = styled.div`
   height: 100vh;
@@ -57,14 +57,14 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
   return (
     <Container>
       <TopBar />
-      {pageInfo.account.has(pathname) ? (
+      {layoutInfo.onlyPage.has(pathname) ? (
         <PageContainer>{children}</PageContainer>
       ) : (
         <WrapBodyContainer>
           <GroupSideBar />
           <WrapMainContainer>
             <NavBar />
-            {pageInfo.createGroup.has(pathname) ? (
+            {layoutInfo.WithOnlyNavBar.has(pathname) ? (
               <PageContainer>{children}</PageContainer>
             ) : (
               <WrapPageContainer>

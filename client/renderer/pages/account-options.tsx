@@ -54,7 +54,7 @@ const ButtonContainer = styled.div`
   margin: 5px auto;
 `;
 const BASIC_PHOTO_URL: string =
-  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/TeamDefaultImg.png";
+  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
 
 export default function AccountOptions() {
   // profile 사진 설정

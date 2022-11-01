@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import EditList from "../components/EditList";
 import TagList from "../components/TagList";
-import { PATH } from "../constants";
-import { pageInfo } from "../hooks/pageHook";
+import { PATH, layoutInfo } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
 
 const Container = styled.div`
@@ -35,7 +34,7 @@ export default function PageSideBar() {
 
   return (
     <Container>
-      {pageInfo.creatPage.has(pathname) ? (
+      {layoutInfo.WithOnlyNavBar.has(pathname) ? (
         <>{listState ? <TagList></TagList> : <EditList></EditList>}</>
       ) : (
         <Link href={PATH.CREATE_PAGE}>
