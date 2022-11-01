@@ -28,7 +28,7 @@ const MainContainer = styled.div`
 const MainHeaderContainer = styled.div`
   display: flex;
   width: 90%;
-  height: 7%;
+  height: 60px;
   margin: 0 auto;
   align-items: center;
   justify-content: space-between;
@@ -43,11 +43,7 @@ export default function CreatePage() {
   const [isSideList, setIsSideList] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
 
-  const dragStarted = (
-    e: React.DragEvent<HTMLDivElement>,
-    id: any,
-    isSideList: boolean
-  ) => {
+  const dragStarted = (e: React.DragEvent<HTMLDivElement>, id: any, isSideList: boolean) => {
     if (isSideList) {
       e.dataTransfer.setData("listId", id);
     } else {
@@ -62,8 +58,9 @@ export default function CreatePage() {
     let sumHeight = 0;
     let idx = 0;
     let isSet = false;
+    console.log(itemRefs.current.map(({ clientHeight }) => clientHeight));
     for (const { clientHeight } of itemRefs.current) {
-      if (e.pageY < 100 + sumHeight + clientHeight / 2) {
+      if (e.pageY < 152 + sumHeight + clientHeight / 2) {
         setDividerIdx(idx);
         isSet = true;
         break;
@@ -111,14 +108,9 @@ export default function CreatePage() {
           return [...pre, { ...tmp[0] }];
         }
         return [
-          ...pre.slice(
-            0,
-            dividerIdx > parseInt(transferListId) ? dividerIdx - 1 : dividerIdx
-          ),
+          ...pre.slice(0, dividerIdx > parseInt(transferListId) ? dividerIdx - 1 : dividerIdx),
           { ...tmp[0] },
-          ...pre.slice(
-            dividerIdx > parseInt(transferListId) ? dividerIdx - 1 : dividerIdx
-          ),
+          ...pre.slice(dividerIdx > parseInt(transferListId) ? dividerIdx - 1 : dividerIdx),
         ];
       });
     }
@@ -135,11 +127,7 @@ export default function CreatePage() {
   return (
     <Wrapper>
       <SideContainer>
-        {isCustom ? (
-          <CustomTag setIsCustom={setIsCustom} />
-        ) : (
-          <TagList dragStarted={dragStarted} />
-        )}
+        {isCustom ? <CustomTag setIsCustom={setIsCustom} /> : <TagList dragStarted={dragStarted} />}
       </SideContainer>
       <MainContainer>
         <MainHeaderContainer>

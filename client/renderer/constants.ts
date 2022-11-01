@@ -9,24 +9,21 @@ export const PATH = {
 };
 
 export const TAG_LIST = [
-  { type: "text", width: "100px", height: "100px" },
-  { type: "list", width: "100px", height: "100px" },
-  { type: "calendar", width: "100px", height: "100px" },
-  { type: "date picker", width: "100px", height: "100px" },
-  { type: "input", width: "100px", height: "100px" },
-  { type: "file upload", width: "100px", height: "100px" },
-  { type: "table", width: "100px", height: "100px" },
-  { type: "check box", width: "100px", height: "100px" },
-  { type: "radio button", width: "100px", height: "100px" },
-  { type: "drop down", width: "100px", height: "100px" },
-  { type: "text area", width: "100px", height: "100px" },
-  { type: "hyperlink", width: "100px", height: "100px" },
+  { type: "text", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "list", tagProps: { count: 5, style: { width: "100px", height: "100px" } } },
+  { type: "calendar", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "date picker", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "input", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "file upload", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "table", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "check box", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "radio button", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "drop down", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "text area", tagProps: { style: { width: "100px", height: "100px" } } },
+  { type: "hyperlink", tagProps: { style: { width: "100px", height: "100px" } } },
   {
     type: "button",
-    width: "100px",
-    height: "100px",
-    color: "gray",
-    textAlign: "center",
+    tagProps: { style: { width: "100px", height: "100px", color: "gray", textAlign: "center" } },
   },
 ];
 
