@@ -12,9 +12,11 @@ public interface UserService {
     String signUp(UserSignUpRequestDto userSignUpRequestDto);
     TokenDto signIn(UserSignInRequestDto userSignInRequestDto);
     void findUserPassword(UserInfoRequestDto userInfoRequestDto);
-    Long changeUserPassword(UserPasswordRequestDto userPasswordRequestDto);
     int addUserList(MultipartFile file);
     Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchUserByNickname(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchAllUser(Pageable pageable);
+    UserInfoResponseDto findUserInfo();
+    void initializeProfileImage();
+    Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo);
 }
