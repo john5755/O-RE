@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import React, { useRef, useState } from "react";
+import TagList from "../molecule/TagList";
 import { TAG_LIST } from "../constants";
+import CustomTag from "../molecule/CustomTag";
+import { H4, Button } from "../styles";
+import CustomPage from "../molecule/CustomPage";
 
 const Wrapper = styled.div`
   display: grid;
@@ -16,70 +20,19 @@ const SideContainer = styled.div`
   overflow: auto;
 `;
 
-const ItemButton = styled.div`
-  width: 80%;
-  height: 30px;
-  margin: 0 auto;
-  align-items: center;
-  border-radius: 4px;
-  cursor: pointer;
-  :hover {
-    background-color: var(--light-main-color);
-    color: white;
-  }
-`;
-
-const Item = styled.div`
-  padding: 2px 0 0 10px;
-`;
-
-const ItemContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 10px 0;
-`;
-
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
-  overflow: auto;
 `;
 
-const ComponentBox = styled.div`
-  :focus {
-    border: 1px solid var(--main-color);
-  }
-  :hover {
-    border: 1px solid var(--main-color);
-  }
+const MainHeaderContainer = styled.div`
+  display: flex;
+  width: 90%;
+  height: 7%;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
 `;
-
-const Text = styled.h1<{ props: any }>`
-  background-color: yellow;
-`;
-const List = styled.li<{ props: any }>``;
-const Input = styled.input<{ props: any }>``;
-const Div = styled.div<{ props: any }>``;
-const Button = styled.button<{ props: any }>`
-  width: ${({ props }) => props.width};
-  height: 100px;
-`;
-
-const Component: { [key: string]: React.FunctionComponent<{ props: any }> } = {
-  text: Text,
-  list: List,
-  calendar: Div,
-  "date picker": Div,
-  input: Input,
-  "file upload": Div,
-  table: Div,
-  "check box": Div,
-  "radio button": Div,
-  "drop down": Div,
-  "text area": Div,
-  hyperlink: Div,
-  button: Button,
-};
 
 export default function CreatePage() {
   const [list] = useState(TAG_LIST);
@@ -88,6 +41,7 @@ export default function CreatePage() {
   const [dividerIdx, setDividerIdx] = useState<number>();
   const [isDragging, setIsDragging] = useState(false);
   const [isSideList, setIsSideList] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const dragStarted = (
     e: React.DragEvent<HTMLDivElement>,
@@ -109,7 +63,7 @@ export default function CreatePage() {
     let idx = 0;
     let isSet = false;
     for (const { clientHeight } of itemRefs.current) {
-      if (e.pageY < 72 + sumHeight + clientHeight / 2) {
+      if (e.pageY < 100 + sumHeight + clientHeight / 2) {
         setDividerIdx(idx);
         isSet = true;
         break;
@@ -118,6 +72,7 @@ export default function CreatePage() {
       sumHeight += clientHeight;
     }
     if (!isSet) setDividerIdx(pageTagList.length);
+    console.log(dividerIdx);
   };
 
   const dragDropped = (e: React.DragEvent<HTMLDivElement>) => {
@@ -125,7 +80,6 @@ export default function CreatePage() {
     setIsDragging(false);
     if (isSideList) {
       const transferListId = e.dataTransfer.getData("listId");
-      console.log("nowId : ", transferListId);
       if (transferListId === "") return;
       setPageTagList((pre) => {
         if (dividerIdx === 0) {
@@ -135,7 +89,7 @@ export default function CreatePage() {
         }
         return [
           ...pre.slice(0, dividerIdx),
-          e.dataTransfer.getData("listId"),
+          list[parseInt(transferListId)],
           ...pre.slice(dividerIdx),
         ];
       });
@@ -170,53 +124,42 @@ export default function CreatePage() {
     }
   };
 
+  const handleClick = (v: any) => {
+    setIsCustom(true);
+  };
+
+  const handleDeleteTag = (v: number) => {
+    setPageTagList((pre) => [...pre.slice(0, v), ...pre.slice(v + 1)]);
+  };
+
   return (
     <Wrapper>
       <SideContainer>
-        <ItemContainer>
-          {list.map((v, index) => (
-            <ItemButton key={`${v}-${index}`}>
-              <Item
-                key={v.type}
-                onDragStart={(e) => dragStarted(e, index, true)}
-                draggable
-              >
-                {v.type}
-              </Item>
-            </ItemButton>
-          ))}
-        </ItemContainer>
+        {isCustom ? (
+          <CustomTag setIsCustom={setIsCustom} />
+        ) : (
+          <TagList dragStarted={dragStarted} />
+        )}
       </SideContainer>
-      <MainContainer
-        onDragOver={(e) => draggingOver(e)}
-        onDrop={(e) => dragDropped(e)}
-      >
-        {pageTagList.map((v, index) => {
-          const TagComponent = Component[v.type];
-
-          return (
-            TagComponent !== undefined && (
-              <ComponentBox
-                key={`${v.type}-${index}`}
-                ref={(el) => {
-                  if (!el) return;
-                  itemRefs.current[index] = el;
-                }}
-                onDragStart={(e) => dragStarted(e, index, false)}
-                onDragOver={(e) => draggingOver(e)}
-                onDrop={(e) => dragDropped(e)}
-                draggable
-              >
-                <TagComponent props={v} />
-                {dividerIdx !== undefined &&
-                  index + 1 === dividerIdx &&
-                  isDragging && (
-                    <div style={{ width: "100%", border: "1px solid red" }} />
-                  )}
-              </ComponentBox>
-            )
-          );
-        })}
+      <MainContainer>
+        <MainHeaderContainer>
+          <H4 style={{}}>페이지 예시</H4>
+          <Button width="50px" height="20px" borderRadius="5px" fontSize="10px">
+            생성
+          </Button>
+        </MainHeaderContainer>
+        <CustomPage
+          dragStarted={dragStarted}
+          draggingOver={draggingOver}
+          dragDropped={dragDropped}
+          handleClick={handleClick}
+          handleDeleteTag={handleDeleteTag}
+          itemRefs={itemRefs}
+          pageTagList={pageTagList}
+          isDragging={isDragging}
+          dividerIdx={dividerIdx}
+          isCustom={isCustom}
+        />
       </MainContainer>
     </Wrapper>
   );

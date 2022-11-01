@@ -10,6 +10,23 @@ body {
   min-height: 0px;
 }
 
+*::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--light-gray-color);
+  border-right: none;
+  border-left: none;
+}
+*::-webkit-scrollbar-track-piece::end {
+  background: transparent;
+  margin-bottom: 10px;
+}
+
 :root {
   --main-color: #48a3a9;
   --light-main-color: #87c3c7;
