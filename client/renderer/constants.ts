@@ -9,18 +9,25 @@ export const PATH = {
 };
 
 export const TAG_LIST = [
-  { type: "text" },
-  { type: "list" },
-  { type: "calendar" },
-  { type: "date picker" },
-  { type: "input" },
-  { type: "file upload" },
-  { type: "table" },
-  { type: "check box" },
-  { type: "radio button" },
-  { type: "drop down" },
-  { type: "text area" },
-  { type: "hyperlink" },
+  { type: "text", width: "100px", height: "100px" },
+  { type: "list", width: "100px", height: "100px" },
+  { type: "calendar", width: "100px", height: "100px" },
+  { type: "date picker", width: "100px", height: "100px" },
+  { type: "input", width: "100px", height: "100px" },
+  { type: "file upload", width: "100px", height: "100px" },
+  { type: "table", width: "100px", height: "100px" },
+  { type: "check box", width: "100px", height: "100px" },
+  { type: "radio button", width: "100px", height: "100px" },
+  { type: "drop down", width: "100px", height: "100px" },
+  { type: "text area", width: "100px", height: "100px" },
+  { type: "hyperlink", width: "100px", height: "100px" },
+  {
+    type: "button",
+    width: "100px",
+    height: "100px",
+    color: "gray",
+    textAlign: "center",
+  },
 ];
 
 export const layoutInfo = {
