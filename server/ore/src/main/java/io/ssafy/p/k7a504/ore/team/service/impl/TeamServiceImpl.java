@@ -3,15 +3,16 @@ package io.ssafy.p.k7a504.ore.team.service.impl;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
+import io.ssafy.p.k7a504.ore.team.dto.TeamCreateRequestDto;
 import io.ssafy.p.k7a504.ore.team.dto.TeamEditRequestDto;
-import io.ssafy.p.k7a504.ore.team.dto.TeamRequestDto;
 import io.ssafy.p.k7a504.ore.team.dto.TeamResponseDto;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.team.service.TeamService;
-import io.ssafy.p.k7a504.ore.teamUser.service.impl.TeamUserServiceImpl;
+import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -19,33 +20,48 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
-    private final TeamUserServiceImpl teamUserService;
+    private final S3Uploader s3Uploader;
+
     @Override
     @Transactional
-    public Long saveTeam(TeamRequestDto teamReqDTO){
-        Team team = Team.builder()
-                .name(teamReqDTO.getName())
-                .imageUrl(teamReqDTO.getImageUrl())
-                .build();
+    public Long createTeam(TeamCreateRequestDto teamCreateRequestDto, MultipartFile multipartFile) {
+        String url =  Team.getDefaultImageUrl();
+        if(!multipartFile.isEmpty()){
+            try{
+                url = s3Uploader.uploadFiles(multipartFile, "team");
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
+        }
+        Team team = Team.createTeam(teamCreateRequestDto.getName(), url);
         return teamRepository.save(team).getId();
     }
     @Override
-    public TeamResponseDto getTeam(final Long teamId){
+    public TeamResponseDto findTeamInfo(final Long teamId){
         return new TeamResponseDto(teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND)));
     }
     @Override
     @Transactional
-    public TeamResponseDto editTeam(final Long teamId, TeamEditRequestDto teamEditReqDTO){
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        team.update(teamEditReqDTO.getName(), teamEditReqDTO.getImageUrl());
-        return new TeamResponseDto(teamId, teamEditReqDTO.getName(), teamEditReqDTO.getImageUrl());
+    public TeamResponseDto modifyTeam(TeamEditRequestDto teamEditReqDTO, MultipartFile multipartFile){
+        Team team = teamRepository.findById(teamEditReqDTO.getTeamId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+        String teamImg = teamEditReqDTO.getImageUrl();
+        if(teamImg.length()==0){
+            teamImg=Team.getDefaultImageUrl();
+        }
+        if(!multipartFile.isEmpty()){
+            try{
+                teamImg=team.modifyTeamImage(multipartFile, s3Uploader);
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
+        }
+        team.modifyTeamInfo(teamEditReqDTO.getName(), teamImg);
+        return new TeamResponseDto(teamEditReqDTO.getTeamId(), teamEditReqDTO.getName(), teamImg);
     }
     @Override
     @Transactional
     public Long removeTeam(final Long teamId){
-        if(!teamRepository.existsById(teamId)){
-            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
-        }
+        Team team = teamRepository.findById(teamId).orElseThrow(()->new CustomException(ErrorCode.TEAM_NOT_FOUND));
         teamRepository.deleteById(teamId);
         return teamId;
     }
