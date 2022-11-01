@@ -21,14 +21,11 @@ public class TeamApiController {
     private final TeamServiceImpl teamService;
     private final TeamUserServiceImpl teamUserService;
 
-    //TODO: 권한부여 필요 preAuthorize("hasRole(ADMIN)")
-    //TODO: 기본 팀 프로필 이미지 처리 - s3에서 기본이미지 가져오기.
-    //TODO: header - userId 가져오는 걸로 수정필요
-    @PostMapping("/{userId}")
-    public ResponseEntity<CommonResponse<Long>> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamRequestDto teamReqDTO){
-        Long teamId = teamService.saveTeam(userId, teamReqDTO);
+    @PostMapping("")
+    public ResponseEntity<CommonResponse<Long>> createTeam(@Valid @RequestBody TeamRequestDto teamReqDTO){
+        Long teamId = teamService.saveTeam(teamReqDTO);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(teamUserService.addMember(userId, teamId, "LEADER")));
+                .body(new CommonResponse<>(teamUserService.beFirstMember(teamId)));
     }
 
     @GetMapping("/{teamId}")
