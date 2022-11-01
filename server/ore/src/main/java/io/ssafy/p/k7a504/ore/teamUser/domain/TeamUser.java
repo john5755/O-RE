@@ -31,21 +31,40 @@ public class TeamUser {
     @Enumerated(EnumType.STRING)
     private TeamUserRole role;
 
+    private TeamUser(User user, Team team, TeamUserRole role){
+        this.team=team;
+        this.user =user;
+        this.role=role;
+    }
+    public static TeamUser createTeamUser(User user, Team team, TeamUserRole role){
+        TeamUser teamUser = new TeamUser(user, team, role);
+        return teamUser;
+    }
+
+    public void modifyTeamUserAuthority(TeamUserRole role){
+        this.role = role;
+    }
+
     public boolean checkTeamUserCanCreatePage() {
         if (this.role == TeamUserRole.LEADER || this.role == TeamUserRole.MANAGER) {
             return true;
         }
         return false;
     }
-    @Builder
-    public TeamUser(User user, Team team, TeamUserRole role){
-        this.user = user;
-        this.team=team;
-        this.role=role;
+    public boolean checkTeamUserRoleToInviteMember(){
+        if(this.role.getPriority()==1)
+            return false;
+        return true;
     }
-    public void update(User user, TeamUserRole role){
-        this.user=user;
-        this.role = role;
+    public boolean checkHavingAuthorityOverUser(TeamUser member){
+        if(this.getRole().getPriority()<=member.getRole().getPriority())
+            return false;
+        return true;
+    }
+    public boolean checkPriorityOfAuthority(TeamUserRole role){
+        if(this.getRole().getPriority()>role.getPriority())
+            return true;
+        return false;
     }
 
 }

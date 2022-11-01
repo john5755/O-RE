@@ -22,7 +22,7 @@ public class TeamServiceImpl implements TeamService {
     private final TeamUserServiceImpl teamUserService;
     @Override
     @Transactional
-    public Long saveTeam(final Long userId, TeamRequestDto teamReqDTO){
+    public Long saveTeam(TeamRequestDto teamReqDTO){
         Team team = Team.builder()
                 .name(teamReqDTO.getName())
                 .imageUrl(teamReqDTO.getImageUrl())
