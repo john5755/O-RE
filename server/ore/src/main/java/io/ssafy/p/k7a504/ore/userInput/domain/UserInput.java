@@ -2,11 +2,9 @@ package io.ssafy.p.k7a504.ore.userInput.domain;
 
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
-import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 

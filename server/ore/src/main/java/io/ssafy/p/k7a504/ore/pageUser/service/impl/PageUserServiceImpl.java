@@ -126,7 +126,6 @@ public class PageUserServiceImpl implements PageUserService {
         if(fromPageUser.getPageUserRole().getPriority()<=toPageUser.getPageUserRole().getPriority()){
             throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE_PAGE);
         }
-
         pageUserRepository.deleteById(toPageUserId);
         return toPageUserId;
     }

@@ -55,8 +55,6 @@ public class PageUser {
      */
     public void grantRole(PageUser pageUser, PageUserRole pageUserRole) {
         if (!checkCanChangeRole(pageUser, pageUserRole)) {
-            // TODO 권한을 변경할 수 없다는 예외 처리
-            // 작성했는데 확인바람. -동윤-
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_PAGE_USER_AUTH);
         }
         pageUser.setPageUserRole(pageUserRole);
@@ -69,8 +67,6 @@ public class PageUser {
      */
     public void adjustRoleByMaintainer(PageUser pageUser, PageUserRole pageUserRole) {
         if (this.pageUserRole != PageUserRole.MAINTAINER) {
-            // TODO 권한이 없다는 예외처리
-            // 작성했는데 확인바람. -동윤-
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_PAGE_USER_AUTH);
         }
         if(this.pageUserRole.getPriority() < pageUserRole.getPriority()){
