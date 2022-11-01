@@ -36,3 +36,11 @@ layoutInfo.withOnlyNavBar.add(PATH.CREATE_GROUP);
 
 export const BASIC_PHOTO_URL: string =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
+
+  // API
+const API = "api/";
+const USERS = "users/";
+export const USERS_API = {
+  VERIFICATION: API + USERS + "verification",
+  SIGNUP: API + USERS + "signup",
+};
