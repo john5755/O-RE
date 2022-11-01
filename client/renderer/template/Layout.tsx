@@ -64,7 +64,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
           <GroupSideBar />
           <WrapMainContainer>
             <NavBar />
-            {layoutInfo.WithOnlyNavBar.has(pathname) ? (
+            {layoutInfo.withOnlyNavBar.has(pathname) ? (
               <PageContainer>{children}</PageContainer>
             ) : (
               <WrapPageContainer>

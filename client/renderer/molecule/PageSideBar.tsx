@@ -34,7 +34,7 @@ export default function PageSideBar() {
 
   return (
     <Container>
-      {layoutInfo.WithOnlyNavBar.has(pathname) ? (
+      {layoutInfo.withOnlyNavBar.has(pathname) ? (
         <>{listState ? <TagList></TagList> : <EditList></EditList>}</>
       ) : (
         <Link href={PATH.CREATE_PAGE}>
