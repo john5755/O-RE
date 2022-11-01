@@ -152,11 +152,13 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
 
-        if(profileInfo.getPassword() != null && !profileInfo.getPassword().equals(""))
-            user.changePassword(encoder.encode(profileInfo.getPassword()));
+        if(profileInfo != null) {
+            if(profileInfo.getPassword() != null && !profileInfo.getPassword().equals(""))
+                user.changePassword(encoder.encode(profileInfo.getPassword()));
 
-        if(profileInfo.getNickname() != null && !profileInfo.getNickname().equals(""))
-            user.modifyProfileNickname(profileInfo.getNickname());
+            if(profileInfo.getNickname() != null && !profileInfo.getNickname().equals(""))
+                user.modifyProfileNickname(profileInfo.getNickname());
+        }
 
         return user.getId();
     }

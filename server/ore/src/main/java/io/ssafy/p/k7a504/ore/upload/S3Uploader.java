@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.upload;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,17 +54,15 @@ public class S3Uploader {
 
     public void deleteFile(String deleteImage) {
         try {
-            DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
             String key = deleteImage.substring(bucketUrl.length() + 1);
-            deleteObjectsRequest.withKeys(key);
-            amazonS3Client.deleteObjects(deleteObjectsRequest);
+            amazonS3Client.deleteObject(bucket, key);
         } catch (AmazonServiceException e) {
             throw new RuntimeException(e);
         }
     }
 
     private String upload(File uploadFile, String filePath) {
-        String fileName = filePath + "/" + "ore_" + LocalDate.now() + uploadFile.getName();
+        String fileName = filePath + "/" + "ore_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SSS")) + "_" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;

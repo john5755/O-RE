@@ -88,7 +88,7 @@ public class UserApiController {
     }
 
     @PostMapping("/mypage")
-    public ResponseEntity<? extends BasicResponse> modifyUserInfo(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage, @RequestPart(value = "profileInfo") UserModifyReqeustDto profileInfo) {
+    public ResponseEntity<? extends BasicResponse> modifyUserInfo(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage, @RequestPart(value = "profileInfo", required = false) UserModifyReqeustDto profileInfo) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.modifyUserInfo(profileImage, profileInfo)));
     }
