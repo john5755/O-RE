@@ -1,5 +1,5 @@
 import React from "react";
-import { pageInfo } from "../hooks/pageHook";
+import { layoutInfo } from "../constants";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { setListStateTrue, setListStateFalse } from "../slices/listSlices";
 

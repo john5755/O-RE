@@ -5,6 +5,9 @@ import UserModal from "../molecule/UserModal";
 import Router from "next/router";
 import { PATH } from "../constants";
 import UserFormLink from "../molecule/UserFormLink";
+import axios from "../utils/axios";
+import { isAxiosError } from "../utils/axios";
+import { USERS_API } from "../constants";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -149,12 +152,52 @@ export default function Signup() {
   // Email 상태 및 조건 확인
   const [emailInput, setEmailInput] = useState<string>("");
   const conditionEmail: boolean = /^[\w+_]\w+@\w+\.\w+/.test(emailInput);
+  const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
+  // Email 중복 확인 후 코드 전송
+  const sendEmailCode = async () => {
+    type DuplicateResponseType = {
+      code: number;
+    };
+
+    try {
+      const params = {
+        email: emailInput,
+      };
+      const res = await axios.get(USERS_API.VERIFICATION, { params });
+      setIsEmailDuplicated(false);
+      setIsCodeSent(true);
+      setOpenEmailModal(true);
+    } catch (e: unknown) {
+      if (isAxiosError<DuplicateResponseType>(e)) {
+        if (e.response?.data.code === 40901) {
+          setOpenEmailModal(true);
+        }
+      }
+    }
+  };
 
   // Email 인증 여부
   const [verificationCode, setverificationCode] = useState<string>("");
   const conditionCode: boolean = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$/.test(
     verificationCode
   );
+  // 인증 코드 전송
+  const veriEmail = async () => {
+    try {
+      const codeCredentials = {
+        email: emailInput,
+        code: verificationCode,
+      };
+      const { data } = await axios.post(
+        USERS_API.VERIFICATION,
+        codeCredentials
+      );
+      if (data.success === true) {
+        setIsEmailVerificated(true);
+        setOpenCodeModal(true);
+      }
+    } catch {}
+  };
 
   // Password 상태 및 조건 확인
   const [pwInput, setPwInput] = useState<string>("");
@@ -194,6 +237,21 @@ export default function Signup() {
     }
   }
 
+  // 회원가입
+  const handleSubmit = async () => {
+    try {
+      const credentials = {
+        email: emailInput,
+        password: pwInput,
+        name: nameInput,
+      };
+      const { data } = await axios.post(USERS_API.SIGNUP, credentials);
+      if (data.success === true) {
+        setOpenSignupModal(true);
+      }
+    } catch {}
+  };
+
   // modal
   // email 인증 보내기 모달
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
@@ -205,7 +263,7 @@ export default function Signup() {
 
   // domain 인증 모달
   const [openDomainModal, setOpenDomainModal] = useState<boolean>(false);
-  const [isDomainDuplicated, setIsDomainDuplicated] = useState<boolean>(true);
+  const [isDomainDuplicated, setIsDomainDuplicated] = useState<boolean>(false);
 
   // 회원가입 완료 Modal
   const [openSignupModal, setOpenSignupModal] = useState<boolean>(false);
@@ -273,13 +331,12 @@ export default function Signup() {
                 width="75%"
                 height="40px"
                 onChange={handleInput}
+                disabled={isCodeSent}
               ></Input>
               <Button
                 width="23%"
                 height="40px"
-                onClick={() => {
-                  setOpenEmailModal(true);
-                }}
+                onClick={sendEmailCode}
                 disabled={!conditionEmail}
               >
                 발송
@@ -342,9 +399,7 @@ export default function Signup() {
               <Button
                 width="23%"
                 height="40px"
-                onClick={() => {
-                  setOpenCodeModal(true);
-                }}
+                onClick={veriEmail}
                 disabled={!conditionCode}
               >
                 인증
@@ -459,9 +514,7 @@ export default function Signup() {
             <Button
               height="40px"
               disabled={!conditionFinish}
-              onClick={() => {
-                setOpenSignupModal(true);
-              }}
+              onClick={handleSubmit}
             >
               회원가입
             </Button>
