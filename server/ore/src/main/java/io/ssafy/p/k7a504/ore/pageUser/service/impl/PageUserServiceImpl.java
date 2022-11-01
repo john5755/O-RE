@@ -4,7 +4,7 @@ import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
-import io.ssafy.p.k7a504.ore.page.domain.PageRepository;
+import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserDeleteRequestDto;

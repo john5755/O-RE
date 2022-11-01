@@ -30,7 +30,7 @@ public class PageServiceImpl implements PageService {
         TeamUser teamUser = teamUserRepository.getByUserIdAndTeamId(userId, teamId);
         String content = pageAddRequestDto.getContent().toString();
         String pageStatus = pageAddRequestDto.getPageStatus();
-        if(!pageStatus.equals("INCLUDE_INPUT")||!pageStatus.equals("EXCLUDE_INPUT")){
+        if(!pageStatus.equals("INCLUDE_INPUT")&&!pageStatus.equals("EXCLUDE_INPUT")){
             throw new CustomException(ErrorCode.STATUS_NOT_VALID);
         }
         Page page = Page.createPage(teamUser, pageAddRequestDto.getName(), pageStatus, content);

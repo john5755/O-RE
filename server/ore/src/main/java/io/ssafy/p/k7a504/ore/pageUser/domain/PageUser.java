@@ -66,10 +66,13 @@ public class PageUser {
      * @param pageUserRole
      */
     public void adjustRoleByMaintainer(PageUser pageUser, PageUserRole pageUserRole) {
-        if (this.pageUserRole != PageUserRole.MAINTAINER) {
+        if(this.getId()==pageUser.getId()){
+            pageUser.setPageUserRole(pageUserRole);
+        }
+        else if (this.pageUserRole != PageUserRole.MAINTAINER) {
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_PAGE_USER_AUTH);
         }
-        if(this.pageUserRole.getPriority() < pageUserRole.getPriority()){
+        else if(this.pageUserRole.getPriority() < pageUserRole.getPriority()){
             throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
         }
         pageUser.setPageUserRole(pageUserRole);

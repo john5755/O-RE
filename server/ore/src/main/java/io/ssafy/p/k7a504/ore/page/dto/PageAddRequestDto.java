@@ -1,6 +1,5 @@
 package io.ssafy.p.k7a504.ore.page.dto;
 
-import io.ssafy.p.k7a504.ore.page.domain.PageStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -24,13 +24,8 @@ public class PageController {
 
     @PostMapping("")
     public ResponseEntity<? extends BasicResponse> pageAdd(@RequestBody @Valid PageAddRequestDto pageAddRequestDto) {
+        System.out.println(pageAddRequestDto.getContent().size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageService.addPage(pageAddRequestDto)));
     }
-
-
-
-
-
-
 }

@@ -3,8 +3,6 @@ package io.ssafy.p.k7a504.ore.page.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
-import io.ssafy.p.k7a504.ore.element.domain.Element;
-import io.ssafy.p.k7a504.ore.element.domain.ElementType;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
@@ -18,7 +16,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
