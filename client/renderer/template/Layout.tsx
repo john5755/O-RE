@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren } from "react";
 import styled from "@emotion/styled";
 import TopBar from "../molecule/TopBar";
 import GroupSideBar from "../molecule/GroupSideBar";
@@ -33,22 +33,6 @@ const WrapPageContainer = styled.div`
 const PageContainer = styled.div`
   background-color: white;
   overflow-y: auto;
-  ::-webkit-scrollbar {
-    display: block;
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--light-gray-color);
-    border-right: none;
-    border-left: none;
-  }
-  ::-webkit-scrollbar-track-piece::end {
-    background: transparent;
-    margin-bottom: 10px;
-  }
 `;
 
 export default function Layout({ children }: PropsWithChildren<{}>) {
