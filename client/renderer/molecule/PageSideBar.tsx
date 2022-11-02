@@ -2,9 +2,7 @@ import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import EditList from "../components/EditList";
-import TagList from "../components/TagList";
-import { PATH, layoutInfo } from "../constants";
+import { PATH } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
 
 const Container = styled.div`
@@ -29,18 +27,11 @@ const Button = styled.button`
 `;
 
 export default function PageSideBar() {
-  const { pathname } = useRouter();
-  const listState = useAppSelector((state) => state.listState).listState;
-
   return (
     <Container>
-      {layoutInfo.withOnlyNavBar.has(pathname) ? (
-        <>{listState ? <TagList></TagList> : <EditList></EditList>}</>
-      ) : (
-        <Link href={PATH.CREATE_PAGE}>
-          <Button>+</Button>
-        </Link>
-      )}
+      <Link href={PATH.CREATE_PAGE}>
+        <Button>+</Button>
+      </Link>
     </Container>
   );
 }

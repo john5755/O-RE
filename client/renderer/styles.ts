@@ -55,12 +55,13 @@ interface ButtonProps
   height?: string;
   fontSize?: string;
   borderRadius?: string;
+  background?: string;
 }
 
 export const Button = styled.button<ButtonProps>`
   width: ${({ width }) => width || "100%"};
   height: ${({ height }) => height || "100%"};
-  background: var(--main-color);
+  background: ${({ background }) => background || "var(--main-color)"};
   color: white;
   border-color: white;
   border-width: 0;
