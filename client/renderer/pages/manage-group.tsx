@@ -5,7 +5,7 @@ import { BASIC_PHOTO_URL } from "../constants";
 import { Box, MenuItem, FormControl, Select } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import { borderBottom } from "@mui/system";
+import SearchDropDown from "../molecule/SearchDropdown";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -29,7 +29,15 @@ const Container = styled.div`
   max-width: 560px;
 `;
 
-const TextContainer = styled.div`
+const GroupProfileContainer = styled.div`
+  width: 100%;
+`;
+
+const GroupMemberManageContainer = styled.div`
+  width: 100%;
+`;
+
+const TitleContainer = styled.div`
   width: 100%;
   height: 30px;
   margin: 10px 0 15px 0;
@@ -247,132 +255,136 @@ export default function ManageGroup() {
   return (
     <LayoutContainer>
       <Container>
-        <TextContainer>
-          <H2 style={{ fontWeight: "bold" }}>그룹 관리</H2>
-        </TextContainer>
-        <ProfilePhotos
-          photo={photo}
-          setPhoto={setPhoto}
-          photoUrl={photoUrl}
-          setPhotoUrl={setPhotoUrl}
-        ></ProfilePhotos>
-        <NameContainer>
-          <Label htmlFor="groupNameInput">그룹 이름</Label>
-          <Input
-            id="groupNameInput"
-            name="groupname"
-            height="50px"
-            onChange={handleGroupNameInput}
-            style={{ margin: "10px auto" }}
-          ></Input>
-        </NameContainer>
-        <TextContainer
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <H3 style={{ fontWeight: 550 }}>멤버 관리</H3>
-          <Button width="120px" height="30px">
-            초대링크복사
-          </Button>
-        </TextContainer>
-        <MemberListContainer>
-          <MemberLabelContainer>
-            <Label style={{ marginRight: 10 }}>멤버 목록</Label>
-          </MemberLabelContainer>
-          <SearchContainer>
-            <SearchCategoryInputContainer>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100, height: 38 }}>
-                  <Select
-                    id="demo-simple-select"
-                    value={searchMemberCategory}
-                    onChange={categoryMemberChange}
-                  >
-                    <MenuItem value="name">이름</MenuItem>
-                    <MenuItem value="nickName">닉네임</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <SearchInput onChange={handleGroupSearchInput}></SearchInput>
-            </SearchCategoryInputContainer>
-            <Button width="60px" height="40px" onClick={fetchGroupResultList}>
-              검색
+        <GroupProfileContainer>
+          <TitleContainer>
+            <H2 style={{ fontWeight: "bold" }}>그룹 관리</H2>
+          </TitleContainer>
+          <ProfilePhotos
+            photo={photo}
+            setPhoto={setPhoto}
+            photoUrl={photoUrl}
+            setPhotoUrl={setPhotoUrl}
+          ></ProfilePhotos>
+          <NameContainer>
+            <Label htmlFor="groupNameInput">그룹 이름</Label>
+            <Input
+              id="groupNameInput"
+              name="groupname"
+              height="50px"
+              onChange={handleGroupNameInput}
+              style={{ margin: "10px auto" }}
+            ></Input>
+          </NameContainer>
+        </GroupProfileContainer>
+        <GroupMemberManageContainer>
+          <TitleContainer
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <H3 style={{ fontWeight: 550 }}>멤버 관리</H3>
+            <Button width="120px" height="30px">
+              초대링크복사
             </Button>
-          </SearchContainer>
-          <ResultContainer>
-            {groupMembers.map((member, idx) => (
-              <ResultItemContainer key={idx}>
-                <MemberContainer>
-                  <SearchNameConatiner>
-                    <CurrentProfile src={member.profileImg}></CurrentProfile>
-                    <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
-                      {member.name}({member.nickName})
-                    </H4>
-                  </SearchNameConatiner>
-                  <RoleConatiner>
-                    <Box sx={{ minWidth: 120 }}>
-                      <FormControl sx={{ width: 100, height: 38 }}>
-                        <Select
-                          id="demo-simple-select"
-                          value={member.role}
-                          onChange={(event) => {
-                            handleChange(event, member.userId);
-                          }}
-                        >
-                          <MenuItem value="LEADER">리더</MenuItem>
-                          <MenuItem value="MANAGER">관리자</MenuItem>
-                          <MenuItem value="USER">사용자</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                    <UnderlineContainer style={{ color: "#C74E4E" }}>
-                      삭제
+          </TitleContainer>
+          <MemberListContainer>
+            <MemberLabelContainer>
+              <Label style={{ marginRight: 10 }}>멤버 목록</Label>
+            </MemberLabelContainer>
+            <SearchContainer>
+              <SearchCategoryInputContainer>
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl sx={{ width: 100, height: 38 }}>
+                    <Select
+                      id="demo-simple-select"
+                      value={searchMemberCategory}
+                      onChange={categoryMemberChange}
+                    >
+                      <MenuItem value="name">이름</MenuItem>
+                      <MenuItem value="nickName">닉네임</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <SearchInput onChange={handleGroupSearchInput}></SearchInput>
+              </SearchCategoryInputContainer>
+              <Button width="60px" height="40px" onClick={fetchGroupResultList}>
+                검색
+              </Button>
+            </SearchContainer>
+            <ResultContainer>
+              {groupMembers.map((member, idx) => (
+                <ResultItemContainer key={idx}>
+                  <MemberContainer>
+                    <SearchNameConatiner>
+                      <CurrentProfile src={member.profileImg}></CurrentProfile>
+                      <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
+                        {member.name}({member.nickName})
+                      </H4>
+                    </SearchNameConatiner>
+                    <RoleConatiner>
+                      <Box sx={{ minWidth: 120 }}>
+                        <FormControl sx={{ width: 100, height: 38 }}>
+                          <Select
+                            id="demo-simple-select"
+                            value={member.role}
+                            onChange={(event) => {
+                              handleChange(event, member.userId);
+                            }}
+                          >
+                            <MenuItem value="LEADER">리더</MenuItem>
+                            <MenuItem value="MANAGER">관리자</MenuItem>
+                            <MenuItem value="USER">사용자</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Box>
+                      <UnderlineContainer style={{ color: "#C74E4E" }}>
+                        삭제
+                      </UnderlineContainer>
+                    </RoleConatiner>
+                  </MemberContainer>
+                </ResultItemContainer>
+              ))}
+            </ResultContainer>
+            <MemberLabelContainer>
+              <Label>멤버 추가</Label>
+            </MemberLabelContainer>
+            <SearchContainer>
+              <SearchCategoryInputContainer>
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl sx={{ width: 100, height: 38 }}>
+                    <Select
+                      id="demo-simple-select"
+                      value={searchAddCategory}
+                      onChange={categoryAddChange}
+                    >
+                      <MenuItem value="name">이름</MenuItem>
+                      <MenuItem value="nickName">닉네임</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <SearchInput onChange={handleAllSearchInput}></SearchInput>
+              </SearchCategoryInputContainer>
+              <Button width="60px" height="40px" onClick={fetchAllResultList}>
+                검색
+              </Button>
+            </SearchContainer>
+            <ResultContainer>
+              {searchAllResultList.map((member, idx) => (
+                <ResultItemContainer key={idx}>
+                  <MemberContainer>
+                    <SearchNameConatiner>
+                      <CurrentProfile src={member.profileImg}></CurrentProfile>
+                      <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
+                        {member.name}({member.nickName})
+                      </H4>
+                    </SearchNameConatiner>
+                    <UnderlineContainer style={{ color: "#4F68A6" }}>
+                      추가
                     </UnderlineContainer>
-                  </RoleConatiner>
-                </MemberContainer>
-              </ResultItemContainer>
-            ))}
-          </ResultContainer>
-          <MemberLabelContainer>
-            <Label>멤버 추가</Label>
-          </MemberLabelContainer>
-          <SearchContainer>
-            <SearchCategoryInputContainer>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100, height: 38 }}>
-                  <Select
-                    id="demo-simple-select"
-                    value={searchAddCategory}
-                    onChange={categoryAddChange}
-                  >
-                    <MenuItem value="name">이름</MenuItem>
-                    <MenuItem value="nickName">닉네임</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <SearchInput onChange={handleAllSearchInput}></SearchInput>
-            </SearchCategoryInputContainer>
-            <Button width="60px" height="40px" onClick={fetchAllResultList}>
-              검색
-            </Button>
-          </SearchContainer>
-          <ResultContainer>
-            {searchAllResultList.map((member, idx) => (
-              <ResultItemContainer key={idx}>
-                <MemberContainer>
-                  <SearchNameConatiner>
-                    <CurrentProfile src={member.profileImg}></CurrentProfile>
-                    <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
-                      {member.name}({member.nickName})
-                    </H4>
-                  </SearchNameConatiner>
-                  <UnderlineContainer style={{ color: "#4F68A6" }}>
-                    추가
-                  </UnderlineContainer>
-                </MemberContainer>
-              </ResultItemContainer>
-            ))}
-          </ResultContainer>
-        </MemberListContainer>
+                  </MemberContainer>
+                </ResultItemContainer>
+              ))}
+            </ResultContainer>
+          </MemberListContainer>
+        </GroupMemberManageContainer>
       </Container>
     </LayoutContainer>
   );
