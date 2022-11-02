@@ -5,7 +5,9 @@ import { BASIC_PHOTO_URL } from "../constants";
 import { Box, MenuItem, FormControl, Select } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import SearchDropDown from "../molecule/SearchDropdown";
+import GroupDropDown from "../molecule/GroupDropdown";
+import { GroupUserType } from "../constants";
+import SearchResults from "../molecule/SearchResults";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -130,15 +132,6 @@ const SearchInput = styled.input`
   }
 `;
 
-interface GroupType {
-  userId: number;
-  name: string;
-  email: string;
-  nickName: string;
-  role: string;
-  profileImg?: string;
-}
-
 const testGroupMembers = [
   {
     userId: 0,
@@ -208,24 +201,18 @@ export default function ManageGroup() {
   const handleChange = (event: SelectChangeEvent, userId: number) => {
     setRole(event.target.value as string);
     groupMembers[userId].role = event.target.value as string;
-    console.log(groupMembers[userId].role);
   };
 
   const [groupMembers, setGroupMembers] =
-    useState<Array<GroupType>>(testGroupMembers);
+    useState<Array<GroupUserType>>(testGroupMembers);
 
   // serach dropdown
+  const searchMenues= {"name":"이름", nickName:"닉네임"}
   // //group member
   const [searchMemberCategory, setSearchMemberCategory] =
     useState<string>("name");
-  const categoryMemberChange = (event: SelectChangeEvent) => {
-    setSearchMemberCategory(event.target.value as string);
-  };
   // //all member
   const [searchAddCategory, setSearchAddCategory] = useState<string>("name");
-  const categoryAddChange = (event: SelectChangeEvent) => {
-    setSearchAddCategory(event.target.value as string);
-  };
   // searchInput
   // // group member
   const [searchGroupInput, setSearchGroupInput] = useState<string>("");
@@ -235,7 +222,7 @@ export default function ManageGroup() {
     setSearchGroupInput(event.target.value);
   };
   const [searchGroupResultList, setSearchGroupResultList] = useState<
-    Array<GroupType> | []
+    Array<GroupUserType> | []
   >([]);
   const fetchGroupResultList = () => {
     setSearchGroupResultList(testGroupMembers);
@@ -246,7 +233,7 @@ export default function ManageGroup() {
     setSearchAllInput(event.target.value);
   };
   const [searchAllResultList, setSearchAllResultList] = useState<
-    Array<GroupType> | []
+    Array<GroupUserType> | []
   >([]);
   const fetchAllResultList = () => {
     setSearchAllResultList(testGroupMembers);
@@ -291,18 +278,9 @@ export default function ManageGroup() {
             </MemberLabelContainer>
             <SearchContainer>
               <SearchCategoryInputContainer>
-                <Box sx={{ minWidth: 120 }}>
-                  <FormControl sx={{ width: 100, height: 38 }}>
-                    <Select
-                      id="demo-simple-select"
-                      value={searchMemberCategory}
-                      onChange={categoryMemberChange}
-                    >
-                      <MenuItem value="name">이름</MenuItem>
-                      <MenuItem value="nickName">닉네임</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+                <GroupDropDown category={searchMemberCategory}
+                 setCategory={setSearchMemberCategory}
+                 MenuItems={searchMenues}></GroupDropDown>
                 <SearchInput onChange={handleGroupSearchInput}></SearchInput>
               </SearchCategoryInputContainer>
               <Button width="60px" height="40px" onClick={fetchGroupResultList}>
@@ -348,41 +326,15 @@ export default function ManageGroup() {
             </MemberLabelContainer>
             <SearchContainer>
               <SearchCategoryInputContainer>
-                <Box sx={{ minWidth: 120 }}>
-                  <FormControl sx={{ width: 100, height: 38 }}>
-                    <Select
-                      id="demo-simple-select"
-                      value={searchAddCategory}
-                      onChange={categoryAddChange}
-                    >
-                      <MenuItem value="name">이름</MenuItem>
-                      <MenuItem value="nickName">닉네임</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+                <GroupDropDown category={searchAddCategory} setCategory={setSearchAddCategory}
+                MenuItems={searchMenues}></GroupDropDown>
                 <SearchInput onChange={handleAllSearchInput}></SearchInput>
               </SearchCategoryInputContainer>
               <Button width="60px" height="40px" onClick={fetchAllResultList}>
                 검색
               </Button>
             </SearchContainer>
-            <ResultContainer>
-              {searchAllResultList.map((member, idx) => (
-                <ResultItemContainer key={idx}>
-                  <MemberContainer>
-                    <SearchNameConatiner>
-                      <CurrentProfile src={member.profileImg}></CurrentProfile>
-                      <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
-                        {member.name}({member.nickName})
-                      </H4>
-                    </SearchNameConatiner>
-                    <UnderlineContainer style={{ color: "#4F68A6" }}>
-                      추가
-                    </UnderlineContainer>
-                  </MemberContainer>
-                </ResultItemContainer>
-              ))}
-            </ResultContainer>
+            <SearchResults ResultList={searchAllResultList} color="#4F68A6" needDropdown={false}></SearchResults>
           </MemberListContainer>
         </GroupMemberManageContainer>
       </Container>

@@ -153,3 +153,13 @@ export const USERS_API = {
   VERIFICATION: API + USERS + "verification",
   SIGNUP: API + USERS + "signup",
 };
+
+// Types
+export interface GroupUserType {
+  userId: number;
+  name: string;
+  email: string;
+  nickName: string;
+  role: string;
+  profileImg?: string;
+}
