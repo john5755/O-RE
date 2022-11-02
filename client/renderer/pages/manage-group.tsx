@@ -60,22 +60,6 @@ const ResultContainer = styled.div`
   height: 220px;
   padding: 5px;
   overflow-y: auto;
-  ::-webkit-scrollbar {
-    display: block;
-    width: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--light-gray-color);
-    border-right: none;
-    border-left: none;
-  }
-  ::-webkit-scrollbar-track-piece::end {
-    background: transparent;
-    margin-bottom: 10px;
-  }
 `;
 
 const ResultItemContainer = styled.div`
@@ -371,27 +355,23 @@ export default function ManageGroup() {
               검색
             </Button>
           </SearchContainer>
-          {searchAllResultList !== [] ? (
-            <ResultContainer>
-              {searchAllResultList.map((member, idx) => (
-                <ResultItemContainer key={idx}>
-                  <MemberContainer>
-                    <SearchNameConatiner>
-                      <CurrentProfile src={member.profileImg}></CurrentProfile>
-                      <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
-                        {member.name}({member.nickName})
-                      </H4>
-                    </SearchNameConatiner>
-                    <UnderlineContainer style={{ color: "#4F68A6" }}>
-                      추가
-                    </UnderlineContainer>
-                  </MemberContainer>
-                </ResultItemContainer>
-              ))}
-            </ResultContainer>
-          ) : (
-            <></>
-          )}
+          <ResultContainer>
+            {searchAllResultList.map((member, idx) => (
+              <ResultItemContainer key={idx}>
+                <MemberContainer>
+                  <SearchNameConatiner>
+                    <CurrentProfile src={member.profileImg}></CurrentProfile>
+                    <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
+                      {member.name}({member.nickName})
+                    </H4>
+                  </SearchNameConatiner>
+                  <UnderlineContainer style={{ color: "#4F68A6" }}>
+                    추가
+                  </UnderlineContainer>
+                </MemberContainer>
+              </ResultItemContainer>
+            ))}
+          </ResultContainer>
         </MemberListContainer>
       </Container>
     </LayoutContainer>
