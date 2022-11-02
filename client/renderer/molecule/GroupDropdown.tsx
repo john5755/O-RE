@@ -12,16 +12,10 @@ interface SearchMenues{
   nickName: string
 }
 
-interface RoleMenues{
-  LEADER: string,
-  MANAGER: string,
-  USER: string,
-}
-
 interface SearchDropDownProps {
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
-  MenuItems: SearchMenues | RoleMenues
+  MenuItems: SearchMenues
 }
 
 export default function GroupDropDown(props: SearchDropDownProps) {

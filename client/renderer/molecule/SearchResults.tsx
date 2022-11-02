@@ -44,9 +44,6 @@ const TextButtonContainer = styled.div`
 interface SearchResultProps{
   ResultList: Array<GroupUserType>
   color: string
-  needDropdown: boolean;
-  category?: string;
-  setCategory?: Dispatch<SetStateAction<string>>;
 }
 
 const RoleMenues = {
@@ -67,12 +64,9 @@ export default function SearchResults(props: SearchResultProps){
                         {member.name}({member.nickName})
                       </H4>
                     </ItemNameConatiner>
-                    <RoleAndButtonContainer>
                       <TextButtonContainer style={{ color: props.color }}>
                       추가
                       </TextButtonContainer>
-                      {props.needDropdown ? <GroupDropDown category={props.category !== undefined ? props.category : tempCategory} setCategory={props.setCategory !== undefined ? props.setCategory : setTempCategory} MenuItems={RoleMenues}></GroupDropDown> : <></>}
-                    </RoleAndButtonContainer>
                 </ResultItemContainer>
               ))}
   </ResultContainer>)

@@ -74,24 +74,18 @@ const ResultContainer = styled.div`
 
 const ResultItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
+  width: 98%;
   height: 50px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MemberContainer = styled.div`
-  width: 98%;
-  height: 40px;
-  display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const RoleConatiner = styled.div`
   display: flex;
 `;
 
-const UnderlineContainer = styled.div`
+const TextButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -290,7 +284,6 @@ export default function ManageGroup() {
             <ResultContainer>
               {groupMembers.map((member, idx) => (
                 <ResultItemContainer key={idx}>
-                  <MemberContainer>
                     <SearchNameConatiner>
                       <CurrentProfile src={member.profileImg}></CurrentProfile>
                       <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
@@ -313,11 +306,10 @@ export default function ManageGroup() {
                           </Select>
                         </FormControl>
                       </Box>
-                      <UnderlineContainer style={{ color: "#C74E4E" }}>
+                      <TextButtonContainer style={{ color: "#C74E4E" }}>
                         삭제
-                      </UnderlineContainer>
+                      </TextButtonContainer>
                     </RoleConatiner>
-                  </MemberContainer>
                 </ResultItemContainer>
               ))}
             </ResultContainer>
@@ -334,7 +326,7 @@ export default function ManageGroup() {
                 검색
               </Button>
             </SearchContainer>
-            <SearchResults ResultList={searchAllResultList} color="#4F68A6" needDropdown={false}></SearchResults>
+            <SearchResults ResultList={searchAllResultList} color="#4F68A6"></SearchResults>
           </MemberListContainer>
         </GroupMemberManageContainer>
       </Container>
