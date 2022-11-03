@@ -6,7 +6,7 @@ export interface LoginState {
 }
 
 const initialState: LoginState = {
-  isLogin: true,
+  isLogin: false,
   name: "홍길동",
 };
 

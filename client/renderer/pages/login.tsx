@@ -5,6 +5,8 @@ import UserFormLink from "../molecule/UserFormLink";
 import { PATH, USERS_API } from "../constants";
 import axios from "../utils/axios";
 import Router from "next/router";
+import { setLogIn } from "../slices/loginSlices";
+import { useAppDispatch } from "../hooks/reduxHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -56,6 +58,8 @@ const LinkOptions = [
 ];
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+
   const [emailInput, setEamilInput] = useState<string>("");
   const conditionEmail: boolean = /^[\w+_]\w+@\w+\.\w+/.test(emailInput);
   const [pwInput, setPwInput] = useState<string>("");
@@ -80,9 +84,10 @@ export default function Login() {
       const { data } = await axios.post(USERS_API.LOGIN, credentials);
       if (data.success === true) {
         localStorage.setItem("token", data.data.token);
+        dispatch(setLogIn("name"))
         Router.push(PATH.MAIN);
       }
-    } catch {}
+    } catch(e) {console.log(e)}
   };
 
   return (
