@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "../styles";
+import { TagType } from "../types";
 
 const Container = styled.div`
   display: grid;
@@ -54,8 +55,8 @@ const Component: {
 };
 
 interface CustomTagProps {
-  setIsCustom: (v: any) => void;
-  setPageTagList: (v: any) => void;
+  setIsCustom: (v: number) => void;
+  setPageTagList: Dispatch<SetStateAction<TagType[]>>;
   isCustom: number;
   pageTagList: any[];
 }

@@ -5,6 +5,7 @@ import { TAG_LIST } from "../constants";
 import CustomTag from "../molecule/CustomTag";
 import { H4, Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
+import { TagType } from "../types";
 
 const Wrapper = styled.div`
   display: grid;
@@ -35,8 +36,8 @@ const MainHeaderContainer = styled.div`
 `;
 
 export default function CreatePage() {
-  const [list] = useState(TAG_LIST);
-  const [pageTagList, setPageTagList] = useState<any[]>([]);
+  const [list] = useState<TagType[]>(TAG_LIST);
+  const [pageTagList, setPageTagList] = useState<TagType[]>([]);
   const itemRefs = useRef<HTMLDivElement[]>([]);
   const [dividerIdx, setDividerIdx] = useState<number>();
   const [isDragging, setIsDragging] = useState(false);

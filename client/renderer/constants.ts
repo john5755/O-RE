@@ -1,3 +1,5 @@
+import { TagType } from "./types";
+
 export const PATH = {
   MAIN: "/",
   LOGIN: "/login",
@@ -8,7 +10,7 @@ export const PATH = {
   CREATE_GROUP: "/create-group",
 };
 
-export const TAG_LIST = [
+export const TAG_LIST: TagType[] = [
   {
     type: "text",
     tagProps: {

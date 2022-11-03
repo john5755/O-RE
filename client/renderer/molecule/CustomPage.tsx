@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import React, { PropsWithChildren } from "react";
 import { Button } from "../styles";
+import { TagType } from "../types";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -269,7 +270,7 @@ interface CustomPageProps {
   handleClick: (v: number) => void;
   handleDeleteTag: (v: number) => void;
   setIsCustom: (v: number) => void;
-  pageTagList: any[];
+  pageTagList: TagType[];
   dividerIdx: number | undefined;
   isDragging: boolean;
   itemRefs: MutableRefObject<HTMLDivElement[]>;
