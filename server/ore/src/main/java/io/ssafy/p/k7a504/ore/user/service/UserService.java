@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
+    long validateDomainUser();
     void sendCertificationEmail(String email);
     boolean verifyEmail(UserEmailVerificationRequestDto emailVerificationRequestDto);
     String signUp(UserSignUpRequestDto userSignUpRequestDto);

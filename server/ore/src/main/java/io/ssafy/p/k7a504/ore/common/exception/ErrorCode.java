@@ -40,6 +40,7 @@ public enum ErrorCode {
     NO_AUTH_TO_DELETE(HttpStatus.UNAUTHORIZED, 40135, "퇴출할 수 있는 권한이 없습니다."),
     NO_AUTH_TO_MODIFY(HttpStatus.UNAUTHORIZED, 40136, "수정할 수 있는 권한이 없습니다."),
     NO_AUTH_TO_CREATE(HttpStatus.UNAUTHORIZED, 40137, "생성할 수 있는 권한이 없습니다."),
+    NO_AUTH_TO_SIGN_UP_FOR_OWNER(HttpStatus.UNAUTHORIZED, 40138, "회원가입할 수 있는 권한이 없습니다."),
 
     // ETC
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40081, "파일이 없습니다."),
