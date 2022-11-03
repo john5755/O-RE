@@ -1,0 +1,6 @@
+site_name: O:RE
+theme: windmill
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Download: download.md
