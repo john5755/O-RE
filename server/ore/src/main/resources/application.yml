@@ -1,0 +1,75 @@
+
+spring:
+  #mail
+  mail:
+    port: 465
+    host: smtp.naver.com
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        debug: true
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          ssl:
+            enable: true
+  redis:
+    host: ${DOMAIN}
+    port: 6379
+
+  #mysql
+  jpa:
+    hibernate:
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      ddl-auto: update
+      use-new-id-generator-mappings: "true"
+    properties:
+      hibernate:
+        format_sql: "true"
+        show_sql: "true"
+    database: mysql
+    show-sql: "true"
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${DOMAIN}:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+
+  devtools:
+    livereload:
+      enabled: "true"
+
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+#jwt
+jwt:
+  header: Authorization
+  secret: 7JWI64WV7ZWY7IS47JqUIE9SReyEnOu5hOyKpOydmCBTZWNyZXQgS2V57J6F64uI64ukIOygiOuMgCDqs7XsnKDtlZjsp4Drp4jshLjsmpQ=
+
+#S3
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ${REGION}
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    s3:
+      bucket: ${BUCKET}
+      bucketUrl: https://${BUCKET}.s3.${REGION}.amazonaws.com/
