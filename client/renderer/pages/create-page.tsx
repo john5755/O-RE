@@ -151,8 +151,9 @@ export default function CreatePage() {
         {isCustom !== -1 ? (
           <CustomTag
             setIsCustom={setIsCustom}
-            pageTagList={pageTagList}
             setPageTagList={setPageTagList}
+            pageTagList={pageTagList}
+            isCustom={isCustom}
           />
         ) : (
           <TagList dragStarted={dragStarted} />
