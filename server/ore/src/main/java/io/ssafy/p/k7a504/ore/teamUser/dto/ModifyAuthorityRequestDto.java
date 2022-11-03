@@ -10,11 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@NoArgsConstructor
 public class ModifyAuthorityRequestDto {
-    @NotNull
-    private Long teamId;
     @NotNull
     private Long userId;
     @NotBlank

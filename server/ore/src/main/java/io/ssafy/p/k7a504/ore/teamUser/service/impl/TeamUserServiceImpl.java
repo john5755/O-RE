@@ -7,10 +7,7 @@ import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
-import io.ssafy.p.k7a504.ore.teamUser.dto.ModifyAuthorityRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamInfoResponseDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamMemberAddRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.UserInfoResponseDto;
+import io.ssafy.p.k7a504.ore.teamUser.dto.*;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.service.TeamUserService;
 import io.ssafy.p.k7a504.ore.user.domain.User;
@@ -72,7 +69,7 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     public Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable) {
         Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, pageable);
-        if(teamUsers.getNumberOfElements()==0){
+        if (teamUsers.getNumberOfElements() == 0) {
             throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
         }
         return teamUsers.map(UserInfoResponseDto::new);
@@ -80,21 +77,21 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long grantAuthority(ModifyAuthorityRequestDto modifyAuthorityRequestDto, TeamUserRole role) {
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), modifyAuthorityRequestDto.getTeamId())
+    public void changeAuthorites(List<ModifyAuthoritiesParamDto> modifyAuthoritiesParamList, Long teamId) {
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser member = teamUserRepository.findByUserIdAndTeamId(modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId())
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkHavingAuthorityOverUser(member)){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+        for(ModifyAuthoritiesParamDto modifyAuthoritiesParamDto: modifyAuthoritiesParamList){
+            TeamUser member = teamUserRepository.findByUserIdAndTeamId(modifyAuthoritiesParamDto.getUserId(), teamId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+            if(!modifier.checkHavingAuthorityOverUser(member)){
+                throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+            }
+            if(!modifier.checkPriorityOfAuthority(modifyAuthoritiesParamDto.getTeamUserRole())){
+                throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
+            }
+            member.modifyTeamUserAuthority(modifyAuthoritiesParamDto.getTeamUserRole());
         }
-        if(!modifier.checkPriorityOfAuthority(role)){
-            throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
-        }
-        member.modifyTeamUserAuthority(role);
-        return modifyAuthorityRequestDto.getUserId();
     }
-
 
     @Override
     @Transactional
