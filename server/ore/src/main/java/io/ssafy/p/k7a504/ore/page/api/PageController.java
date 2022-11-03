@@ -8,24 +8,32 @@ import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserInviteRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/page")
+@RequestMapping("/api/pages")
 public class PageController {
 
     final private PageService pageService;
 
     @PostMapping("")
     public ResponseEntity<? extends BasicResponse> pageAdd(@RequestBody @Valid PageAddRequestDto pageAddRequestDto) {
-        System.out.println(pageAddRequestDto.getContent().size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageService.addPage(pageAddRequestDto)));
+    }
+
+    @GetMapping("detail/{pageId}")
+    public ResponseEntity<? extends BasicResponse> pageDetail(@PathVariable Long pageId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageService.detailPage(pageId)));
+    }
+
+    @DeleteMapping("{pageId}")
+    public ResponseEntity<? extends BasicResponse> pageRemove(@PathVariable Long pageId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageService.removePage(pageId)));
     }
 }

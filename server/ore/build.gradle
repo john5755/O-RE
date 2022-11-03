@@ -46,6 +46,10 @@ dependencies {
 	// excel
 	implementation 'org.apache.poi:poi-ooxml:5.2.2' //.xlsx
 	implementation 'org.apache.poi:poi:5.2.2' //.xls
+
+	//Gson
+	implementation 'com.google.code.gson:gson:2.9.0'
+
 }
 
 tasks.named('test') {

@@ -6,6 +6,7 @@ import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddResponseDto;
+import io.ssafy.p.k7a504.ore.page.dto.PageDetailResponseDto;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
@@ -26,6 +27,7 @@ public class PageServiceImpl implements PageService {
     private final TeamUserRepository teamUserRepository;
     private final PageUserRepository pageUserRepository;
 
+
     @Override
     @Transactional
     public PageAddResponseDto addPage(PageAddRequestDto pageAddRequestDto) {
@@ -44,6 +46,33 @@ public class PageServiceImpl implements PageService {
         pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
         pageUserRepository.save(pageUser);
 
+
         return new PageAddResponseDto(page, pageAddRequestDto.getContent());
     }
+
+    @Override
+    public PageDetailResponseDto detailPage(Long pageId) {
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
+        return new PageDetailResponseDto(page);
+    }
+
+    @Override
+    public Long removePage(Long pageId) {
+        if(!pageRepository.existsById(pageId)){
+            throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
+        }
+
+        //페이지 지울 수 있는 권한 있는지 확인
+        Long userId = SecurityUtil.getCurrentUserId();
+        PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+        if(!pageUser.getPageUserRole().equals(PageUserRole.MAINTAINER)){
+            //todo : 페이지 삭제 권한없음 추가
+        }
+        pageRepository.deleteById(pageId);
+        return pageId;
+    }
+
+
 }
