@@ -38,10 +38,6 @@ public class Page {
 
     private  String content;
 
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
-//    private List<Element> elements = new ArrayList<>();
-
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
     private List<PageUser> pageUserList = new ArrayList<>();
@@ -65,9 +61,6 @@ public class Page {
         }
 
         Page page = new Page(teamUser.getTeam(), name, pageStatus, content);
-        PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
-        pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
-        page.pageUserList.add(pageUser);
 
         return page;
     }

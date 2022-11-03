@@ -8,6 +8,9 @@ import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddResponseDto;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
+import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
+import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
+import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class PageServiceImpl implements PageService {
 
     private final PageRepository pageRepository;
     private final TeamUserRepository teamUserRepository;
+    private final PageUserRepository pageUserRepository;
 
     @Override
     @Transactional
@@ -35,6 +39,11 @@ public class PageServiceImpl implements PageService {
         }
         Page page = Page.createPage(teamUser, pageAddRequestDto.getName(), pageStatus, content);
         pageRepository.save(page);
+
+        PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
+        pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
+        pageUserRepository.save(pageUser);
+
         return new PageAddResponseDto(page, pageAddRequestDto.getContent());
     }
 }

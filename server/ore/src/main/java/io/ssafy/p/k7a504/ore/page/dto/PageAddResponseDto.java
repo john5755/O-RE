@@ -3,7 +3,6 @@ package io.ssafy.p.k7a504.ore.page.dto;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import lombok.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
