@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.page.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.page.dto.PageModifyRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
@@ -63,6 +64,12 @@ public class Page {
         Page page = new Page(teamUser.getTeam(), name, pageStatus, content);
 
         return page;
+    }
+
+    public void modifyPage(PageModifyRequestDto pageModifyRequestDto, String content){
+        this.content = content;
+        this.name = pageModifyRequestDto.getName();
+        this.pageStatus = PageStatus.valueOf(pageModifyRequestDto.getPageStatus());
     }
 
 

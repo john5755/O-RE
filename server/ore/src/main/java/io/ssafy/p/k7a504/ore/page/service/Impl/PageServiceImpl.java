@@ -4,15 +4,11 @@ import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
-import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
-import io.ssafy.p.k7a504.ore.page.dto.PageAddResponseDto;
-import io.ssafy.p.k7a504.ore.page.dto.PageDetailResponseDto;
-import io.ssafy.p.k7a504.ore.page.dto.PageOfTeamResponseDto;
+import io.ssafy.p.k7a504.ore.page.dto.*;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
-import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserResponseDto;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
@@ -90,6 +86,29 @@ public class PageServiceImpl implements PageService {
         }
         return pageList.stream().map(PageOfTeamResponseDto::new).collect(Collectors.toList());
     }
+
+//    @Override
+//    public PageModifyResponseDto pageModify(PageModifyRequestDto pageModifyRequestDto) {
+//        Long userId = SecurityUtil.getCurrentUserId();
+//        Long pageId = pageModifyRequestDto.getPageId();
+//
+//        PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+//        if(pageUser.getPageUserRole().equals(PageUserRole.VIEWER)){
+//            //todo : 수정 권한없다 던져주기
+//        }
+//
+//        String pageStatus = pageModifyRequestDto.getPageStatus();
+//        if(!pageStatus.equals("INCLUDE_INPUT")&&!pageStatus.equals("EXCLUDE_INPUT")){
+//            throw new CustomException(ErrorCode.STATUS_NOT_VALID);
+//        }
+//        Page page = pageRepository.findById(pageId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+//        String content = pageModifyRequestDto.getContent().toString();
+//        page.modifyPage(pageModifyRequestDto, content);
+//        pageRepository.save(page);
+//        return new PageModifyResponseDto(page);
+//    }
 
     public boolean userInPage(Long userId, Long pageId){
         if(pageUserRepository.existsByPageIdAndUserId(pageId, userId))

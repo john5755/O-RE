@@ -1,8 +1,12 @@
 package io.ssafy.p.k7a504.ore.userInput.domain;
 
+import io.ssafy.p.k7a504.ore.common.exception.CustomException;
+import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
+import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +31,16 @@ public class UserInput {
     private PageUser pageUser;
 
     private String inputValue;
+
+    @Builder
+    private UserInput(PageUser pageUser, String inputValue){
+        this.page = pageUser.getPage();
+        this.pageUser = pageUser;
+        this.inputValue = inputValue;
+    }
+
+    public static UserInput userInputSubmit(PageUser pageUser, String inputValue) {
+        UserInput userinput = new UserInput(pageUser, inputValue);
+        return userinput;
+    }
 }

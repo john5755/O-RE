@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.page.api;
 import io.ssafy.p.k7a504.ore.common.response.BasicResponse;
 import io.ssafy.p.k7a504.ore.common.response.CommonResponse;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
+import io.ssafy.p.k7a504.ore.page.dto.PageModifyRequestDto;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
 import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserInviteRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,11 @@ public class PageController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageService.pageOfTeam(teamId)));
     }
+
+//    @PatchMapping("")
+//    public ResponseEntity<? extends BasicResponse> pageModify(@RequestBody @Valid PageModifyRequestDto pageModifyRequestDto) {
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .body(new CommonResponse<>(pageService.pageModify(pageModifyRequestDto)));
+//    }
 
 }
