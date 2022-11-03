@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { useAppSelector } from "../hooks/reduxHook";
 import { BASIC_PHOTO_URL } from "../constants";
+import { PATH } from "../constants";
+import Router from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -33,6 +35,24 @@ const NoProfileContainer = styled.div`
   cursor: pointer;
 `;
 
+const PlusButtonContainer = styled.div`
+  border-radius: 50%;
+  background-color: transparent;
+  border-style: dashed;
+  border: 1px dashed white;
+  color: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin: 20px auto;
+  padding-bottom: 6px;
+  padding-left: 1.5px;
+  cursor: pointer;
+`;
+
 const unClickedCss = {
   width: "50px",
   height: "50px",
@@ -54,7 +74,7 @@ export default function GroupSideBar() {
   return (
     <Container>
       {myGroups.map((group, idx) => (
-        <>
+        <div key={idx}>
           {group.profileUrl === BASIC_PHOTO_URL ? (
             <NoProfileContainer
               style={idx === clickedIdx ? clickedCss : unClickedCss}
@@ -77,8 +97,15 @@ export default function GroupSideBar() {
               }}
             ></GroupProfileImg>
           )}
-        </>
+        </div>
       ))}
+      <PlusButtonContainer
+        onClick={() => {
+          Router.push(PATH.CREATE_GROUP);
+        }}
+      >
+        +
+      </PlusButtonContainer>
     </Container>
   );
 }
