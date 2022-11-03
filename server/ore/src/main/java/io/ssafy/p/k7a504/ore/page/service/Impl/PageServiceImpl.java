@@ -7,16 +7,21 @@ import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddResponseDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageDetailResponseDto;
+import io.ssafy.p.k7a504.ore.page.dto.PageOfTeamResponseDto;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
+import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserResponseDto;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -72,6 +77,24 @@ public class PageServiceImpl implements PageService {
         }
         pageRepository.deleteById(pageId);
         return pageId;
+    }
+
+    @Override
+    public List<PageOfTeamResponseDto> pageOfTeam(Long teamId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        List<Page> pageList = pageRepository.findAllByTeamId(teamId);
+
+        for(int i=0; i<pageList.size(); i++){
+            if(!userInPage(userId, pageList.get(i).getId()))
+                pageList.remove(i);
+        }
+        return pageList.stream().map(PageOfTeamResponseDto::new).collect(Collectors.toList());
+    }
+
+    public boolean userInPage(Long userId, Long pageId){
+        if(pageUserRepository.existsByPageIdAndUserId(pageId, userId))
+            return true;
+        return false;
     }
 
 

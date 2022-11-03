@@ -6,19 +6,13 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PageDetailResponseDto {
+public class PageOfTeamResponseDto {
     private Long pageId;
-    private Long teamId;
     private String name;
-    private String pageStatus;
-    private String content;
 
     @Builder
-    public PageDetailResponseDto(Page page){
+    public PageOfTeamResponseDto(Page page){
         this.pageId = page.getId();
-        this.teamId = page.getTeam().getId();
         this.name = page.getName();
-        this.pageStatus = page.getPageStatus().toString();
-        this.content = page.getContent();
     }
 }
