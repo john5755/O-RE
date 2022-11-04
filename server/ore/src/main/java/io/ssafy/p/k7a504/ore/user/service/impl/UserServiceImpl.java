@@ -44,6 +44,11 @@ public class UserServiceImpl implements UserService {
     private final S3Uploader s3Uploader;
 
     @Override
+    public long validateDomainUser() {
+        return userRepository.count();
+    }
+
+    @Override
     public void sendCertificationEmail(String email) {
         if(userRepository.existsByEmail(email))
             throw new CustomException(ErrorCode.DUPLICATE_USER_EMAIL);
@@ -58,6 +63,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public String signUp(UserSignUpRequestDto userSignUpRequestDto) {
+        if(userRepository.count() != 0)
+            throw new CustomException(ErrorCode.NO_AUTH_TO_SIGN_UP_FOR_OWNER);
         if(userRepository.existsByEmail(userSignUpRequestDto.getEmail()))
             throw new CustomException(ErrorCode.DUPLICATE_USER_EMAIL);
 
