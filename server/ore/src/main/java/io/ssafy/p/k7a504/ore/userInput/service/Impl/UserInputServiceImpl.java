@@ -3,7 +3,9 @@ package io.ssafy.p.k7a504.ore.userInput.service.Impl;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
+import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.page.dto.PageOfTeamResponseDto;
+import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.userInput.domain.UserInput;
@@ -26,6 +28,7 @@ public class UserInputServiceImpl implements UserInputService {
 
     private final UserInputRepository userInputRepository;
     private final PageUserRepository pageUserRepository;
+    private final PageRepository pageRepository;
 
     @Override
     @Transactional
@@ -41,8 +44,14 @@ public class UserInputServiceImpl implements UserInputService {
     }
 
     @Override
-    public List<UserInputOfPageResponseDto> userInputsOfPage(Long pageId) {
+    public UserInputOfPageResponseDto userInputsOfPage(Long pageId) {
         List<UserInput> userinputList = userInputRepository.findAllByPageId(pageId);
-        return userinputList.stream().map(UserInputOfPageResponseDto::new).collect(Collectors.toList());
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
+        List<String> userInputs = userinputList.stream().map(UserInput::getInputValue).collect(Collectors.toList());
+
+//        return userinputList.stream().map(UserInputOfPageResponseDto::new).collect(Collectors.toList());
+
+        return new UserInputOfPageResponseDto(page, userInputs);
     }
 }
