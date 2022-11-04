@@ -45,6 +45,7 @@ export default function ProfilePhotos(props: PhotoProps) {
   // 기본 프로필로 변경
   const basicPhotoChange = () => {
     props.setPhotoUrl(BASIC_PHOTO_URL);
+    props.setPhoto(null);
   };
   return (
     <PhotoContainer>

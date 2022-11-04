@@ -1,3 +1,5 @@
+import { SetStateAction, Dispatch } from "react";
+
 export interface GroupUserType {
   userId: number;
   name: string;
@@ -19,4 +21,9 @@ export interface UserProfileOptions extends Object {
   nickname: string;
   role: string;
   profileImage: string;
+}
+
+export interface BarProps {
+  selectedTeamId: number;
+  setSelectedTeamId: Dispatch<SetStateAction<number>>;
 }

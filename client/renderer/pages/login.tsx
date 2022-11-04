@@ -84,10 +84,13 @@ export default function Login() {
       const { data } = await axios.post(USERS_API.LOGIN, credentials);
       if (data.success === true) {
         localStorage.setItem("token", data.data.token);
-        dispatch(setLogIn("name"))
+        const now: Date = new Date();
+        const expiredAt: number = now.setDate(now.getDate() + 7);
+        localStorage.setItem("expiredAt", expiredAt.toLocaleString());
+        dispatch(setLogIn("name"));
         Router.push(PATH.MAIN);
       }
-    } catch(e) {console.log(e)}
+    } catch (e) {}
   };
 
   return (

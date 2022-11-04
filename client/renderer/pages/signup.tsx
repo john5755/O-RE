@@ -124,20 +124,6 @@ const codeModalText = [
   },
 ];
 
-const domainModalText = [
-  { title: "확인되었습니다.", content: "회원 가입을 완료해주세요." },
-  {
-    title: "이미 사용 중인 도메인 입니다.",
-    content: (
-      <>
-        다른 도메인을 사용하시거나
-        <br />
-        해당 도메인으로 <b>로그인</b>을 해주세요.
-      </>
-    ),
-  },
-];
-
 const LinkOptions = [
   { pathLink: PATH.MAIN, pathName: "메인페이지로" },
   { pathLink: PATH.LOGIN, pathName: "로그인" },
@@ -208,13 +194,6 @@ export default function Signup() {
   const [pwConfirm, setPwConfirm] = useState<string>("");
   const isPwConfirmed: boolean = !!(pwInput === pwConfirm);
 
-  // Domain 상태 및 조건 확인
-  const [domainInput, setDomainInput] = useState<string>("https://");
-  const conditionDomain: boolean =
-    /^((http(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/.test(
-      domainInput
-    );
-
   // input state 변경
   function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -228,12 +207,6 @@ export default function Signup() {
       setNameInput(value);
     } else if (name === "code") {
       setverificationCode(value);
-    } else if (name === "domain") {
-      if (value.includes("http:" || "https:")) {
-        setDomainInput(value);
-      } else {
-        setDomainInput("https://" + value);
-      }
     }
   }
 
@@ -261,10 +234,6 @@ export default function Signup() {
   const [openCodeModal, setOpenCodeModal] = useState<boolean>(false);
   const [isEmailVerificated, setIsEmailVerificated] = useState<boolean>(false);
 
-  // domain 인증 모달
-  const [openDomainModal, setOpenDomainModal] = useState<boolean>(false);
-  const [isDomainDuplicated, setIsDomainDuplicated] = useState<boolean>(false);
-
   // 회원가입 완료 Modal
   const [openSignupModal, setOpenSignupModal] = useState<boolean>(false);
   const setLoginPage = (pathname: string) => {
@@ -277,8 +246,7 @@ export default function Signup() {
     conditionEmail &&
     isEmailVerificated &&
     conditionPassword &&
-    isPwConfirmed &&
-    !isDomainDuplicated;
+    isPwConfirmed;
 
   return (
     <LayoutContainer>
@@ -449,57 +417,6 @@ export default function Signup() {
               height="40px"
               onChange={handleInput}
             ></Input>
-          </InputContainer>
-          <InputContainer>
-            <Label
-              htmlFor="domainInput"
-              color={
-                domainInput !== "https://" && conditionDomain === false
-                  ? domainLabelText[1].color
-                  : domainLabelText[0].color
-              }
-            >
-              {domainInput !== "https://" && conditionDomain === false
-                ? domainLabelText[1].text
-                : domainLabelText[0].text}
-            </Label>
-            <UserModal
-              needImage={false}
-              needButton={true}
-              open={openDomainModal}
-              setOpen={setOpenDomainModal}
-              title={
-                isDomainDuplicated
-                  ? domainModalText[1].title
-                  : domainModalText[0].title
-              }
-              content={
-                isDomainDuplicated
-                  ? domainModalText[1].content
-                  : domainModalText[0].content
-              }
-            ></UserModal>
-            <VeriContainer>
-              <Input
-                id="domainInput"
-                name="domain"
-                placeholder="example.example.com"
-                type="text"
-                width="75%"
-                height="40px"
-                onChange={handleInput}
-              ></Input>
-              <Button
-                width="23%"
-                height="40px"
-                onClick={() => {
-                  setOpenDomainModal(true);
-                }}
-                disabled={!conditionDomain}
-              >
-                중복확인
-              </Button>
-            </VeriContainer>
           </InputContainer>
           <ButtonContainer>
             <UserModal
