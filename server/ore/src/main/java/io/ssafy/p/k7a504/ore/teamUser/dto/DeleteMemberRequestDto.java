@@ -5,13 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class DeleteMemberRequestDto {
     @NotNull
-    private Long userId;
-    @NotNull
     private Long teamId;
+    @NotNull
+    private List<Long> userList;
 }
