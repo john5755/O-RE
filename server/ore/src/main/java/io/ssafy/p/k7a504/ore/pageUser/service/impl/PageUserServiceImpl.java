@@ -35,16 +35,19 @@ public class PageUserServiceImpl implements PageUserService {
     public PageUserResponseDto getPageUser(Long pageUserId){
         PageUser pageUser = pageUserRepository.findById(pageUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-        PageUserResponseDto pageUserResponseDto = PageUserResponseDto.builder()
-                .pageUser(pageUser)
-                .build();
-        return pageUserResponseDto;
+        //todo : dto에서 create로해서 여기서 쓰기
+        return  PageUserResponseDto.builder().pageUser(pageUser).build();
     }
 
     @Override
     public List<PageUserResponseDto> getPageUserList(Long pageId) {
-        List<PageUser> pageUserList = pageUserRepository.findAllByPageId(pageId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+        //todo : 페이지네이션
+        List<PageUser> pageUserList = pageUserRepository.findAllByPageId(pageId);
+
+        if(pageUserList.size()==0){
+            throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
+        }
+
         return pageUserList.stream().map(PageUserResponseDto::new).collect(Collectors.toList());
     }
 
@@ -52,7 +55,7 @@ public class PageUserServiceImpl implements PageUserService {
     @Transactional
     public Long changeAuth(List<PageUserModifyAuthRequestDto> pageUserModifyAuthRequestDto) {
         Long fromUserId = SecurityUtil.getCurrentUserId();
-
+        //todo: for문안에서 쿼리 그만...
         for(int i=0; i<pageUserModifyAuthRequestDto.size(); i++){
             Long toPageUserId = pageUserModifyAuthRequestDto.get(i).getPageUserId();
             PageUser toPageUser = pageUserRepository.findById(toPageUserId)
@@ -72,6 +75,7 @@ public class PageUserServiceImpl implements PageUserService {
     @Override
     @Transactional
     public Long invitePageUser(PageUserInviteRequestDto pageUserInviteDto){
+        //todo : for문안에 쿼리좀 그만... saveAll로 처리하자
         Long pageId = pageUserInviteDto.getPageId();
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
@@ -82,8 +86,8 @@ public class PageUserServiceImpl implements PageUserService {
             throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE_PAGE);
         }
 
-        for(int i=0; i<pageUserInviteDto.getTeamUserId().size(); i++){
-            Long toTeamUserId = pageUserInviteDto.getTeamUserId().get(i);
+        for(int i = 0; i<pageUserInviteDto.getTeamUserIdList().size(); i++){
+            Long toTeamUserId = pageUserInviteDto.getTeamUserIdList().get(i);
             User toUser = teamUserRepository.findById(toTeamUserId)
                     .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND)).getUser();
 
@@ -108,6 +112,7 @@ public class PageUserServiceImpl implements PageUserService {
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
         pageUserRepository.deleteById(pageUser.getId());
+        //todo: 페이지에 남은사람 0명이면 페이지 지워
         return pageUser.getId();
     }
 
@@ -115,6 +120,7 @@ public class PageUserServiceImpl implements PageUserService {
     @Transactional
     public Long deletePageUser(PageUserDeleteRequestDto pageUserDeleteRequestDto) {
         Long fromUserId = SecurityUtil.getCurrentUserId();
+        //todo: for문안에서 쿼리 그만...
         for(int i=0; i<pageUserDeleteRequestDto.getPageUserId().size(); i++){
             Long toPageUserId = pageUserDeleteRequestDto.getPageUserId().get(i);
 
@@ -128,6 +134,8 @@ public class PageUserServiceImpl implements PageUserService {
                 throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE_PAGE);
             }
             pageUserRepository.deleteById(toPageUserId);
+
+            //todo: 페이지에 남은사람 0명이면 페이지 지워
         }
         return fromUserId;
     }

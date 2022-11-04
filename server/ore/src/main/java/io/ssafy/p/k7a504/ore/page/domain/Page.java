@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.page.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageModifyRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
@@ -53,17 +54,16 @@ public class Page {
     /**
      * Manager 이상 권한의 TeamUser가 최초로 Page를 생성하는 메서드
      * @param teamUser
-     * @param name
+     * @param pageAddRequestDto
      * @return 새로운 Page
      */
-    public static Page createPage(TeamUser teamUser, String name, String pageStatus, String content) {
+    public static Page createPage(TeamUser teamUser, PageAddRequestDto pageAddRequestDto) {
         if (!teamUser.checkTeamUserCanCreatePage()) {
             throw new CustomException(ErrorCode.CANT_CREATE_TEAM);
         }
 
-        Page page = new Page(teamUser.getTeam(), name, pageStatus, content);
-
-        return page;
+        return new Page(
+                teamUser.getTeam(), pageAddRequestDto.getName(), pageAddRequestDto.getPageStatus(), pageAddRequestDto.getContent().toString());
     }
 
     public void modifyPage(PageModifyRequestDto pageModifyRequestDto, String content){

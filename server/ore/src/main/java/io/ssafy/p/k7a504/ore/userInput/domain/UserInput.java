@@ -24,6 +24,7 @@ public class UserInput {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="page_id")
+    //todo : Cascade추가
     private Page page;
 
     @ManyToOne(fetch = FetchType.LAZY)

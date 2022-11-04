@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface PageUserRepository extends JpaRepository<PageUser, Long> {
     Optional<PageUser> findByPageIdAndUserId(Long pageId, Long userId);
-    Optional<List<PageUser>> findAllByPageId(Long pageId);
+    List<PageUser> findAllByPageId(Long pageId);
+
+    //todo: pageuser랑 page조인해서 userId랑 teamId를 갖고 볼수있는페이지 가져오기
     boolean existsByPageIdAndUserId(Long pageId, Long userId);
 }

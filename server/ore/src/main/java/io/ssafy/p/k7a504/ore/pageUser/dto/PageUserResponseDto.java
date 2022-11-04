@@ -2,7 +2,6 @@ package io.ssafy.p.k7a504.ore.pageUser.dto;
 
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
-import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.*;
 
 @Getter

@@ -35,19 +35,18 @@ public class PageServiceImpl implements PageService {
     public PageAddResponseDto addPage(PageAddRequestDto pageAddRequestDto) {
         Long userId = SecurityUtil.getCurrentUserId();
         Long teamId = pageAddRequestDto.getTeamId();
+        //todo: Teamuser 예외처리
         TeamUser teamUser = teamUserRepository.getByUserIdAndTeamId(userId, teamId);
-        String content = pageAddRequestDto.getContent().toString();
         String pageStatus = pageAddRequestDto.getPageStatus();
         if(!pageStatus.equals("INCLUDE_INPUT")&&!pageStatus.equals("EXCLUDE_INPUT")){
             throw new CustomException(ErrorCode.STATUS_NOT_VALID);
         }
-        Page page = Page.createPage(teamUser, pageAddRequestDto.getName(), pageStatus, content);
+        Page page = Page.createPage(teamUser, pageAddRequestDto);
         pageRepository.save(page);
 
         PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
         pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
         pageUserRepository.save(pageUser);
-
 
         return new PageAddResponseDto(page, pageAddRequestDto.getContent());
     }
@@ -60,16 +59,16 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
+    @Transactional
     public Long removePage(Long pageId) {
         if(!pageRepository.existsById(pageId)){
             throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
         }
 
-        //페이지 지울 수 있는 권한 있는지 확인
         Long userId = SecurityUtil.getCurrentUserId();
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-        if(!pageUser.getPageUserRole().equals(PageUserRole.MAINTAINER)){
+        if(pageUser.getPageUserRole()!=PageUserRole.MAINTAINER){
             //todo : 페이지 삭제 권한없음 추가
         }
         pageRepository.deleteById(pageId);
@@ -80,7 +79,7 @@ public class PageServiceImpl implements PageService {
     public List<PageOfTeamResponseDto> pageOfTeam(Long teamId) {
         Long userId = SecurityUtil.getCurrentUserId();
         List<Page> pageList = pageRepository.findAllByTeamId(teamId);
-
+        //todo : JPQL써서 바꾸기
         for(int i=0; i<pageList.size(); i++){
             if(!userInPage(userId, pageList.get(i).getId()))
                 pageList.remove(i);
@@ -92,7 +91,7 @@ public class PageServiceImpl implements PageService {
     public List<PageContainInputResponseDto> pageContainInput(Long teamId) {
         Long userId = SecurityUtil.getCurrentUserId();
         List<Page> pageList = pageRepository.findAllByTeamId(teamId);
-
+        //todo : JPQL써서 바꾸기
         for(int i=0; i<pageList.size(); i++){
             Long pageId = pageList.get(i).getId();
             if(!userInPage(userId, pageId)&&!isPageContainInput(pageId))

@@ -12,10 +12,9 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UserInputSubmitRequestDto {
-    //todo : 이거 페이지id는 한번만 보내주고 input만 list로 만들어서 보내주자.
     @NotNull
-    Long pageId;
+    private Long pageId;
 
     @NotNull
-    Map<String, Object> input;
+    private Map<String, Object> input;
 }

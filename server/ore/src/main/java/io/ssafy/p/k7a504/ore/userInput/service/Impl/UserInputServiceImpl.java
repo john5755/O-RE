@@ -35,23 +35,21 @@ public class UserInputServiceImpl implements UserInputService {
     public UserInputSubmitResponseDto userInputSubmit(UserInputSubmitRequestDto userInputSubmitRequestDto) {
         Long pageId = userInputSubmitRequestDto.getPageId();
         Long userId = SecurityUtil.getCurrentUserId();
-        String inputvalue = userInputSubmitRequestDto.getInput().toString();
+        String inputValue = userInputSubmitRequestDto.getInput().toString();
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));;
-        UserInput userInput = UserInput.userInputSubmit(pageUser, inputvalue);
+        UserInput userInput = UserInput.userInputSubmit(pageUser, inputValue);
         userInputRepository.save(userInput);
         return new UserInputSubmitResponseDto(userInputSubmitRequestDto.getInput());
     }
 
     @Override
     public UserInputOfPageResponseDto userInputsOfPage(Long pageId) {
-        List<UserInput> userinputList = userInputRepository.findAllByPageId(pageId);
+        //todo : 반환 형식 토론
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
-        List<String> userInputs = userinputList.stream().map(UserInput::getInputValue).collect(Collectors.toList());
-
-//        return userinputList.stream().map(UserInputOfPageResponseDto::new).collect(Collectors.toList());
-
+        List<UserInput> userInputList = userInputRepository.findAllByPageId(pageId);
+        List<String> userInputs = userInputList.stream().map(UserInput::getInputValue).collect(Collectors.toList());
         return new UserInputOfPageResponseDto(page, userInputs);
     }
 }
