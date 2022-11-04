@@ -8,6 +8,7 @@ import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.domain.UserRole;
 import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
@@ -168,6 +169,32 @@ public class UserServiceImpl implements UserService {
         }
 
         return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long leaveServer() {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(user.getRole() == UserRole.OWNER)
+            throw new CustomException(ErrorCode.NO_AUTH_TO_LEAVE_SERVER);
+        userRepository.delete(user);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long removeUser(Long userId) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User other = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(user.getRole().getPriority() <= other.getRole().getPriority())
+            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+
+        userRepository.delete(other);
+        return other.getId();
     }
 
     private String generateTempPassword() {

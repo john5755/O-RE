@@ -100,5 +100,18 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.modifyUserInfo(profileImage, profileInfo)));
     }
 
+    @DeleteMapping("")
+    public ResponseEntity<? extends BasicResponse> leaveServer() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.leaveServer()));
+    }
+
+    @PreAuthorize("hasAnyAuthority('OWNER', 'ADMIN')")
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<? extends BasicResponse> removeUser(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.removeUser(userId)));
+    }
+
 
 }

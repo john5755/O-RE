@@ -20,4 +20,6 @@ public interface UserService {
     UserInfoResponseDto findUserInfo();
     void initializeProfileImage();
     Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo);
+    Long leaveServer();
+    Long removeUser(Long userId);
 }
