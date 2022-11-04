@@ -41,7 +41,7 @@ public class TeamUserApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.inviteMembers(teamMemberAddRequestDto)));
     }
 
-    @PatchMapping("/{teamId}}")
+    @PatchMapping("/{teamId}")
     public  ResponseEntity<String> changeAuthorities(@RequestParam Long teamId, @RequestBody  List<ModifyAuthorityRequestDto> list){
         List<ModifyAuthoritiesParamDto> modifyAuthoritiesParamList = new ArrayList<>();
         for(ModifyAuthorityRequestDto modifyAuthorityRequestDto: list){
