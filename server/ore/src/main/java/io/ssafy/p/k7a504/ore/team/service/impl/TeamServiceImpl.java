@@ -26,7 +26,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public Long createTeam(TeamCreateRequestDto teamCreateRequestDto, MultipartFile multipartFile) {
         String url =  Team.getDefaultImageUrl();
-        if(!multipartFile.isEmpty()){
+        if(multipartFile!=null){
             try{
                 url = s3Uploader.uploadFiles(multipartFile, "team");
             }catch(Exception e){
@@ -48,8 +48,9 @@ public class TeamServiceImpl implements TeamService {
         if(teamImg.length()==0){
             teamImg=Team.getDefaultImageUrl();
         }
-        if(!multipartFile.isEmpty()){
+        if(multipartFile!=null){
             try{
+                System.out.println(4);
                 teamImg=team.modifyTeamImage(multipartFile, s3Uploader);
             }catch(Exception e){
                 throw new RuntimeException(e);
