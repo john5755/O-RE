@@ -50,56 +50,55 @@ public class PageUserServiceImpl implements PageUserService {
 
     @Override
     @Transactional
-    public PageUserResponseDto changeAuth(PageUserModifyAuthRequestDto pageUserModifyAuthRequestDto) {
-        Long toPageUserId = pageUserModifyAuthRequestDto.getPageUserId();
-        PageUser toPageUser = pageUserRepository.findById(toPageUserId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-
-        Long pageId = toPageUser.getPage().getId();
+    public Long changeAuth(List<PageUserModifyAuthRequestDto> pageUserModifyAuthRequestDto) {
         Long fromUserId = SecurityUtil.getCurrentUserId();
-        PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(pageId, fromUserId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-        fromPageUser.grantRole(toPageUser, pageUserModifyAuthRequestDto.getPageUserRole());
-        PageUserResponseDto pageUserResponseDto = PageUserResponseDto.builder()
-                .pageUser(toPageUser)
-                .build();
-        pageUserRepository.save(toPageUser);
-        return pageUserResponseDto;
+
+        for(int i=0; i<pageUserModifyAuthRequestDto.size(); i++){
+            Long toPageUserId = pageUserModifyAuthRequestDto.get(i).getPageUserId();
+            PageUser toPageUser = pageUserRepository.findById(toPageUserId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+
+            Long pageId = toPageUser.getPage().getId();
+
+            PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(pageId, fromUserId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+            fromPageUser.grantRole(toPageUser, pageUserModifyAuthRequestDto.get(i).getPageUserRole());
+
+            pageUserRepository.save(toPageUser);
+        }
+        return fromUserId;
     }
 
     @Override
     @Transactional
-    public PageUserResponseDto invitePageUser(PageUserInviteRequestDto pageUserInviteDto){
-        Long toTeamUserId = pageUserInviteDto.getTeamUserId();
-        User toUser = teamUserRepository.findById(toTeamUserId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND)).getUser();
-
+    public Long invitePageUser(PageUserInviteRequestDto pageUserInviteDto){
         Long pageId = pageUserInviteDto.getPageId();
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
-
         Long fromUserId = SecurityUtil.getCurrentUserId();
         PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(pageId, fromUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-
-        if(!teamUserRepository.existsById(toTeamUserId)){
-            throw new CustomException(ErrorCode.TEAM_USER_NOT_FOUND);
-        }
-
-        if(pageUserRepository.existsByPageIdAndUserId(pageId, toUser.getId())){
-            throw new CustomException(ErrorCode.DUPLICATE_PAGE_USER);
-        }
-
         if(fromPageUser.getPageUserRole().equals(PageUserRole.VIEWER)){
             throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE_PAGE);
         }
 
-        PageUser newPageUser = PageUser.enrollPage(page, toUser);
-        pageUserRepository.save(newPageUser);
-        PageUserResponseDto pageUserResponseDto = PageUserResponseDto.builder()
-                .pageUser(newPageUser)
-                .build();
-        return pageUserResponseDto;
+        for(int i=0; i<pageUserInviteDto.getTeamUserId().size(); i++){
+            Long toTeamUserId = pageUserInviteDto.getTeamUserId().get(i);
+            User toUser = teamUserRepository.findById(toTeamUserId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND)).getUser();
+
+            if(!teamUserRepository.existsById(toTeamUserId)){
+                throw new CustomException(ErrorCode.TEAM_USER_NOT_FOUND);
+            }
+
+            if(pageUserRepository.existsByPageIdAndUserId(pageId, toUser.getId())){
+                throw new CustomException(ErrorCode.DUPLICATE_PAGE_USER);
+            }
+
+            PageUser newPageUser = PageUser.enrollPage(page, toUser);
+            pageUserRepository.save(newPageUser);
+        }
+        return fromUserId;
     }
 
     @Override
@@ -115,18 +114,21 @@ public class PageUserServiceImpl implements PageUserService {
     @Override
     @Transactional
     public Long deletePageUser(PageUserDeleteRequestDto pageUserDeleteRequestDto) {
-        Long toPageUserId = pageUserDeleteRequestDto.getPageUserId();
         Long fromUserId = SecurityUtil.getCurrentUserId();
+        for(int i=0; i<pageUserDeleteRequestDto.getPageUserId().size(); i++){
+            Long toPageUserId = pageUserDeleteRequestDto.getPageUserId().get(i);
 
-        PageUser toPageUser = pageUserRepository.findById(toPageUserId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-        PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(toPageUser.getPage().getId(), fromUserId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+            PageUser toPageUser = pageUserRepository.findById(toPageUserId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
 
-        if(fromPageUser.getPageUserRole().getPriority()<=toPageUser.getPageUserRole().getPriority()){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE_PAGE);
+            PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(toPageUser.getPage().getId(), fromUserId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+
+            if(fromPageUser.getPageUserRole().getPriority()<=toPageUser.getPageUserRole().getPriority()){
+                throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE_PAGE);
+            }
+            pageUserRepository.deleteById(toPageUserId);
         }
-        pageUserRepository.deleteById(toPageUserId);
-        return toPageUserId;
+        return fromUserId;
     }
 }

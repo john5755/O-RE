@@ -45,7 +45,7 @@ public class PageController {
                 .body(new CommonResponse<>(pageService.pageOfTeam(teamId)));
     }
 
-    @GetMapping
+    @GetMapping("status/{teamId}")
     public ResponseEntity<? extends BasicResponse> pageContainInput(@PathVariable Long teamId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageService.pageContainInput(teamId)));

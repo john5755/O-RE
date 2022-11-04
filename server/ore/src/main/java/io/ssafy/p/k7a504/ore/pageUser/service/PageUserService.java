@@ -8,8 +8,8 @@ public interface PageUserService {
 
     Long leavePageUser(Long pageId);
     Long deletePageUser(PageUserDeleteRequestDto pageUserDeleteDto );
-    PageUserResponseDto invitePageUser(PageUserInviteRequestDto pageUserInviteDto);
+    Long invitePageUser(PageUserInviteRequestDto pageUserInviteDto);
     PageUserResponseDto getPageUser(Long pageUserId);
     List<PageUserResponseDto> getPageUserList(Long pageId);
-    PageUserResponseDto changeAuth(PageUserModifyAuthRequestDto pageUserModifyAuthRequestDto);
+    Long changeAuth(List<PageUserModifyAuthRequestDto> pageUserModifyAuthRequestDto);
 }

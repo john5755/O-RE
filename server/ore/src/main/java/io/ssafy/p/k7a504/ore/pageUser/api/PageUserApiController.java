@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -51,7 +52,7 @@ public class PageUserApiController {
     }
 
     @PutMapping("")
-    public ResponseEntity<? extends BasicResponse> pageUserModifyAuth(@RequestBody PageUserModifyAuthRequestDto pageUserModifyAuthRequestDto) {
+    public ResponseEntity<? extends BasicResponse> pageUserModifyAuth(@RequestBody List<PageUserModifyAuthRequestDto> pageUserModifyAuthRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageUserService.changeAuth(pageUserModifyAuthRequestDto)));
     }

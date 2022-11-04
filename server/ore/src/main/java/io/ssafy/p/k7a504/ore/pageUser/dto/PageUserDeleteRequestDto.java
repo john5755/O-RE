@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class PageUserDeleteRequestDto {
     @NotNull
-    private Long pageUserId;
+    private List<Long> pageUserId;
 }
