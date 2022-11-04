@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,12 @@ import javax.validation.Valid;
 public class UserApiController {
 
     private final UserService userService;
+
+    @GetMapping("/domain")
+    public ResponseEntity<? extends BasicResponse> validateDomainUser() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.validateDomainUser()));
+    }
 
     @GetMapping("/verification")
     public ResponseEntity<? extends BasicResponse> sendCertificationEmail(@Valid @RequestParam String email) {
@@ -50,7 +57,7 @@ public class UserApiController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // TODO: PreAuthorize() 설정 필요
+    @PreAuthorize("hasAnyAuthority('OWNER','ADMIN')")
     @PostMapping("/list")
     public ResponseEntity<? extends BasicResponse> addUserList(@RequestPart(name = "file")MultipartFile file) {
         return ResponseEntity.status(HttpStatus.OK)
