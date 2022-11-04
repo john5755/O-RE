@@ -9,12 +9,14 @@ import java.util.List;
 
 public interface TeamUserService {
     Long beFirstMember(Long teamId);
-    Long inviteMember(TeamMemberAddRequestDto teamMemberAddRequestDto);
+    Long inviteMembers(TeamMemberAddRequestDto teamMemberAddRequestDto);
     Slice<TeamInfoResponseDto> findTeamsUserBelongTo(Pageable pageable);
     Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable);
     void changeAuthorites(List<ModifyAuthoritiesParamDto> modifyAuthoritiesParamList, Long teamId);
-    Long removeMember(Long userId, Long teamId);
+    Long removeMembers(DeleteMemberRequestDto deleteMemberRequestDto);
     Long leaveTeam(Long teamId);
 
+    List<UserInfoResponseDto> findUserByName(String name, Long teamId);
+    List<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId);
 
 }

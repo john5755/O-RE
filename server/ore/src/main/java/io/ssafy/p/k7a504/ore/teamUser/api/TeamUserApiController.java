@@ -31,14 +31,14 @@ public class TeamUserApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findTeamsUserBelongTo(pageable)));
     }
 
-    @GetMapping("/users/list")
+    @GetMapping("/team/users/list")
     public ResponseEntity<? extends BasicResponse> findUsersInTeam(@RequestParam Long teamId, Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findUsersInTeam(teamId, pageable)));
     }
 
     @PostMapping("")
-    public ResponseEntity<? extends BasicResponse> inviteMember(@Valid @RequestBody TeamMemberAddRequestDto teamMemberAddRequestDto){
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.inviteMember(teamMemberAddRequestDto)));
+    public ResponseEntity<? extends BasicResponse> inviteMembers(@Valid @RequestBody TeamMemberAddRequestDto teamMemberAddRequestDto){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.inviteMembers(teamMemberAddRequestDto)));
     }
 
     @PatchMapping("/{teamId}}")
@@ -55,12 +55,22 @@ public class TeamUserApiController {
 
     @DeleteMapping("/removal")
     public ResponseEntity<CommonResponse<Long>> removeMember(@Valid @RequestBody DeleteMemberRequestDto deleteMemberRequestDto){
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMember(deleteMemberRequestDto.getUserId(), deleteMemberRequestDto.getTeamId())));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.removeMembers(deleteMemberRequestDto)));
     }
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<CommonResponse<Long>> leaveTeam(@PathVariable Long teamId){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.leaveTeam(teamId)));
+    }
+
+    @GetMapping("/users/name/list")
+    public ResponseEntity<? extends BasicResponse> findUsersByName(@RequestParam Long teamId, String name){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findUserByName(name, teamId)));
+    }
+
+    @GetMapping("/users/nickname/list")
+    public ResponseEntity<? extends BasicResponse> findUsersByNickName(@RequestParam Long teamId, String ninckName){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findUserByNickName(ninckName, teamId)));
     }
 
 }

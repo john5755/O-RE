@@ -18,7 +18,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,23 +43,25 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
     @Override
     @Transactional
-    public Long inviteMember(TeamMemberAddRequestDto teamMemberAddRequestDto) {
-        Long userId = teamMemberAddRequestDto.getUserId();
+    public Long inviteMembers(TeamMemberAddRequestDto teamMemberAddRequestDto) {
         Long teamId = teamMemberAddRequestDto.getTeamId();
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkTeamUserRoleToInviteMember()){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE);
-        }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        if(teamUserRepository.existsByUserAndTeam(user, team)){
-            throw new CustomException(ErrorCode.DUPLICATE_TEAM_USER);
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        for(Long userId: teamMemberAddRequestDto.getUserList()){
+            if(!modifier.checkTeamUserRoleToInviteMember()){
+                throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE);
+            }
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+            if(teamUserRepository.existsByUserAndTeam(user, team)){
+                throw new CustomException(ErrorCode.DUPLICATE_TEAM_USER);
+            }
+            TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.MEMBER);
+            teamUserRepository.save(teamUser).getId();
         }
-        TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.MEMBER);
-        return teamUserRepository.save(teamUser).getId();
+        return SecurityUtil.getCurrentUserId();
     }
 
     @Override
@@ -95,16 +99,19 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long removeMember(Long userId, Long teamId) {
+    public Long removeMembers(DeleteMemberRequestDto deleteMemberRequestDto) {
+        Long teamId = deleteMemberRequestDto.getTeamId();
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser member = teamUserRepository.findByUserIdAndTeamId(userId, teamId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkHavingAuthorityOverUser(member)){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+        for(Long userId: deleteMemberRequestDto.getUserList()){
+            TeamUser member = teamUserRepository.findByUserIdAndTeamId(userId, teamId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+            if(!modifier.checkHavingAuthorityOverUser(member)){
+                throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+            }
+            teamUserRepository.delete(member);
         }
-        teamUserRepository.delete(member);
-        return userId;
+        return SecurityUtil.getCurrentUserId();
     }
 
     @Override
@@ -120,4 +127,31 @@ public class TeamUserServiceImpl implements TeamUserService {
         return SecurityUtil.getCurrentUserId();
     }
 
+    @Override
+    public List<UserInfoResponseDto> findUserByName(String name, Long teamId) {
+        List<User> userList = userRepository.findByNameContains(name);
+        List<TeamUser> teamUserList = new ArrayList<>();
+        for(User user: userList){
+            if(teamUserRepository.existsByUserAndTeamId(user, teamId)) {
+                TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+                teamUserList.add(teamUser);
+            }
+        }
+        return teamUserList.stream().map(UserInfoResponseDto::toUserResponseDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId) {
+        List<User> userList = userRepository.findByNicknameContains(nickName);
+        List<TeamUser> teamUserList = new ArrayList<>();
+        for(User user: userList){
+            if(teamUserRepository.existsByUserAndTeamId(user, teamId)) {
+                TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+                teamUserList.add(teamUser);
+            }
+        }
+        return teamUserList.stream().map(UserInfoResponseDto::toUserResponseDto).collect(Collectors.toList());
+    }
 }
