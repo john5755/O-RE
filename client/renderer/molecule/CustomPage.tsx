@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
-import React, { PropsWithChildren } from "react";
+import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
 import { Button } from "../styles";
+import { TagType } from "../types";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -18,13 +19,10 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  :focus {
-    border: 1px solid var(--main-color);
-  }
   :hover {
-    border: 3px solid var(--main-color);
+    border: 2px solid var(--light-main-color);
   }
-  border: ${(props) => props.highlighted && `3px solid var(--main-color)`};
+  border: ${(props) => props.highlighted && `2px solid var(--main-color)`};
 `;
 
 type ListProps = PropsWithChildren<{
@@ -266,10 +264,9 @@ interface CustomPageProps {
   ) => void;
   draggingOver: (e: React.DragEvent<HTMLDivElement>) => void;
   dragDropped: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleClick: (v: number) => void;
   handleDeleteTag: (v: number) => void;
-  setIsCustom: (v: number) => void;
-  pageTagList: any[];
+  setIsCustom: Dispatch<SetStateAction<number>>;
+  pageTagList: TagType[];
   dividerIdx: number | undefined;
   isDragging: boolean;
   itemRefs: MutableRefObject<HTMLDivElement[]>;
@@ -282,48 +279,52 @@ export default function CustomPage(props: CustomPageProps) {
       onDragOver={(e) => props.draggingOver(e)}
       onDrop={(e) => props.dragDropped(e)}
     >
-      {props.pageTagList.map((v, index) => {
-        const TagComponent = Component[v.type];
-        return (
-          TagComponent !== undefined && (
-            <React.Fragment key={`${v.type}-${index}`}>
-              <ComponentBox
-                ref={(el) => {
-                  if (!el) return;
-                  props.itemRefs.current[index] = el;
-                }}
-                onDragStart={(e) => props.dragStarted(e, index, false)}
-                onDragOver={(e) => props.draggingOver(e)}
-                onDrop={(e) => props.dragDropped(e)}
-                onClick={() => props.handleClick(index)}
-                draggable
-                highlighted={index === props.isCustom}
-              >
-                <TagComponent {...v.tagProps} />
-                {props.isCustom !== -1 && props.isCustom === index && (
-                  <Button
-                    width="50px"
-                    height="20px"
-                    onClick={() => {
-                      props.handleDeleteTag(index);
-                      props.setIsCustom(-1);
-                    }}
-                  >
-                    삭제
-                  </Button>
-                )}
-              </ComponentBox>
-              {props.dividerIdx !== undefined &&
-                index + 1 === props.dividerIdx &&
-                props.isDragging && (
-                  <div
-                    style={{ width: "100%", borderBottom: "1px solid red" }}
-                  />
-                )}
-            </React.Fragment>
-          )
-        );
-      })}
+      {props.pageTagList.length > 0 &&
+        props.pageTagList.map((v, index) => {
+          const TagComponent = Component[v.type];
+          return (
+            TagComponent !== undefined && (
+              <React.Fragment key={`${v.type}-${index}`}>
+                <ComponentBox
+                  ref={(el) => {
+                    if (!el) return;
+                    props.itemRefs.current[index] = el;
+                  }}
+                  onDragStart={(e) => props.dragStarted(e, index, false)}
+                  onDragOver={(e) => props.draggingOver(e)}
+                  onDrop={(e) => props.dragDropped(e)}
+                  onClick={() => props.setIsCustom(index)}
+                  draggable
+                  highlighted={index === props.isCustom}
+                >
+                  <TagComponent {...v.tagProps} />
+                  {props.isCustom !== -1 && props.isCustom === index && (
+                    <Button
+                      width="50px"
+                      height="20px"
+                      fontSize="11px"
+                      borderRadius="4px"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        props.setIsCustom(-1);
+                        props.handleDeleteTag(index);
+                      }}
+                    >
+                      삭제
+                    </Button>
+                  )}
+                </ComponentBox>
+                {props.dividerIdx !== undefined &&
+                  index + 1 === props.dividerIdx &&
+                  props.isDragging && (
+                    <div
+                      style={{ width: "100%", borderBottom: "1px solid red" }}
+                    />
+                  )}
+              </React.Fragment>
+            )
+          );
+        })}
     </PageContainer>
   );
 }

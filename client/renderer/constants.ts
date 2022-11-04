@@ -1,3 +1,5 @@
+import { TagType } from "./types";
+
 export const PATH = {
   MAIN: "/",
   LOGIN: "/login",
@@ -8,13 +10,13 @@ export const PATH = {
   CREATE_GROUP: "/create-group",
 };
 
-export const TAG_LIST = [
+export const TAG_LIST: TagType[] = [
   {
     type: "text",
     tagProps: {
       children: "내용",
       style: {
-        width: "100px",
+        width: "",
         height: "",
         color: "black",
         fontSize: "30px",
@@ -22,23 +24,23 @@ export const TAG_LIST = [
       },
     },
   },
-  {
-    type: "list",
-    tagProps: {
-      header: "리스트 제목",
-      count: 2,
-      children: ["내용", "입력"],
-      style: { width: "100px", height: "" },
-    },
-  },
-  {
-    type: "date picker",
-    tagProps: {
-      type: "date",
-      header: "날짜 제목",
-      style: { width: "", height: "" },
-    },
-  },
+  // {
+  //   type: "list",
+  //   tagProps: {
+  //     header: "리스트 제목",
+  //     count: 2,
+  //     children: ["내용", "입력"],
+  //     style: { width: "100px", height: "" },
+  //   },
+  // },
+  // {
+  //   type: "date picker",
+  //   tagProps: {
+  //     type: "date",
+  //     header: "날짜 제목",
+  //     style: { width: "", height: "" },
+  //   },
+  // },
   {
     type: "input",
 
@@ -51,17 +53,17 @@ export const TAG_LIST = [
       },
     },
   },
-  {
-    type: "file upload",
-    tagProps: {
-      header: "파일 업로드 제목",
-      type: "file",
-      style: {
-        width: "",
-        height: "",
-      },
-    },
-  },
+  // {
+  //   type: "file upload",
+  //   tagProps: {
+  //     header: "파일 업로드 제목",
+  //     type: "file",
+  //     style: {
+  //       width: "",
+  //       height: "",
+  //     },
+  //   },
+  // },
   {
     type: "table",
     tagProps: {
@@ -75,15 +77,15 @@ export const TAG_LIST = [
       },
     },
   },
-  {
-    type: "check box",
-    tagProps: {
-      type: "checkbox",
-      header: "체크박스 버튼 제목",
-      label: ["one", "two", "three"],
-      style: { width: "", height: "" },
-    },
-  },
+  // {
+  //   type: "check box",
+  //   tagProps: {
+  //     type: "checkbox",
+  //     header: "체크박스 버튼 제목",
+  //     label: ["one", "two", "three"],
+  //     style: { width: "", height: "" },
+  //   },
+  // },
   {
     type: "radio button",
     tagProps: {
@@ -93,43 +95,43 @@ export const TAG_LIST = [
       style: { width: "", height: "" },
     },
   },
-  {
-    type: "drop down",
-    tagProps: {
-      header: "드롭다운 제목",
-      option: ["one", "two", "three"],
-      style: { width: "", height: "" },
-    },
-  },
-  {
-    type: "text area",
-    tagProps: {
-      header: "텍스트 제목",
-      style: { width: "300px", height: "100px" },
-    },
-  },
-  {
-    type: "hyperlink",
-    tagProps: {
-      href: "https://www.ssafy.com",
-      children: "SSAFY",
-      target: "_blank",
-      header: "링크 제목",
-      style: { width: "", height: "" },
-    },
-  },
-  {
-    type: "button",
-    tagProps: {
-      header: "버튼 제목",
-      children: "버튼",
-      style: {
-        width: "100px",
-        height: "40px",
-        textAlign: "center",
-      },
-    },
-  },
+  // {
+  //   type: "drop down",
+  //   tagProps: {
+  //     header: "드롭다운 제목",
+  //     option: ["one", "two", "three"],
+  //     style: { width: "", height: "" },
+  //   },
+  // },
+  // {
+  //   type: "text area",
+  //   tagProps: {
+  //     header: "텍스트 제목",
+  //     style: { width: "300px", height: "100px" },
+  //   },
+  // },
+  // {
+  //   type: "hyperlink",
+  //   tagProps: {
+  //     href: "https://www.ssafy.com",
+  //     children: "SSAFY",
+  //     target: "_blank",
+  //     header: "링크 제목",
+  //     style: { width: "", height: "" },
+  //   },
+  // },
+  // {
+  //   type: "button",
+  //   tagProps: {
+  //     header: "버튼 제목",
+  //     children: "버튼",
+  //     style: {
+  //       width: "100px",
+  //       height: "40px",
+  //       textAlign: "center",
+  //     },
+  //   },
+  // },
 ];
 
 export const layoutInfo = {

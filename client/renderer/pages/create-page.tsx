@@ -5,6 +5,7 @@ import { TAG_LIST } from "../constants";
 import CustomTag from "../molecule/CustomTag";
 import { H4, Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
+import { TagType } from "../types";
 
 const Wrapper = styled.div`
   display: grid;
@@ -35,8 +36,8 @@ const MainHeaderContainer = styled.div`
 `;
 
 export default function CreatePage() {
-  const [list] = useState(TAG_LIST);
-  const [pageTagList, setPageTagList] = useState<any[]>([]);
+  const [list] = useState<TagType[]>(TAG_LIST);
+  const [pageTagList, setPageTagList] = useState<TagType[]>([]);
   const itemRefs = useRef<HTMLDivElement[]>([]);
   const [dividerIdx, setDividerIdx] = useState<number>();
   const [isDragging, setIsDragging] = useState(false);
@@ -137,10 +138,6 @@ export default function CreatePage() {
     }
   };
 
-  const handleClick = (v: number) => {
-    setIsCustom(v);
-  };
-
   const handleDeleteTag = (v: number) => {
     setPageTagList((pre) => [...pre.slice(0, v), ...pre.slice(v + 1)]);
   };
@@ -148,11 +145,12 @@ export default function CreatePage() {
   return (
     <Wrapper>
       <SideContainer>
-        {isCustom !== -1 ? (
+        {isCustom !== -1 && pageTagList.length > 0 ? (
           <CustomTag
             setIsCustom={setIsCustom}
-            pageTagList={pageTagList}
             setPageTagList={setPageTagList}
+            pageTagList={pageTagList}
+            isCustom={isCustom}
           />
         ) : (
           <TagList dragStarted={dragStarted} />
@@ -169,7 +167,6 @@ export default function CreatePage() {
           dragStarted={dragStarted}
           draggingOver={draggingOver}
           dragDropped={dragDropped}
-          handleClick={handleClick}
           handleDeleteTag={handleDeleteTag}
           itemRefs={itemRefs}
           pageTagList={pageTagList}
