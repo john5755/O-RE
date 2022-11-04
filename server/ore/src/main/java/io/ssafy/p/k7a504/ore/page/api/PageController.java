@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/pages/")
+@RequestMapping("/api/pages")
 public class PageController {
 
     final private PageService pageService;
@@ -43,6 +43,12 @@ public class PageController {
     public ResponseEntity<? extends BasicResponse> pageOfTeam(@PathVariable Long teamId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageService.pageOfTeam(teamId)));
+    }
+
+    @GetMapping
+    public ResponseEntity<? extends BasicResponse> pageContainInput(@PathVariable Long teamId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageService.pageContainInput(teamId)));
     }
 
 //    @PatchMapping("")

@@ -9,5 +9,6 @@ public interface PageService {
     PageDetailResponseDto detailPage(Long pageId);
     Long removePage(Long pageId);
     List<PageOfTeamResponseDto> pageOfTeam(Long teamId);
+    List<PageContainInputResponseDto> pageContainInput(Long teamId);
 //    PageModifyResponseDto pageModify(PageModifyRequestDto pageModifyRequestDto);
 }

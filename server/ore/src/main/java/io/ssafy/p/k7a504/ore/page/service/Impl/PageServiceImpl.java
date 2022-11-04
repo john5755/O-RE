@@ -4,6 +4,7 @@ import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
+import io.ssafy.p.k7a504.ore.page.domain.PageStatus;
 import io.ssafy.p.k7a504.ore.page.dto.*;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
@@ -87,6 +88,19 @@ public class PageServiceImpl implements PageService {
         return pageList.stream().map(PageOfTeamResponseDto::new).collect(Collectors.toList());
     }
 
+    @Override
+    public List<PageContainInputResponseDto> pageContainInput(Long teamId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        List<Page> pageList = pageRepository.findAllByTeamId(teamId);
+
+        for(int i=0; i<pageList.size(); i++){
+            Long pageId = pageList.get(i).getId();
+            if(!userInPage(userId, pageId)&&!isPageContainInput(pageId))
+                pageList.remove(i);
+        }
+        return pageList.stream().map(PageContainInputResponseDto::new).collect(Collectors.toList());
+    }
+
 //    @Override
 //    public PageModifyResponseDto pageModify(PageModifyRequestDto pageModifyRequestDto) {
 //        Long userId = SecurityUtil.getCurrentUserId();
@@ -112,6 +126,14 @@ public class PageServiceImpl implements PageService {
 
     public boolean userInPage(Long userId, Long pageId){
         if(pageUserRepository.existsByPageIdAndUserId(pageId, userId))
+            return true;
+        return false;
+    }
+
+    public boolean isPageContainInput(Long pageId){
+        if(pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND))
+                .getPageStatus().equals(PageStatus.INCLUDE_INPUT))
             return true;
         return false;
     }

@@ -26,8 +26,8 @@ public class PageUserApiController {
                 .body(new CommonResponse<>(pageUserService.getPageUserList(pageId)));
     }
 
-    @GetMapping("")
-    public ResponseEntity<? extends BasicResponse> pageUserGet(@RequestParam("page-user-id") Long pageUserId) {
+    @GetMapping("/{pageUserId}")
+    public ResponseEntity<? extends BasicResponse> pageUserGet(@PathVariable Long pageUserId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageUserService.getPageUser(pageUserId)));
     }
