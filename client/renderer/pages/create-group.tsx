@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
-import { useAppDispatch } from "../hooks/reduxHook";
-import { addGroupState } from "../slices/myGroupsState";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { addGroupState } from "../slices/myGroupsStateSlice";
 import { BASIC_PHOTO_URL } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 
@@ -47,6 +47,7 @@ const ButtonContainer = styled.div`
 
 export default function CreateGroup() {
   const dispatch = useAppDispatch();
+  const myGroups = useAppSelector((state) => state.myGroupsState).myGroupsState;
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
@@ -85,7 +86,11 @@ export default function CreateGroup() {
               height="50px"
               onClick={() => {
                 dispatch(
-                  addGroupState({ name: groupName, profileUrl: photoUrl })
+                  addGroupState({
+                    teamId: myGroups.length,
+                    name: groupName,
+                    profileUrl: photoUrl,
+                  })
                 );
               }}
             >

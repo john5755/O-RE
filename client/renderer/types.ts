@@ -28,3 +28,16 @@ export interface TagType {
   type: string;
   tagProps: TagPropsType;
 }
+export interface GroupOptions extends Object {
+  teamId: number;
+  name: string;
+  profileUrl: string | null | ArrayBuffer;
+}
+
+export interface UserProfileOptions extends Object {
+  email: string;
+  name: string;
+  nickname: string;
+  role: string;
+  profileImage: string;
+}
