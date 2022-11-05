@@ -151,14 +151,21 @@ export const BASIC_PHOTO_URL: string =
 // API
 const API = "api/";
 const USERS = "users/";
+const TEAM_USER = "team-user/";
+const TEAM = "team/";
 const TEAMS = "teams/";
+
 export const USERS_API = {
+  DOMAIN: API + USERS + "domain",
   VERIFICATION: API + USERS + "verification",
   SIGNUP: API + USERS + "signup",
   LOGIN: API + USERS + "signin",
   MYPAGE: API + USERS + "mypage",
 };
-const TEAM_USER = "team-user/";
 export const TEAM_USER_API = {
   LIST: API + TEAM_USER + TEAMS + "list",
+};
+
+export const TEAM_API = {
+  CREATE: API + TEAM,
 };

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React from "react";
+=======
+import { SetStateAction, Dispatch } from "react";
+>>>>>>> 545874d (feat: login 및 login 이후 유저 정보 업데이트)
 
 export interface GroupUserType {
   userId: number;
@@ -40,4 +44,9 @@ export interface UserProfileOptions extends Object {
   nickname: string;
   role: string;
   profileImage: string;
+}
+
+export interface BarProps {
+  selectedTeamId: number;
+  setSelectedTeamId: Dispatch<SetStateAction<number>>;
 }
