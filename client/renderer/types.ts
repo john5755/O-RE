@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from "react";
 =======
 import { SetStateAction, Dispatch } from "react";
 >>>>>>> 545874d (feat: login 및 login 이후 유저 정보 업데이트)
+=======
+import { SetStateAction, Dispatch } from "react";
+>>>>>>> a9a1099ae70d17e8b548dfef5fe0f4ee92264faf
 
 export interface GroupUserType {
   userId: number;
@@ -13,6 +17,7 @@ export interface GroupUserType {
   profileImg?: string;
 }
 
+<<<<<<< HEAD
 interface TagPropsType {
   header?: string;
   target?: string;
@@ -32,6 +37,8 @@ export interface TagType {
   type: string;
   tagProps: TagPropsType;
 }
+=======
+>>>>>>> a9a1099ae70d17e8b548dfef5fe0f4ee92264faf
 export interface GroupOptions extends Object {
   teamId: number;
   name: string;
