@@ -1,4 +1,5 @@
 import React from "react";
+import { SetStateAction, Dispatch } from "react";
 
 export interface GroupUserType {
   userId: number;
@@ -7,6 +8,25 @@ export interface GroupUserType {
   nickName: string;
   role: string;
   profileImg?: string;
+}
+
+export interface GroupOptions extends Object {
+  teamId: number;
+  name: string;
+  profileUrl: string | null | ArrayBuffer;
+}
+
+export interface UserProfileOptions extends Object {
+  email: string;
+  name: string;
+  nickname: string;
+  role: string;
+  profileImage: string;
+}
+
+export interface BarProps {
+  selectedTeamId: number;
+  setSelectedTeamId: Dispatch<SetStateAction<number>>;
 }
 
 interface TagPropsType {

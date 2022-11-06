@@ -1,6 +1,6 @@
-import React, { useState, useRef, SetStateAction, Dispatch } from "react";
+import React, { useRef, SetStateAction, Dispatch } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, H4, Label, Button, Input } from "../styles";
+import { Label, Button } from "../styles";
 import { BASIC_PHOTO_URL } from "../constants";
 
 const PhotoContainer = styled.div`
@@ -45,6 +45,7 @@ export default function ProfilePhotos(props: PhotoProps) {
   // 기본 프로필로 변경
   const basicPhotoChange = () => {
     props.setPhotoUrl(BASIC_PHOTO_URL);
+    props.setPhoto(null);
   };
   return (
     <PhotoContainer>

@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H1, Input, Button } from "../styles";
 import UserFormLink from "../molecule/UserFormLink";
-import { PATH } from "../constants";
+import { PATH, USERS_API } from "../constants";
+import axios from "../utils/axios";
+import Router from "next/router";
+import { setLogIn } from "../slices/loginSlices";
+import { useAppDispatch } from "../hooks/reduxHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -32,7 +36,7 @@ const InputContainer = styled.div`
   align-items: center;
 `;
 
-const TextContainer = styled.div`
+const TitleContainer = styled.div`
   width: 100%;
   height: 30px;
   margin: 10px 0 30px 0;
@@ -47,30 +51,6 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const CantLoginContainer = styled.ul`
-  width: 100%;
-  text-align: center;
-  padding: 0;
-`;
-
-const CantLoginOptions = styled.li`
-  display: inline-block;
-  list-style: none;
-  :first-child {
-    border-right: 1px solid var(--main-color);
-    padding-right: 10px;
-    margin-right: 10px;
-  }
-  :last-child {
-    border-left: 1px solid var(--main-color);
-    padding-left: 10px;
-    margin-left: 10px;
-  }
-  > a {
-    color: var(--main-color);
-  }
-`;
-
 const LinkOptions = [
   { pathLink: PATH.MAIN, pathName: "메인페이지로" },
   { pathLink: PATH.SIGNUP, pathName: "회원가입" },
@@ -78,21 +58,74 @@ const LinkOptions = [
 ];
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+
+  const [emailInput, setEamilInput] = useState<string>("");
+  const conditionEmail: boolean = /^[\w+_]\w+@\w+\.\w+/.test(emailInput);
+  const [pwInput, setPwInput] = useState<string>("");
+  const conditionPassword: boolean =
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(pwInput);
+
+  function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+    if (name === "email") {
+      setEamilInput(value);
+    } else if (name === "password") {
+      setPwInput(value);
+    }
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const credentials = {
+        email: emailInput,
+        password: pwInput,
+      };
+      const { data } = await axios.post(USERS_API.LOGIN, credentials);
+      if (data.success === true) {
+        localStorage.setItem("token", data.data.token);
+        const now: Date = new Date();
+        const expiredAt: number = now.setDate(now.getDate() + 7);
+        localStorage.setItem("expiredAt", expiredAt.toLocaleString());
+        dispatch(setLogIn("name"));
+        Router.push(PATH.MAIN);
+      }
+    } catch (e) {}
+  };
+
   return (
     <LayoutContainer>
       <Container>
         <LoginContainer>
-          <TextContainer>
+          <TitleContainer>
             <H1 style={{ color: "var(--main-color)" }}>O:RE</H1>
-          </TextContainer>
+          </TitleContainer>
           <InputContainer>
-            <Input placeholder="email" type="text" height="60px"></Input>
+            <Input
+              placeholder="email"
+              name="email"
+              type="text"
+              height="60px"
+              onChange={handleInput}
+            ></Input>
           </InputContainer>
           <InputContainer>
-            <Input placeholder="password" type="password" height="60px"></Input>
+            <Input
+              placeholder="password"
+              name="password"
+              type="password"
+              height="60px"
+              onChange={handleInput}
+            ></Input>
           </InputContainer>
           <ButtonContainer>
-            <Button height="60px">로그인</Button>
+            <Button
+              height="60px"
+              disabled={!(conditionEmail && conditionPassword)}
+              onClick={handleSubmit}
+            >
+              로그인
+            </Button>
           </ButtonContainer>
           <UserFormLink
             firstPath={LinkOptions[0].pathLink}
