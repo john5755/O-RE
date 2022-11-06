@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
-import { useAppDispatch } from "../hooks/reduxHook";
-import { addGroupState } from "../slices/myGroupsState";
-import { BASIC_PHOTO_URL } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { addGroupState } from "../slices/myGroupsStateSlice";
+import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
+import axios from "../utils/axios";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -47,17 +48,50 @@ const ButtonContainer = styled.div`
 
 export default function CreateGroup() {
   const dispatch = useAppDispatch();
+  const myTeams = useAppSelector((state) => state.myGroupsState).myGroupsState;
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
     BASIC_PHOTO_URL
   );
 
-  // groupname 변경
-  const [groupName, setGroupName] = useState<string>("");
-  function handleGroupNameInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setGroupName(event.target.value);
+  // teamName 변경
+  const [teamName, setTeamName] = useState<string>("");
+  function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
+    setTeamName(event.target.value);
   }
+
+  const submitCreateTeam = async () => {
+    const accessToken = localStorage.getItem("token");
+    const teamInfoJson = {
+      name: teamName,
+      imageUrl: photoUrl,
+    };
+    const teamInfo = JSON.stringify(teamInfoJson);
+    const formData = new FormData();
+    if (photo !== null) {
+      formData.append("image", photo);
+    }
+    formData.append("info", new Blob([teamInfo], { type: "application/json" }));
+    try {
+      const res = await axios.post(TEAM_API.CREATE, formData, {
+        headers: {
+          ContentType: "multipart/formdata",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      dispatch(
+        addGroupState({
+          teamId: myTeams.length,
+          name: teamName,
+          profileUrl: photoUrl,
+        })
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <LayoutContainer>
@@ -72,23 +106,16 @@ export default function CreateGroup() {
           setPhotoUrl={setPhotoUrl}
         ></ProfilePhotos>
         <NameContainer>
-          <Label htmlFor="groupNameInput">그룹명</Label>
+          <Label htmlFor="teamNameInput">그룹명</Label>
           <Input
-            id="groupNameInput"
-            name="groupName"
+            id="teamNameInput"
+            name="teamName"
             style={{ margin: "10px auto" }}
             height="50px"
-            onChange={handleGroupNameInput}
+            onChange={handleTeamNameInput}
           ></Input>
           <ButtonContainer>
-            <Button
-              height="50px"
-              onClick={() => {
-                dispatch(
-                  addGroupState({ name: groupName, profileUrl: photoUrl })
-                );
-              }}
-            >
+            <Button height="50px" onClick={submitCreateTeam}>
               저장
             </Button>
           </ButtonContainer>

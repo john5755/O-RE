@@ -4,6 +4,7 @@ import { useAppSelector } from "../hooks/reduxHook";
 import { BASIC_PHOTO_URL } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
+import { BarProps } from "../types";
 
 const Container = styled.div`
   width: 100%;
@@ -64,10 +65,9 @@ const clickedCss = {
   fontSize: "16px",
 };
 
-export default function GroupSideBar() {
-  const [clickedIdx, setClickedIdx] = useState<number>(0);
+export default function GroupSideBar(props: BarProps) {
   const selectGroup = (num: number): void => {
-    setClickedIdx(num);
+    props.setSelectedTeamId(num);
   };
   const myGroups = useAppSelector((state) => state.myGroupsState).myGroupsState;
 
@@ -77,7 +77,7 @@ export default function GroupSideBar() {
         <div key={idx}>
           {group.profileUrl === BASIC_PHOTO_URL ? (
             <NoProfileContainer
-              style={idx === clickedIdx ? clickedCss : unClickedCss}
+              style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
               onClick={() => {
                 selectGroup(idx);
               }}
@@ -91,7 +91,7 @@ export default function GroupSideBar() {
                   ? group.profileUrl
                   : BASIC_PHOTO_URL
               }
-              style={idx === clickedIdx ? clickedCss : unClickedCss}
+              style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
               onClick={() => {
                 selectGroup(idx);
               }}
