@@ -60,22 +60,9 @@ export default function CreatePage() {
 
   const draggingOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    let sumHeight = 0;
+    let sumHeight = -e.currentTarget.scrollTop;
     let idx = 0;
     let isSet = false;
-    // console.log(
-    //   "ch : ",
-    //   itemRefs.current.map(({ clientHeight }) => clientHeight)
-    // );
-    // console.log(
-    //   "sh : ",
-    //   itemRefs.current.map(({ scrollHeight }) => scrollHeight)
-    // );
-
-    // console.log("y", e.screenY);
-    // console.log(e.pageY);
-    // console.log(e.clientY);
-    // console.log(e.movementY);
 
     for (const { clientHeight } of itemRefs.current) {
       if (e.pageY < 152 + sumHeight + clientHeight / 2) {
