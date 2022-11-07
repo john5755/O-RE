@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
+import CheckBox from "../atom/CheckBox";
 import DatePicker from "../atom/DatePicker";
 import Input from "../atom/Input";
 import List from "../atom/List";
@@ -27,6 +28,7 @@ const Component: {
   table: Table,
   "radio button": RadioButton,
   "date picker": DatePicker,
+  "check box": CheckBox,
 };
 
 const arr = [
@@ -83,6 +85,15 @@ const arr = [
       type: "date",
       header: "투표 날짜를 기입하세요",
       style: { width: "200px", height: "" },
+    },
+  },
+  {
+    type: "check box",
+    tagProps: {
+      type: "checkbox",
+      header: "좋아하는 사람을 모두 고르시오.",
+      label: ["동윤", "민지", "창엽", "수빈", "민석"],
+      style: { width: "", height: "" },
     },
   },
 ];

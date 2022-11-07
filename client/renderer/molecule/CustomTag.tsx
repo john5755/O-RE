@@ -129,6 +129,105 @@ const CustomDatePicker = ({ obj, setObj, objIdx }: CustomType) => {
   );
 };
 
+const CustomCheckBox = ({ obj, setObj, objIdx }: CustomType) => {
+  const [labelCnt, setLabelCnt] = useState<number>(
+    obj[objIdx].tagProps.label?.length as number
+  );
+  return (
+    <CustomContainer>
+      <Label>라벨</Label>
+      <Input
+        type="text"
+        value={obj[objIdx].tagProps.header}
+        onChange={(e) =>
+          setObj((pre: TagType[]) => {
+            return [
+              ...pre.slice(0, objIdx),
+              {
+                ...pre[objIdx],
+                tagProps: {
+                  ...pre[objIdx].tagProps,
+                  header: e.target.value,
+                },
+              },
+              ...pre.slice(objIdx + 1),
+            ];
+          })
+        }
+      />
+      <ButtonContainer>
+        <Label>옵션</Label>
+        <Button
+          width="40px"
+          height="20px"
+          fontSize="10px"
+          borderRadius="5px"
+          onClick={() => setLabelCnt((pre) => (pre = pre + 1))}
+        >
+          추가
+        </Button>
+        <Button
+          width="40px"
+          height="20px"
+          fontSize="10px"
+          borderRadius="5px"
+          onClick={() => {
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    label: [
+                      ...pre[objIdx].tagProps.label!.splice(0, labelCnt - 1),
+                    ],
+                  },
+                },
+                ...pre.slice(objIdx + 1),
+              ];
+            });
+            setLabelCnt((pre) => (pre = pre - 1));
+          }}
+        >
+          삭제
+        </Button>
+      </ButtonContainer>
+      {labelCnt > 0 &&
+        [...Array(labelCnt)].map((_, idx) => {
+          return (
+            <React.Fragment key={idx}>
+              <Label>option {idx}</Label>
+              <Input
+                type="text"
+                value={obj[objIdx].tagProps.label?.[idx]}
+                onChange={(e) =>
+                  setObj((pre: TagType[]) => {
+                    return [
+                      ...pre.slice(0, objIdx),
+                      {
+                        ...pre[objIdx],
+                        tagProps: {
+                          ...pre[objIdx].tagProps,
+                          label: [
+                            ...pre[objIdx].tagProps.label!.slice(0, idx),
+                            e.target.value,
+                            ...pre[objIdx].tagProps.label!.slice(idx + 1),
+                          ],
+                        },
+                      },
+                      ...pre.slice(objIdx + 1),
+                    ];
+                  })
+                }
+              ></Input>
+            </React.Fragment>
+          );
+        })}
+    </CustomContainer>
+  );
+};
+
 const CustomRadioButton = ({ obj, setObj, objIdx }: CustomType) => {
   const [labelCnt, setLabelCnt] = useState<number>(
     obj[objIdx].tagProps.label?.length as number
@@ -237,7 +336,7 @@ const Component: {
   input: CustomInput,
   // "file upload": FileUpload,
   // table: Table,
-  // "check box": CheckBox,
+  "check box": CustomCheckBox,
   "radio button": CustomRadioButton,
   // "drop down": DropDown,
   // "text area": TextArea,

@@ -51,5 +51,5 @@ export interface TagType {
 }
 
 export interface InputType {
-  [key: string]: string;
+  [key: string]: string | string[];
 }

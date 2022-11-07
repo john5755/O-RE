@@ -51,9 +51,7 @@ export default function CreateGroup() {
   const myTeams = useAppSelector((state) => state.myGroupsState).myGroupsState;
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
-    BASIC_PHOTO_URL
-  );
+  const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(BASIC_PHOTO_URL);
 
   // teamName 변경
   const [teamName, setTeamName] = useState<string>("");
@@ -84,7 +82,7 @@ export default function CreateGroup() {
         addGroupState({
           teamId: myTeams.length,
           name: teamName,
-          profileUrl: photoUrl,
+          imageUrl: photoUrl,
         })
       );
       console.log(res);
