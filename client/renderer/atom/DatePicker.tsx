@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { InputType } from "../types";
 
 const Container = styled.div`
@@ -11,21 +11,19 @@ const HeaderContainer = styled.div`
   padding-bottom: 10px;
 `;
 
-type InputProps = PropsWithChildren<{
+type DatePickerProps = {
   style?: React.CSSProperties;
   header?: string;
-  children?: string;
   userInput?: InputType;
   setUserInput?: Dispatch<SetStateAction<InputType>>;
-}>;
+};
 
-const Input = ({
-  children,
+const DatePicker = ({
   header,
   userInput,
   setUserInput,
   ...props
-}: InputProps) => {
+}: DatePickerProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!userInput![header!]) {
       setUserInput!((pre: any) => {
@@ -36,13 +34,12 @@ const Input = ({
       return { ...pre, [header!]: e.target.value };
     });
   };
-
   return (
     <Container>
       {header !== "" && <HeaderContainer>{header}</HeaderContainer>}
-      <input {...props} onChange={(e) => handleChange(e)}></input>
+      <input onChange={(e) => handleChange(e)} {...props} />
     </Container>
   );
 };
 
-export default Input;
+export default DatePicker;

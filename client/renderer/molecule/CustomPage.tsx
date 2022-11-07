@@ -7,6 +7,7 @@ import Input from "../atom/Input";
 import { Button } from "../styles";
 import { TagType } from "../types";
 import RadioButton from "../atom/RadioButton";
+import DatePicker from "../atom/DatePicker";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -130,20 +131,6 @@ const DropDown = ({ header, option, ...props }: DropDownProps) => {
           </option>
         ))}
       </select>
-    </div>
-  );
-};
-
-type DatePickerProps = {
-  style?: React.CSSProperties;
-  header?: string;
-};
-
-const DatePicker = ({ header, ...props }: DatePickerProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <input {...props} />
     </div>
   );
 };
