@@ -10,7 +10,7 @@ const initialState: MyGroupsState = {
     {
       teamId: 999,
       name: "현재 속한 팀이 없습니다.",
-      profileUrl: "images/logo.png",
+      imageUrl: "images/logo.png",
     },
   ],
 };

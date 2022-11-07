@@ -8,6 +8,7 @@ import { TEAM_USER_API, USERS_API, PATH } from "../constants";
 import { GroupOptions } from "../types";
 import Router from "next/router";
 import { H1, Input, Label, Button } from "../styles";
+// import { wrapper } from "../store";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -85,7 +86,7 @@ export default function Home() {
     const accessToken = localStorage.getItem("token");
     try {
       const params = {
-        page: 1,
+        page: 0,
         size: 20,
       };
       const { data } = await axios.get(TEAM_USER_API.LIST, {
@@ -150,9 +151,18 @@ export default function Home() {
           ></Input>
         </DomainInputContainer>
         <ButtonContainer>
-          <Button onClick={submitDomainInput}>확인</Button>
+          <Button onClick={submitDomainInput} disabled={!conditionDomain}>
+            확인
+          </Button>
         </ButtonContainer>
       </Container>
     </LayoutContainer>
   );
 }
+
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) => async () => {
+//     store.getState();
+//     return { props: {} };
+//   }
+// );
