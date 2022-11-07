@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { useAppSelector } from "../hooks/reduxHook";
 import { BarProps } from "../types";
+import Router from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -29,6 +30,7 @@ const SelectedGroupContainer = styled.div`
 const UserProfileImg = styled.img`
   width: 40px;
   height: 40px;
+  cursor: pointer;
 `;
 
 export default function NavBar(props: BarProps) {
@@ -44,7 +46,12 @@ export default function NavBar(props: BarProps) {
         {props.selectedTeamId == -1 ? "" : myGroups[props.selectedTeamId].name}
       </SelectedGroupContainer>
       <ProfileImgContainer>
-        <UserProfileImg src={userProfile.profileImage}></UserProfileImg>
+        <UserProfileImg
+          src={userProfile.profileImage}
+          onClick={() => {
+            Router.push("/account-options");
+          }}
+        ></UserProfileImg>
       </ProfileImgContainer>
     </Container>
   );

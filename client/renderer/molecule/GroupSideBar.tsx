@@ -75,7 +75,7 @@ export default function GroupSideBar(props: BarProps) {
     <Container>
       {myGroups.map((group, idx) => (
         <div key={idx}>
-          {group.profileUrl === BASIC_PHOTO_URL ? (
+          {group.imageUrl === BASIC_PHOTO_URL ? (
             <NoProfileContainer
               style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
               onClick={() => {
@@ -87,8 +87,8 @@ export default function GroupSideBar(props: BarProps) {
           ) : (
             <GroupProfileImg
               src={
-                typeof group.profileUrl === "string"
-                  ? group.profileUrl
+                typeof group.imageUrl === "string"
+                  ? group.imageUrl
                   : BASIC_PHOTO_URL
               }
               style={idx === props.selectedTeamId ? clickedCss : unClickedCss}

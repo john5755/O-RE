@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { H2, H3, Button, Input, Label } from "../styles";
 import { BASIC_PHOTO_URL } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
+import { useAppSelector } from "../hooks/reduxHook";
+import { useSelector } from "react-redux";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -44,14 +46,18 @@ const ButtonContainer = styled.div`
 `;
 
 export default function AccountOptions() {
+  const userProfile = useAppSelector(
+    (state) => state.userProfileState
+  ).userProfileState;
+
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
-    BASIC_PHOTO_URL
+    userProfile.profileImage
   );
 
   // nickname 변경
-  const [nickname, setNickName] = useState<string>("");
+  const [nickname, setNickName] = useState<string>(userProfile.nickname);
 
   function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setNickName(event.target.value);
@@ -75,18 +81,19 @@ export default function AccountOptions() {
             id="nicknameInput"
             name="nickname"
             height="50px"
+            value={nickname}
             onChange={handleNicknameInput}
             style={{ margin: "10px auto" }}
           ></Input>
           <Label>직책</Label>
-          <H3 style={{ margin: "5px auto" }}>팀원</H3>
-          <Label style={{ display: "block" }}>탈퇴</Label>
+          <H3 style={{ margin: "5px auto" }}>{userProfile.role}</H3>
+          <Label style={{ display: "block" }}>비밀번호 변경</Label>
           <Button
             width="120px"
             height="35px"
             style={{ background: "#C74E4E", margin: "3px 0 3px" }}
           >
-            그룹나가기
+            비밀번호 변경
           </Button>
         </ExtraContainer>
         <ButtonContainer>

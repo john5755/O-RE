@@ -13,7 +13,7 @@ export interface GroupUserType {
 export interface GroupOptions extends Object {
   teamId: number;
   name: string;
-  profileUrl: string | null | ArrayBuffer;
+  imageUrl: string | null | ArrayBuffer;
 }
 
 export interface UserProfileOptions extends Object {
