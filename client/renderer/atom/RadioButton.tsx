@@ -1,11 +1,22 @@
+import styled from "@emotion/styled";
 import React, { Dispatch, SetStateAction } from "react";
+import { InputType } from "../types";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const HeaderContainer = styled.div`
+  padding-bottom: 10px;
+`;
 
 type RadioButtonProps = {
   header?: string;
   label?: string[];
   style?: React.CSSProperties;
-  userInput?: any;
-  setUserInput?: Dispatch<SetStateAction<any>>;
+  userInput?: InputType;
+  setUserInput?: Dispatch<SetStateAction<InputType>>;
 };
 
 const RadioButton = ({
@@ -16,7 +27,7 @@ const RadioButton = ({
   ...props
 }: RadioButtonProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!userInput[header!]) {
+    if (!userInput![header!]) {
       setUserInput!((pre: any) => {
         return { ...pre, [header!]: "" };
       });
@@ -27,8 +38,8 @@ const RadioButton = ({
   };
 
   return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
+    <Container>
+      {header !== "" && <HeaderContainer>{header}</HeaderContainer>}
 
       {label?.map((v, i) => (
         <div key={v} style={{ display: "flex", textAlign: "center" }}>
@@ -36,7 +47,7 @@ const RadioButton = ({
           <label>{v}</label>
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 

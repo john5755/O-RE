@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
+import DatePicker from "../atom/DatePicker";
 import Input from "../atom/Input";
 import List from "../atom/List";
 import RadioButton from "../atom/RadioButton";
@@ -25,6 +26,7 @@ const Component: {
   input: Input,
   table: Table,
   "radio button": RadioButton,
+  "date picker": DatePicker,
 };
 
 const arr = [
@@ -73,6 +75,14 @@ const arr = [
         width: "200px",
         height: "30px",
       },
+    },
+  },
+  {
+    type: "date picker",
+    tagProps: {
+      type: "date",
+      header: "투표 날짜를 기입하세요",
+      style: { width: "200px", height: "" },
     },
   },
 ];

@@ -49,3 +49,7 @@ export interface TagType {
   type: string;
   tagProps: TagPropsType;
 }
+
+export interface InputType {
+  [key: string]: string;
+}

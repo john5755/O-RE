@@ -34,14 +34,14 @@ export const TAG_LIST: TagType[] = [
   //     style: { width: "100px", height: "" },
   //   },
   // },
-  // {
-  //   type: "date picker",
-  //   tagProps: {
-  //     type: "date",
-  //     header: "날짜 제목",
-  //     style: { width: "", height: "" },
-  //   },
-  // },
+  {
+    type: "date picker",
+    tagProps: {
+      type: "date",
+      header: "날짜 제목",
+      style: { width: "200px", height: "" },
+    },
+  },
   {
     type: "input",
 

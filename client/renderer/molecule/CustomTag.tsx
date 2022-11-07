@@ -102,6 +102,33 @@ const CustomInput = ({ obj, setObj, objIdx }: CustomType) => {
   );
 };
 
+const CustomDatePicker = ({ obj, setObj, objIdx }: CustomType) => {
+  return (
+    <CustomContainer>
+      <Label>라벨</Label>
+      <Input
+        type="text"
+        value={obj[objIdx].tagProps.header}
+        onChange={(e) =>
+          setObj((pre: TagType[]) => {
+            return [
+              ...pre.slice(0, objIdx),
+              {
+                ...pre[objIdx],
+                tagProps: {
+                  ...pre[objIdx].tagProps,
+                  header: e.target.value,
+                },
+              },
+              ...pre.slice(objIdx + 1),
+            ];
+          })
+        }
+      />
+    </CustomContainer>
+  );
+};
+
 const CustomRadioButton = ({ obj, setObj, objIdx }: CustomType) => {
   const [labelCnt, setLabelCnt] = useState<number>(
     obj[objIdx].tagProps.label?.length as number
@@ -206,7 +233,7 @@ const Component: {
 } = {
   text: CustomText,
   // list: List,
-  // "date picker": DatePicker,
+  "date picker": CustomDatePicker,
   input: CustomInput,
   // "file upload": FileUpload,
   // table: Table,
