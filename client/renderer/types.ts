@@ -41,6 +41,7 @@ interface TagPropsType {
   row?: number;
   column?: number;
   href?: string;
+  name?: string;
   style?: React.CSSProperties;
 }
 

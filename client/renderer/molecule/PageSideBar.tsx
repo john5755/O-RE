@@ -29,6 +29,9 @@ const Button = styled.button`
 export default function PageSideBar() {
   return (
     <Container>
+      <Link href={PATH.VIEW_PAGE}>
+        <Button>페이지 바로가기</Button>
+      </Link>
       <Link href={PATH.CREATE_PAGE}>
         <Button>+</Button>
       </Link>

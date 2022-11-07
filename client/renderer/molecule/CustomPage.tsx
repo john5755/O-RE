@@ -1,7 +1,12 @@
 import styled from "@emotion/styled";
 import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
+import List from "../atom/List";
+import Table from "../atom/Table";
+import Text from "../atom/Text";
+import Input from "../atom/Input";
 import { Button } from "../styles";
 import { TagType } from "../types";
+import RadioButton from "../atom/RadioButton";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -25,69 +30,24 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   border: ${(props) => props.highlighted && `2px solid var(--main-color)`};
 `;
 
-type ListProps = PropsWithChildren<{
-  count?: number;
-  style?: React.CSSProperties;
-  children?: string[];
-  header?: string;
-}>;
+// type ButtonComponentProps = PropsWithChildren<{
+//   children?: string;
+//   header?: string;
+//   style?: React.CSSProperties;
+// }>;
 
-const List = ({ count, header, children, ...props }: ListProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      {count !== undefined &&
-        children !== undefined &&
-        [...Array(count)].map((v, index) => (
-          <li {...props} key={`${index} - ${v}`}>
-            {children[index]}
-          </li>
-        ))}
-    </div>
-  );
-};
-
-type TextProps = PropsWithChildren<{
-  style?: React.CSSProperties;
-  children?: string;
-}>;
-const Text = ({ children, ...props }: TextProps) => {
-  return <div {...props}>{children}</div>;
-};
-
-type InputProps = PropsWithChildren<{
-  style?: React.CSSProperties;
-  header?: string;
-  children?: string;
-}>;
-
-const Input = ({ children, header, ...props }: InputProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <input {...props}></input>
-    </div>
-  );
-};
-
-type ButtonComponentProps = PropsWithChildren<{
-  children?: string;
-  header?: string;
-  style?: React.CSSProperties;
-}>;
-
-const ButtonComponent = ({
-  children,
-  header,
-  ...props
-}: ButtonComponentProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <button {...props}>{children}</button>
-    </div>
-  );
-};
+// const ButtonComponent = ({
+//   children,
+//   header,
+//   ...props
+// }: ButtonComponentProps) => {
+//   return (
+//     <div style={{ display: "grid" }}>
+//       {header !== "" && <div>{header}</div>}
+//       <button {...props}>{children}</button>
+//     </div>
+//   );
+// };
 
 type TextAreaProps = {
   style?: React.CSSProperties;
@@ -113,27 +73,6 @@ const FileUpload = ({ header, ...props }: FileUploadProps) => {
     <div style={{ display: "grid" }}>
       {header !== "" && <div>{header}</div>}
       <input {...props}></input>
-    </div>
-  );
-};
-
-type RadioButtonProps = {
-  header?: string;
-  label?: string[];
-  style?: React.CSSProperties;
-};
-
-const RadioButton = ({ header, label, ...props }: RadioButtonProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-
-      {label?.map((v, _) => (
-        <div key={v} style={{ display: "flex", textAlign: "center" }}>
-          <input {...props} />
-          <label>{v}</label>
-        </div>
-      ))}
     </div>
   );
 };
@@ -209,32 +148,6 @@ const DatePicker = ({ header, ...props }: DatePickerProps) => {
   );
 };
 
-type TableProps = {
-  style?: React.CSSProperties;
-  header?: string;
-  row?: number;
-  column?: number;
-};
-
-const Table = ({ header, row, column, ...props }: TableProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <table {...props}>
-        {row !== undefined &&
-          column !== undefined &&
-          [...Array(row)].map((_) => (
-            <tr style={{ border: "1px solid black" }}>
-              {[...Array(column)].map((_) => (
-                <td style={{ border: "1px solid black" }}></td>
-              ))}
-            </tr>
-          ))}
-      </table>
-    </div>
-  );
-};
-
 const Component: {
   [key: string]: React.FunctionComponent<{ [key: string]: any }>;
 } = {
@@ -249,7 +162,7 @@ const Component: {
   "drop down": DropDown,
   "text area": TextArea,
   hyperlink: HyperLink,
-  button: ButtonComponent,
+  //  button: ButtonComponent,
 };
 
 interface MutableRefObject<T> {

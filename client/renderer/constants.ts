@@ -8,13 +8,14 @@ export const PATH = {
   SIGNUP: "/signup",
   ACCOUNT_OPTIONS: "/account-options",
   CREATE_GROUP: "/create-group",
+  VIEW_PAGE: "/view-page",
 };
 
 export const TAG_LIST: TagType[] = [
   {
     type: "text",
     tagProps: {
-      children: "내용",
+      header: "내용",
       style: {
         width: "",
         height: "",
@@ -91,6 +92,7 @@ export const TAG_LIST: TagType[] = [
     tagProps: {
       type: "radio",
       header: "라디오 버튼 제목",
+      name: "",
       label: ["one", "two", "three"],
       style: { width: "", height: "" },
     },

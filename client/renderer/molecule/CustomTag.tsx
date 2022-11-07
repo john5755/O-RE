@@ -54,7 +54,7 @@ const CustomText = ({ obj, setObj, objIdx }: CustomType) => {
       <Label>텍스트 내용</Label>
       <Input
         type="text"
-        value={obj[objIdx].tagProps.children}
+        value={obj[objIdx].tagProps.header}
         onChange={(e) =>
           setObj((pre: TagType[]) => {
             return [
@@ -63,7 +63,7 @@ const CustomText = ({ obj, setObj, objIdx }: CustomType) => {
                 ...pre[objIdx],
                 tagProps: {
                   ...pre[objIdx].tagProps,
-                  children: e.target.value,
+                  header: e.target.value,
                 },
               },
               ...pre.slice(objIdx + 1),
