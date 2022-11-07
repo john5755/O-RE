@@ -8,6 +8,7 @@ import { Button } from "../styles";
 import { TagType } from "../types";
 import RadioButton from "../atom/RadioButton";
 import DatePicker from "../atom/DatePicker";
+import CheckBox from "../atom/CheckBox";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -30,25 +31,6 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   }
   border: ${(props) => props.highlighted && `2px solid var(--main-color)`};
 `;
-
-// type ButtonComponentProps = PropsWithChildren<{
-//   children?: string;
-//   header?: string;
-//   style?: React.CSSProperties;
-// }>;
-
-// const ButtonComponent = ({
-//   children,
-//   header,
-//   ...props
-// }: ButtonComponentProps) => {
-//   return (
-//     <div style={{ display: "grid" }}>
-//       {header !== "" && <div>{header}</div>}
-//       <button {...props}>{children}</button>
-//     </div>
-//   );
-// };
 
 type TextAreaProps = {
   style?: React.CSSProperties;
@@ -89,27 +71,6 @@ const HyperLink = ({ header, children, ...props }: HyperLinkProps) => {
     <div style={{ display: "grid" }}>
       {header !== "" && <div>{header}</div>}
       <a {...props}>{children}</a>
-    </div>
-  );
-};
-
-type CheckBoxProps = {
-  header?: string;
-  label?: string[];
-  style?: React.CSSProperties;
-};
-
-const CheckBox = ({ header, label, ...props }: CheckBoxProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-
-      {label?.map((v) => (
-        <div key={v} style={{ display: "flex", textAlign: "center" }}>
-          <input {...props} />
-          <label>{v}</label>
-        </div>
-      ))}
     </div>
   );
 };

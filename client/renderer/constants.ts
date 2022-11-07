@@ -78,15 +78,15 @@ export const TAG_LIST: TagType[] = [
       },
     },
   },
-  // {
-  //   type: "check box",
-  //   tagProps: {
-  //     type: "checkbox",
-  //     header: "체크박스 버튼 제목",
-  //     label: ["one", "two", "three"],
-  //     style: { width: "", height: "" },
-  //   },
-  // },
+  {
+    type: "check box",
+    tagProps: {
+      type: "checkbox",
+      header: "체크박스 버튼 제목",
+      label: ["one", "two", "three"],
+      style: { width: "", height: "" },
+    },
+  },
   {
     type: "radio button",
     tagProps: {

@@ -11,6 +11,11 @@ const HeaderContainer = styled.div`
   padding-bottom: 10px;
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  text-align: center;
+`;
+
 type RadioButtonProps = {
   header?: string;
   label?: string[];
@@ -42,10 +47,10 @@ const RadioButton = ({
       {header !== "" && <HeaderContainer>{header}</HeaderContainer>}
 
       {label?.map((v, i) => (
-        <div key={v} style={{ display: "flex", textAlign: "center" }}>
+        <InputContainer key={v}>
           <input value={v} {...props} onChange={(e) => handleChange(e)} />
           <label>{v}</label>
-        </div>
+        </InputContainer>
       ))}
     </Container>
   );
