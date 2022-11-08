@@ -19,6 +19,6 @@ public interface UserService {
     Slice<UserSearchResponseDto> searchUserByNickname(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchAllUser(Pageable pageable);
     UserInfoResponseDto findUserInfo();
-    void initializeProfileImage();
     Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo);
+    Long modifyUserPassword(UserPasswordRequestDto userPasswordRequestDto);
 }

@@ -171,32 +171,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void initializeProfileImage() {
-        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        user.initializeProfileImage();
-    }
-
-    @Override
-    @Transactional
     public Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo) {
         User user = userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        try {
-            user.modifyProfileImage(profileImage, s3Uploader);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(!profileInfo.getImageUrl().equals(user.getProfileImage())) {
+            if(profileInfo.getImageUrl().equals(User.getDefaultImageUrl()))
+                user.initializeProfileImage();
+            else {
+                try {
+                    user.modifyProfileImage(profileImage, s3Uploader);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
-        if(profileInfo != null) {
-            if(profileInfo.getPassword() != null && !profileInfo.getPassword().equals(""))
-                user.changePassword(encoder.encode(profileInfo.getPassword()));
+        if(profileInfo.getNickname() != null && !profileInfo.getNickname().equals(""))
+            user.modifyProfileNickname(profileInfo.getNickname());
 
-            if(profileInfo.getNickname() != null && !profileInfo.getNickname().equals(""))
-                user.modifyProfileNickname(profileInfo.getNickname());
-        }
+        return user.getId();
+    }
 
+    @Override
+    @Transactional
+    public Long modifyUserPassword(UserPasswordRequestDto userPasswordRequestDto) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(!encoder.encode(userPasswordRequestDto.getOldPassword()).equals(user.getPassword()))
+            throw new CustomException(ErrorCode.NOT_VALID_PASSWORD);
+
+        if(userPasswordRequestDto.getOldPassword().equals(userPasswordRequestDto.getNewPassword()))
+            throw new CustomException(ErrorCode.DUPLICATE_PASSWORD);
+
+        user.changePassword(encoder.encode(userPasswordRequestDto.getNewPassword()));
         return user.getId();
     }
 
