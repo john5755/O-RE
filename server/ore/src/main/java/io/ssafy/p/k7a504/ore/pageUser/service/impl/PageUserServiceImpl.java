@@ -149,8 +149,29 @@ public class PageUserServiceImpl implements PageUserService {
 
     @Override
     public Slice<PageOfTeamResponseDto> pageOfTeam(Long teamId, Pageable pageable) {
+        if(!teamUserRepository.existsById(teamId)){
+            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
+        }
         Long userId = SecurityUtil.getCurrentUserId();
         Slice<PageUser> pageUserList = pageUserRepository.findByTeamIdAndUserId(teamId,userId, pageable);
         return pageUserList.map(PageOfTeamResponseDto::new);
+    }
+
+    @Override
+    public Slice<PageUserResponseDto> findPageUserByName(Long pageId, String name, Pageable pageable) {
+        if(!pageRepository.existsById(pageId)){
+            throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
+        }
+        Slice<PageUser> pageUserList = pageUserRepository.findAllByUserName(pageId, name, pageable);
+        return pageUserList.map(PageUserResponseDto::new);
+    }
+
+    @Override
+    public Slice<PageUserResponseDto> findPageUserByNickame(Long pageId, String nickName, Pageable pageable) {
+        if(!pageRepository.existsById(pageId)){
+            throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
+        }
+        Slice<PageUser> pageUserList = pageUserRepository.findAllByNickName(pageId, nickName, pageable);
+        return pageUserList.map(PageUserResponseDto::new);
     }
 }
