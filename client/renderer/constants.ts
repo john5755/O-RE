@@ -19,9 +19,8 @@ export const TAG_LIST: TagType[] = [
       style: {
         width: "",
         height: "",
-        color: "black",
         fontSize: "30px",
-        fontWeight: "500",
+        fontWeight: "600",
       },
     },
   },
@@ -39,7 +38,12 @@ export const TAG_LIST: TagType[] = [
     tagProps: {
       type: "date",
       header: "날짜 제목",
-      style: { width: "200px", height: "" },
+      style: {
+        width: "200px",
+        height: "",
+        fontSize: "13px",
+        fontWeight: "600",
+      },
     },
   },
   {
@@ -49,8 +53,8 @@ export const TAG_LIST: TagType[] = [
       header: "인풋 제목",
       placeholder: "내용을 입력하세요",
       style: {
-        width: "200px",
-        height: "30px",
+        width: "250px",
+        height: "40px",
       },
     },
   },

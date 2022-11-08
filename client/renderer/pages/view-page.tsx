@@ -17,7 +17,7 @@ const Container = styled.div`
 `;
 
 const TagContainer = styled.div`
-  padding: 15px;
+  padding: 10px;
 `;
 
 const Component: {
@@ -63,8 +63,8 @@ const arr = [
       header: "MVP 선정 이유",
       placeholder: "내용을 입력하세요",
       style: {
-        width: "200px",
-        height: "30px",
+        width: "250px",
+        height: "40px",
       },
     },
   },
@@ -75,8 +75,8 @@ const arr = [
       header: "기타 건의사항",
       placeholder: "내용을 입력하세요",
       style: {
-        width: "200px",
-        height: "30px",
+        width: "250px",
+        height: "40px",
       },
     },
   },
@@ -85,7 +85,7 @@ const arr = [
     tagProps: {
       type: "date",
       header: "투표 날짜를 기입하세요",
-      style: { width: "200px", height: "" },
+      style: { width: "200px", height: "30px" },
     },
   },
   {
@@ -128,6 +128,13 @@ export default function ViewPage() {
                       : {}),
                   }}
                 />
+
+                <div
+                  style={{
+                    height: "15px",
+                    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                  }}
+                ></div>
               </TagContainer>
             )
           );
