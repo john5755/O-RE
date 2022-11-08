@@ -3,10 +3,10 @@ import styled from "@emotion/styled";
 import { H1, Input, Button } from "../styles";
 import UserFormLink from "../molecule/UserFormLink";
 import { PATH, USERS_API } from "../constants";
-import axios from "../utils/axios";
+import axios from "axios";
 import Router from "next/router";
 import { setLogIn } from "../slices/loginSlices";
-import { useAppDispatch } from "../hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -58,6 +58,7 @@ const LinkOptions = [
 ];
 
 export default function Login() {
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const dispatch = useAppDispatch();
 
   const [emailInput, setEamilInput] = useState<string>("");
@@ -81,7 +82,10 @@ export default function Login() {
         email: emailInput,
         password: pwInput,
       };
-      const { data } = await axios.post(USERS_API.LOGIN, credentials);
+      const { data } = await axios.post(
+        `${HOST}${USERS_API.LOGIN}`,
+        credentials
+      );
       if (data.success === true) {
         localStorage.setItem("token", data.data.token);
         const now: Date = new Date();

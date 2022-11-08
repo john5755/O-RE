@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { addGroupState } from "../slices/myGroupsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import axios from "../utils/axios";
+import axios from "axios";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -47,11 +47,14 @@ const ButtonContainer = styled.div`
 `;
 
 export default function CreateGroup() {
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const dispatch = useAppDispatch();
   const myTeams = useAppSelector((state) => state.myGroupsState).myGroupsState;
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(BASIC_PHOTO_URL);
+  const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
+    BASIC_PHOTO_URL
+  );
 
   // teamName 변경
   const [teamName, setTeamName] = useState<string>("");
@@ -72,7 +75,7 @@ export default function CreateGroup() {
     }
     formData.append("info", new Blob([teamInfo], { type: "application/json" }));
     try {
-      const res = await axios.post(TEAM_API.CREATE, formData, {
+      const res = await axios.post(`${HOST}${TEAM_API.CREATE}`, formData, {
         headers: {
           ContentType: "multipart/formdata",
           Authorization: `Bearer ${accessToken}`,
@@ -85,10 +88,7 @@ export default function CreateGroup() {
           imageUrl: photoUrl,
         })
       );
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch {}
   };
 
   return (

@@ -11,7 +11,7 @@ const LinkContainer = styled.ul`
 const LinkOptions = styled.li`
   display: inline-block;
   list-style: none;
-  :first-child {
+  :first-of-type {
     border-right: 1px solid var(--main-color);
     padding-right: 10px;
     margin-right: 10px;
