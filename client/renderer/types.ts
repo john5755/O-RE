@@ -1,7 +1,7 @@
 import React from "react";
 import { SetStateAction, Dispatch } from "react";
 
-export interface GroupUserType {
+export interface TeamUserType {
   userId: number;
   name: string;
   email: string;
@@ -10,7 +10,7 @@ export interface GroupUserType {
   profileImg?: string;
 }
 
-export interface GroupOptions extends Object {
+export interface TeamOptions extends Object {
   teamId: number;
   name: string;
   imageUrl: string | null | ArrayBuffer;

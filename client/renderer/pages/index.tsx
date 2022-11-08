@@ -2,11 +2,11 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setAxiosState } from "../slices/axiosSlice";
-import { setGroupState } from "../slices/myGroupsStateSlice";
+import { setTeamState } from "../slices/myTeamsStateSlice";
 import { setUserProfileState } from "../slices/userProfileSlices";
 import axios from "axios";
 import { TEAM_USER_API, USERS_API, PATH, TEAM_API } from "../constants";
-import { GroupOptions } from "../types";
+import { TeamOptions } from "../types";
 import Router from "next/router";
 import { H1, Input, Label, Button } from "../styles";
 // import { wrapper } from "../store";
@@ -97,8 +97,8 @@ export default function Home() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const myTeams: Array<GroupOptions> = data.data.content;
-      dispatch(setGroupState(myTeams));
+      const myTeams: Array<TeamOptions> = data.data.content;
+      dispatch(setTeamState(myTeams));
     } catch {}
   }, []);
 

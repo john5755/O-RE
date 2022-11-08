@@ -6,7 +6,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { GroupUserType } from "../types";
+import { TeamUserType } from "../types";
 
 interface SearchMenues {
   name: string;
@@ -23,15 +23,15 @@ interface SearchDropDownProps {
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
   MenuItems: SearchMenues | RoleMenues;
-  member?: GroupUserType;
-  groupMembers?: Array<GroupUserType>;
+  member?: TeamUserType;
+  teamMembers?: Array<TeamUserType>;
 }
 
-export default function GroupDropDown(props: SearchDropDownProps) {
+export default function TeamDropDown(props: SearchDropDownProps) {
   const categoryChange = (event: SelectChangeEvent, userId?: number) => {
     props.setCategory(event.target.value as string);
-    if (props.groupMembers !== undefined && userId !== undefined) {
-      props.groupMembers[userId].role = event.target.value as string;
+    if (props.teamMembers !== undefined && userId !== undefined) {
+      props.teamMembers[userId].role = event.target.value as string;
     }
   };
 

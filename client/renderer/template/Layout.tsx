@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useState } from "react";
 import styled from "@emotion/styled";
 import TopBar from "../molecule/TopBar";
-import GroupSideBar from "../molecule/GroupSideBar";
+import TeamSideBar from "../molecule/TeamSideBar";
 import PageSideBar from "../molecule/PageSideBar";
 import NavBar from "../molecule/NavBar";
 import { useRouter } from "next/router";
@@ -50,7 +50,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         <PageContainer>{children}</PageContainer>
       ) : (
         <WrapBodyContainer>
-          <GroupSideBar
+          <TeamSideBar
             selectedTeamId={selectedTeamId}
             setSelectedTeamId={setSelectedTeamId}
           />

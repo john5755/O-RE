@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { addGroupState } from "../slices/myGroupsStateSlice";
+import { addTeamState } from "../slices/myTeamsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "axios";
@@ -46,10 +46,10 @@ const ButtonContainer = styled.div`
   margin: 5px auto;
 `;
 
-export default function CreateGroup() {
+export default function CreateTeam() {
   const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const dispatch = useAppDispatch();
-  const myTeams = useAppSelector((state) => state.myGroupsState).myGroupsState;
+  const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
@@ -82,7 +82,7 @@ export default function CreateGroup() {
         },
       });
       dispatch(
-        addGroupState({
+        addTeamState({
           teamId: myTeams.length,
           name: teamName,
           imageUrl: photoUrl,
