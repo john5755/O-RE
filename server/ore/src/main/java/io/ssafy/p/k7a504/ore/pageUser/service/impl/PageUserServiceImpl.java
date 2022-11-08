@@ -116,11 +116,9 @@ public class PageUserServiceImpl implements PageUserService {
         Long fromUserId = SecurityUtil.getCurrentUserId();
         Long pageId = pageUserDeleteRequestDto.getPageId();
         List<Long> pageUserIdList = pageUserDeleteRequestDto.getPageUserIdList();
-
-        PageUser fromPageUser = pageUserRepository.findById(fromUserId)
+        PageUser fromPageUser = pageUserRepository.findByPageIdAndUserId(pageId,fromUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
         int fromUserRole = fromPageUser.getPageUserRole().getPriority();
-
         if(pageUserRepository.countById(pageUserIdList)!=pageUserIdList.size()){
             throw new CustomException(ErrorCode.PAGE_USER_NOT_FOUND);
         }

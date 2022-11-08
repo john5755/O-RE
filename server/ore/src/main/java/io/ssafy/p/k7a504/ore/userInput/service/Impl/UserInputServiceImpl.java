@@ -40,10 +40,9 @@ public class UserInputServiceImpl implements UserInputService {
         String inputValue = "";
         try {
             inputValue = new ObjectMapper().writeValueAsString(userInputSubmitRequestDto.getInput());
-            System.out.println(inputValue);
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            throw new CustomException(ErrorCode.CANT_CONVERT_TO_STRING);
         }
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));;
@@ -66,7 +65,7 @@ public class UserInputServiceImpl implements UserInputService {
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            throw new CustomException(ErrorCode.CANT_CONVERT_TO_JSON);
         }
         return new UserInputOfPageResponseDto(page, userInputMaps);
     }
