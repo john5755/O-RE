@@ -120,7 +120,14 @@ export default function ViewPage() {
           return (
             TagComponent !== undefined && (
               <TagContainer key={`${v.type}-${index}`}>
-                <TagComponent {...{ ...v.tagProps, userInput, setUserInput }} />
+                <TagComponent
+                  {...{
+                    ...v.tagProps,
+                    ...(INPUT_LIST.includes(v.type)
+                      ? { userInput, setUserInput }
+                      : {}),
+                  }}
+                />
               </TagContainer>
             )
           );

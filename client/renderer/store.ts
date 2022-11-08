@@ -18,11 +18,13 @@ import listStateSlice from "./slices/listSlices";
 import loginSlice from "./slices/loginSlices";
 import myGroupsStateSlice from "./slices/myGroupsStateSlice";
 import userProfileSlices from "./slices/userProfileSlices";
+import axiosSlice from "./slices/axiosSlice";
 import storage from "redux-persist/lib/storage";
 import { createWrapper, MakeStore } from "next-redux-wrapper";
 
 export const rootReducer = combineReducers({
   login: loginSlice,
+  axiosState: axiosSlice,
   listState: listStateSlice,
   myGroupsState: myGroupsStateSlice,
   userProfileState: userProfileSlices,

@@ -5,9 +5,10 @@ import UserModal from "../molecule/UserModal";
 import Router from "next/router";
 import { PATH } from "../constants";
 import UserFormLink from "../molecule/UserFormLink";
-import axios from "../utils/axios";
+import axios from "axios";
 import { isAxiosError } from "../utils/axios";
 import { USERS_API } from "../constants";
+import { useAppSelector } from "../hooks/reduxHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -131,6 +132,7 @@ const LinkOptions = [
 ];
 
 export default function Signup() {
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   // name 상태 및 조건 확인
   const [nameInput, setNameInput] = useState<string>("");
   const conditionName: boolean = /^[가-힣]{2,10}$/.test(nameInput);
@@ -149,7 +151,9 @@ export default function Signup() {
       const params = {
         email: emailInput,
       };
-      const res = await axios.get(USERS_API.VERIFICATION, { params });
+      const res = await axios.get(`${HOST}${USERS_API.VERIFICATION}`, {
+        params,
+      });
       setIsEmailDuplicated(false);
       setIsCodeSent(true);
       setOpenEmailModal(true);
@@ -175,7 +179,7 @@ export default function Signup() {
         code: verificationCode,
       };
       const { data } = await axios.post(
-        USERS_API.VERIFICATION,
+        `${HOST}${USERS_API.VERIFICATION}`,
         codeCredentials
       );
       if (data.success === true) {
@@ -218,7 +222,10 @@ export default function Signup() {
         password: pwInput,
         name: nameInput,
       };
-      const { data } = await axios.post(USERS_API.SIGNUP, credentials);
+      const { data } = await axios.post(
+        `${HOST}${USERS_API.SIGNUP}`,
+        credentials
+      );
       if (data.success === true) {
         setOpenSignupModal(true);
       }

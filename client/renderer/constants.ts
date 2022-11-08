@@ -153,6 +153,7 @@ export const BASIC_PHOTO_URL: string =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
 
 // API
+const PORT = ":8080/";
 const API = "api/";
 const USERS = "users/";
 const TEAM_USER = "team-user/";
@@ -160,16 +161,16 @@ const TEAM = "team/";
 const TEAMS = "teams/";
 
 export const USERS_API = {
-  DOMAIN: API + USERS + "domain",
-  VERIFICATION: API + USERS + "verification",
-  SIGNUP: API + USERS + "signup",
-  LOGIN: API + USERS + "signin",
-  MYPAGE: API + USERS + "mypage",
+  DOMAIN: PORT + API + USERS + "domain",
+  VERIFICATION: PORT + API + USERS + "verification",
+  SIGNUP: PORT + API + USERS + "signup",
+  LOGIN: PORT + API + USERS + "signin",
+  MYPAGE: PORT + API + USERS + "mypage",
 };
 export const TEAM_USER_API = {
-  LIST: API + TEAM_USER + TEAMS + "list",
+  LIST: PORT + API + TEAM_USER + TEAMS + "list",
 };
 
 export const TEAM_API = {
-  CREATE: API + TEAM,
+  CREATE: PORT + API + TEAM,
 };
