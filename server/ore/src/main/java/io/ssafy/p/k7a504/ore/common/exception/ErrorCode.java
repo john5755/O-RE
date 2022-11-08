@@ -31,6 +31,8 @@ public enum ErrorCode {
 
     // JWT
     NOT_FOUND_CREDENTIALS(HttpStatus.UNAUTHORIZED, 40101, "인증정보가 없습니다."),
+    NOT_VALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 40102, "유효하지 않은 Refresh Token입니다."),
+    NOT_FOUND_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 40103, "Refresh Token이 존재하지 않습니다."),
 
     //권한
     CANT_GIVE_HIGHER_AUTH(HttpStatus.UNAUTHORIZED, 40133, "본인의 권한보다 더 높은 권한을 부여할 수 없습니다."),

@@ -3,17 +3,12 @@ package io.ssafy.p.k7a504.ore.common.security;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.user.domain.UserRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+@Slf4j
 public class SecurityUtil {
-
-    private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
-
-    public SecurityUtil() {
-    }
 
     public static String getCurrentEmail() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -32,7 +27,7 @@ public class SecurityUtil {
             throw new CustomException(ErrorCode.NOT_FOUND_CREDENTIALS);
 
         CustomDetails customDetails = (CustomDetails) authentication.getPrincipal();
-        return customDetails.getId();
+        return Long.parseLong(customDetails.getUsername());
     }
 
     public static UserRole getCurrentRole() {

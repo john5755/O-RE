@@ -2,6 +2,7 @@ package io.ssafy.p.k7a504.ore.common.security;
 
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import io.ssafy.p.k7a504.ore.user.domain.UserRole;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,39 +10,49 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+@ToString
 public class CustomDetails implements UserDetails {
 
-    private final User user;
+    private Long id;
+    private String email;
+    private String password;
+    private UserRole role;
 
     public CustomDetails(User user) {
-        this.user = user;
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+    }
+
+    public CustomDetails(String id, String email, String password, String role) {
+        this.id = Long.parseLong(id);
+        this.email = email;
+        this.password = password;
+        this.role = UserRole.valueOf(role);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString()));
+        return Collections.singleton(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getName();
-    }
-
-    public UserRole getRole() {
-        return user.getRole();
+        return id.toString();
     }
 
     public String getEmail() {
-        return user.getEmail();
+        return email;
     }
 
-    public Long getId() {
-        return user.getId();
+    public UserRole getRole() {
+        return role;
     }
 
     @Override
@@ -64,8 +75,4 @@ public class CustomDetails implements UserDetails {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return user.toString();
-    }
 }
