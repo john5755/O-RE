@@ -47,6 +47,9 @@ dependencies {
 	implementation 'org.apache.poi:poi-ooxml:5.2.2' //.xlsx
 	implementation 'org.apache.poi:poi:5.2.2' //.xls
 
+	//Gson
+	implementation 'com.google.code.gson:gson:2.9.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
 	// AWS S3
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }

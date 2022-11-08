@@ -27,14 +27,12 @@ public enum ErrorCode {
     // Page
     PAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40051, " 페이지 정보를 찾을 수 없습니다."),
     PAGE_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40052, "페이지 유저 정보를 찾을 수 없습니다."),
+    PAGE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, 40053, "허용되지 않는 페이지 타입입니다."),
 
     // JWT
     NOT_FOUND_CREDENTIALS(HttpStatus.UNAUTHORIZED, 40101, "인증정보가 없습니다."),
 
     //권한
-    NO_AUTH_TO_INVITE_PAGE(HttpStatus.UNAUTHORIZED, 40130, "페이지에 초대할 수 있는 권한이 없습니다."),
-    NO_AUTH_TO_DELETE_PAGE(HttpStatus.UNAUTHORIZED, 40131, "페이지에 퇴출할 수 있는 권한이 없습니다."),
-    NO_AUTH_TO_MODIFY_PAGE_USER_AUTH(HttpStatus.UNAUTHORIZED, 40132, "해당 페이지 유저의 권한을 변경할 수 있는 권한이 없습니다."),
     CANT_GIVE_HIGHER_AUTH(HttpStatus.UNAUTHORIZED, 40133, "본인의 권한보다 더 높은 권한을 부여할 수 없습니다."),
     NO_AUTH_TO_INVITE(HttpStatus.UNAUTHORIZED, 40134, "초대할 수 있는 권한이 없습니다."),
     NO_AUTH_TO_DELETE(HttpStatus.UNAUTHORIZED, 40135, "퇴출할 수 있는 권한이 없습니다."),
