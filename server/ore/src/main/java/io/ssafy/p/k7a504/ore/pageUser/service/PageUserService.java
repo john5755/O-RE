@@ -13,4 +13,6 @@ public interface PageUserService {
     Slice<PageUserResponseDto> getPageUserList(Long pageId, Pageable pageable);
     Long changeAuth(PageUserModifyAuthRequestDto pageUserModifyAuthRequestDto);
     Slice<PageOfTeamResponseDto> pageOfTeam(Long teamId, Pageable pageable);
+    Slice<PageUserResponseDto> findPageUserByName(Long pageId, String name, Pageable pageable);
+    Slice<PageUserResponseDto> findPageUserByNickame(Long pageId, String nickName, Pageable pageable);
 }

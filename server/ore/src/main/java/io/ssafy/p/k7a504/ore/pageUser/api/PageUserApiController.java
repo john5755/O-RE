@@ -27,6 +27,18 @@ public class PageUserApiController {
                 .body(new CommonResponse<>(pageUserService.getPageUserList(pageId, pageable)));
     }
 
+    @GetMapping("/nickname")
+    public ResponseEntity<? extends BasicResponse> findPageUserByNickname(@RequestParam Long pageId,@RequestParam String nickName , Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageUserService.findPageUserByNickame(pageId, nickName, pageable)));
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<? extends BasicResponse> findPageUserByName(@RequestParam Long pageId, @RequestParam String name , Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageUserService.findPageUserByName(pageId, name, pageable)));
+    }
+
     @GetMapping("/{pageUserId}")
     public ResponseEntity<? extends BasicResponse> pageUserGet(@PathVariable Long pageUserId) {
         return ResponseEntity.status(HttpStatus.OK)
