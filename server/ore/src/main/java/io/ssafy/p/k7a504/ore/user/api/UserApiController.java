@@ -51,6 +51,12 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.signIn(userSignInRequestDto)));
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<? extends BasicResponse> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.reissue(tokenRequestDto)));
+    }
+
     @PostMapping("/password")
     public ResponseEntity<? extends BasicResponse> findUserPassword(@Valid @RequestBody UserInfoRequestDto userInfoRequestDto) {
         userService.findUserPassword(userInfoRequestDto);

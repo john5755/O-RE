@@ -12,6 +12,7 @@ public interface UserService {
     boolean verifyEmail(UserEmailVerificationRequestDto emailVerificationRequestDto);
     String signUp(UserSignUpRequestDto userSignUpRequestDto);
     TokenDto signIn(UserSignInRequestDto userSignInRequestDto);
+    TokenDto reissue(TokenRequestDto tokenRequestDto);
     void findUserPassword(UserInfoRequestDto userInfoRequestDto);
     int addUserList(MultipartFile file);
     Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable);

@@ -3,6 +3,7 @@ package io.ssafy.p.k7a504.ore.user.service.impl;
 import io.ssafy.p.k7a504.ore.common.excel.ExcelUtil;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.common.redis.RedisUtil;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ExcelUtil excelUtil;
     private final S3Uploader s3Uploader;
+    private final RedisUtil redisUtil;
 
     @Override
     public long validateDomainUser() {
@@ -72,12 +74,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public TokenDto signIn(UserSignInRequestDto userSignInRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userSignInRequestDto.getEmail(), userSignInRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        return new TokenDto(tokenProvider.createToken(authentication));
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        redisUtil.setDataExpire("[RefreshToken]"+authentication.getName(), tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExpiration()/1000);
+
+        return tokenDto;
+    }
+
+    @Override
+    @Transactional
+    public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+        if(!tokenProvider.validateToken(tokenRequestDto.getRefreshToken()))
+            throw new CustomException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
+
+        String accessToken = tokenRequestDto.getAccessToken();
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+
+        User user = userRepository.findById(Long.parseLong(authentication.getName()))
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        String refreshToken = redisUtil.getData("[RefreshToken]"+user.getId());
+
+        if(refreshToken == null)
+            throw new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
+
+        if(!refreshToken.equals(tokenRequestDto.getRefreshToken()))
+            throw new CustomException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
+
+        TokenDto newTokenDto = tokenProvider.generateTokenDto(authentication);
+        redisUtil.setDataExpire("[RefreshToken]"+user.getEmail(), newTokenDto.getRefreshToken(), newTokenDto.getRefreshTokenExpiration()/1000);
+        return newTokenDto;
     }
 
     @Override
