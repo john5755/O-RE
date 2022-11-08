@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import React, { useRef, useState } from "react";
+import React, { ReactEventHandler, useRef, useState } from "react";
 import TagList from "../molecule/TagList";
-import { TAG_LIST } from "../constants";
+import { INPUT_LIST, TAG_LIST } from "../constants";
 import CustomTag from "../molecule/CustomTag";
 import { H4, Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
@@ -35,6 +35,19 @@ const MainHeaderContainer = styled.div`
   justify-content: space-between;
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const PageNameInput = styled.input`
+  height: 100%;
+  border: 0;
+  font-size: 20px;
+  padding-left: 10px;
+  outline: none;
+`;
+
 export default function CreatePage() {
   const [list] = useState<TagType[]>(TAG_LIST);
   const [pageTagList, setPageTagList] = useState<TagType[]>([]);
@@ -43,6 +56,7 @@ export default function CreatePage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isSideList, setIsSideList] = useState(false);
   const [isCustom, setIsCustom] = useState<number>(-1);
+  const [pageName, setPageName] = useState("");
 
   const dragStarted = (
     e: React.DragEvent<HTMLDivElement>,
@@ -129,6 +143,24 @@ export default function CreatePage() {
     setPageTagList((pre) => [...pre.slice(0, v), ...pre.slice(v + 1)]);
   };
 
+  const handleSave = () => {
+    const isInput =
+      pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
+        ? false
+        : true;
+    const data = {
+      teamId: 0,
+      name: pageName,
+      pageStatus: isInput ? "INCLUDE_INPUT" : "EXCLUDE_INPUT",
+      content: pageTagList,
+    };
+    console.log(data);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPageName(e.target.value);
+  };
+
   return (
     <Wrapper>
       <SideContainer>
@@ -145,8 +177,22 @@ export default function CreatePage() {
       </SideContainer>
       <MainContainer>
         <MainHeaderContainer>
-          <H4 style={{}}>페이지 예시</H4>
-          <Button width="50px" height="20px" borderRadius="5px" fontSize="10px">
+          <TitleContainer>
+            <H4>제목 : </H4>
+            <PageNameInput
+              placeholder="페이지 제목을 입력하세요."
+              onChange={(e) => handleChange(e)}
+            />
+          </TitleContainer>
+          <Button
+            width="50px"
+            height="40px"
+            borderRadius="5px"
+            fontSize="13px"
+            onClick={() => {
+              handleSave();
+            }}
+          >
             생성
           </Button>
         </MainHeaderContainer>

@@ -136,6 +136,8 @@ export const TAG_LIST: TagType[] = [
   // },
 ];
 
+export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
+
 export const layoutInfo = {
   onlyPage: new Set<string>(),
   withOnlyNavBar: new Set<string>(),
