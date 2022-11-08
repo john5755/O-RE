@@ -7,6 +7,7 @@ import List from "../atom/List";
 import RadioButton from "../atom/RadioButton";
 import Table from "../atom/Table";
 import Text from "../atom/Text";
+import { INPUT_LIST } from "../constants";
 import { Button } from "../styles";
 import { TagType } from "../types";
 
@@ -16,7 +17,7 @@ const Container = styled.div`
 `;
 
 const TagContainer = styled.div`
-  padding: 20px;
+  padding: 15px;
 `;
 
 const Component: {
@@ -35,7 +36,7 @@ const arr = [
   {
     type: "text",
     tagProps: {
-      children: "A504팀 MVP",
+      header: "A504팀 MVP",
       style: {
         width: "",
         height: "",
@@ -102,7 +103,15 @@ const tmp = JSON.stringify(arr);
 export default function ViewPage() {
   const [pageTagList, _] = useState<TagType[]>(JSON.parse(tmp));
   const [userInput, setUserInput] = useState<any>({});
-  console.log(JSON.stringify(userInput));
+  const isInput =
+    pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
+      ? false
+      : true;
+
+  const handleClick = () => {
+    console.log(userInput);
+  };
+
   return (
     <Container>
       {pageTagList.length > 0 &&
@@ -116,9 +125,11 @@ export default function ViewPage() {
             )
           );
         })}
-      <Button width="100px" height="50px">
-        저장
-      </Button>
+      {isInput && (
+        <Button width="100px" height="50px" onClick={handleClick}>
+          저장
+        </Button>
+      )}
     </Container>
   );
 }
