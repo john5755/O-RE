@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,6 +15,5 @@ public class PageUserInviteRequestDto {
     @NotNull
     private Long pageId;
 
-    @NotNull
-    private Long teamUserId;
+    private List<Long> userIdList;
 }

@@ -7,6 +7,7 @@ import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserInviteRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.dto.PageUserModifyAuthRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.service.PageUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +21,14 @@ public class PageUserApiController {
 
     private final PageUserService pageUserService;
 
-    @GetMapping("/list/{pageId}")
-    public ResponseEntity<? extends BasicResponse> allUsersOfPage(@PathVariable Long pageId) {
+    @GetMapping("/list/u/{pageId}")
+    public ResponseEntity<? extends BasicResponse> allUsersOfPage(@PathVariable Long pageId, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse<>(pageUserService.getPageUserList(pageId)));
+                .body(new CommonResponse<>(pageUserService.getPageUserList(pageId, pageable)));
     }
 
-    @GetMapping("")
-    public ResponseEntity<? extends BasicResponse> pageUserGet(@RequestParam("page-user-id") Long pageUserId) {
+    @GetMapping("/{pageUserId}")
+    public ResponseEntity<? extends BasicResponse> pageUserGet(@PathVariable Long pageUserId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageUserService.getPageUser(pageUserId)));
     }
@@ -55,4 +56,11 @@ public class PageUserApiController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(pageUserService.changeAuth(pageUserModifyAuthRequestDto)));
     }
+
+    @GetMapping("/list/p/{teamId}")
+    public ResponseEntity<? extends BasicResponse> pageOfTeam(@PathVariable Long teamId, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(pageUserService.pageOfTeam(teamId, pageable)));
+    }
+
 }

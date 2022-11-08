@@ -1,10 +1,10 @@
 package io.ssafy.p.k7a504.ore.page.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.ssafy.p.k7a504.ore.element.domain.Element;
-import io.ssafy.p.k7a504.ore.element.domain.ElementType;
+import io.ssafy.p.k7a504.ore.common.exception.CustomException;
+import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
-import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import lombok.AccessLevel;
@@ -32,65 +32,42 @@ public class Page {
     private Team team;
 
     private String name;
-    private String sequence;
 
     @Enumerated(EnumType.STRING)
     private PageStatus pageStatus;
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
-    private List<Element> elements = new ArrayList<>();
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
+    private List<PageUser> PageUser;
+
+    private  String content;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
     private List<PageUser> pageUserList = new ArrayList<>();
 
-    private Page(Team team, String name, PageStatus pageStatus) {
+    private Page(Team team, String name, String pageStatus, String content) {
         this.team = team;
         this.name = name;
-        this.pageStatus = pageStatus;
+        this.pageStatus = PageStatus.valueOf(pageStatus);
+        this.content = content;
     }
 
     /**
      * Manager 이상 권한의 TeamUser가 최초로 Page를 생성하는 메서드
      * @param teamUser
-     * @param name
+     * @param pageAddRequestDto
      * @return 새로운 Page
      */
-    public static Page createPage(TeamUser teamUser, String name) {
+    public static Page createPage(TeamUser teamUser, PageAddRequestDto pageAddRequestDto) {
         if (!teamUser.checkTeamUserCanCreatePage()) {
-            // TODO 예외처리해야함
+            throw new CustomException(ErrorCode.NO_AUTH_TO_CREATE);
         }
 
-        Page page = new Page(teamUser.getTeam(), name, PageStatus.EXCLUDE_INPUT);
-        PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
-        pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
-        page.pageUserList.add(pageUser);
-
-        return page;
-    }
-
-
-    /**
-     * Page 가 Input Element 를 가지고 있는지 확인하고 가지고 있다면 PageStatus를 INCLUDE_INPUT으로, 없다면 EXCLUDE_INPUT으로 설정
-     */
-    public void changePageStatusByContainingInput() {
-        // TODO elements 가 있는지 확인하는 검증 필요
-
-        // FIXME element의 Type이 Enum으로 변경되면 그에 맞게 변경해야 함
-        boolean result = elements.stream()
-                .anyMatch(element -> element.getType() == ElementType.INPUT
-                        || element.getType() == ElementType.CHECKBOX
-                        || element.getType() == ElementType.SELECT
-                        || element.getType() == ElementType.RADIO
-                );
-        PageStatus pageStatus = PageStatus.EXCLUDE_INPUT;
-        if(result) pageStatus = PageStatus.INCLUDE_INPUT;
-        confirmPageStatus(pageStatus);
+        return new Page(
+                teamUser.getTeam(), pageAddRequestDto.getName(), pageAddRequestDto.getPageStatus(), pageAddRequestDto.getContent().toString());
     }
 
     private void confirmPageStatus(PageStatus pageStatus) {
         this.pageStatus = pageStatus;
     }
-
 }

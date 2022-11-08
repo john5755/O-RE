@@ -1,21 +1,20 @@
-package io.ssafy.p.k7a504.ore.pageUser.dto;
+package io.ssafy.p.k7a504.ore.userInput.dto;
 
-import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PageUserModifyAuthRequestDto {
+public class UserInputSubmitRequestDto {
     @NotNull
     private Long pageId;
 
     @NotNull
-    private HashMap<Long, PageUserRole> userRoleMapList;
+    private Map<String, Object> input;
 }

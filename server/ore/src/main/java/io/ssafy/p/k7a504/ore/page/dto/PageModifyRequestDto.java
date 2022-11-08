@@ -1,19 +1,27 @@
-package io.ssafy.p.k7a504.ore.pageUser.dto;
+package io.ssafy.p.k7a504.ore.page.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PageUserDeleteRequestDto {
+public class PageModifyRequestDto {
     @NotNull
-    private Long pageId;
-    @NotNull
-    private List<Long> pageUserIdList;
+    Long pageId;
+
+    @NotBlank
+    String name;
+
+    List<Map<String, Object>> content;
+
+    @NotBlank
+    String pageStatus;
 }
