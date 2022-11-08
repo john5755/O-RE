@@ -18,13 +18,13 @@ public interface PageUserRepository extends JpaRepository<PageUser, Long> {
     @Query("select u from Page p join fetch PageUser u on p.id = u.page.id where u.user.id= ?2 and p.team.id = ?1")
     Slice<PageUser> findByTeamIdAndUserId(Long teamId, Long userId, Pageable pageable);
 
-    @Query("select count(p) from PageUser p where p.id in ?1")
-    int countById(List<Long> userIdList);
+    @Query("select count(p.id) from PageUser p where p.id in ?1")
+    int countById(List<Long> pageUserIdList);
 
 
-    @Query("select count(p) from PageUser p where p.id in ?1 and p.pageUserRole=?2")
+    @Query("select count(p.id) from PageUser p where p.id in ?1 and p.pageUserRole=?2")
     int countByIdAndPageUserRole(List<Long> userIdList, PageUserRole pageUserRole);
 
-    @Query("select count(p) from PageUser p where p.page.id =?1 and p.id in ?2")
+    @Query("select count(p.id) from PageUser p where p.page.id =?1 and p.id in ?2")
     int countByPageIdAndUserId(Long pageId, List<Long> userIdList);
 }

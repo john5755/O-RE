@@ -42,7 +42,9 @@ public enum ErrorCode {
 
     // ETC
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40081, "파일이 없습니다."),
-    NOT_EXCEL_FILE(HttpStatus.BAD_REQUEST, 40082, "Excel 파일이 아닙니다.");
+    NOT_EXCEL_FILE(HttpStatus.BAD_REQUEST, 40082, "Excel 파일이 아닙니다."),
+    CANT_CONVERT_TO_JSON(HttpStatus.BAD_REQUEST, 40083, "Json형식으로 바꿀 수 없습니다."),
+    CANT_CONVERT_TO_STRING(HttpStatus.BAD_REQUEST, 40084, "String형식으로 바꿀 수 없습니다.");
 
     private final HttpStatus status;
     private final int code;

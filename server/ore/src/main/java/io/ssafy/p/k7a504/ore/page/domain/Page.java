@@ -37,19 +37,21 @@ public class Page {
     private PageStatus pageStatus;
 
     @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<PageUser> PageUser;
 
-    private  String content;
-
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
-    private List<PageUser> pageUserList = new ArrayList<>();
+    private List<Content> content;
 
-    private Page(Team team, String name, String pageStatus, String content) {
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PageUser> pageUserList;
+
+    private Page(Team team, String name, String pageStatus) {
         this.team = team;
         this.name = name;
         this.pageStatus = PageStatus.valueOf(pageStatus);
-        this.content = content;
     }
 
     /**
@@ -62,12 +64,7 @@ public class Page {
         if (!teamUser.checkTeamUserCanCreatePage()) {
             throw new CustomException(ErrorCode.NO_AUTH_TO_CREATE);
         }
-
         return new Page(
-                teamUser.getTeam(), pageAddRequestDto.getName(), pageAddRequestDto.getPageStatus(), pageAddRequestDto.getContent().toString());
-    }
-
-    private void confirmPageStatus(PageStatus pageStatus) {
-        this.pageStatus = pageStatus;
+                teamUser.getTeam(), pageAddRequestDto.getName(), pageAddRequestDto.getPageStatus());
     }
 }
