@@ -20,7 +20,7 @@ const ProfileImgContainer = styled.div`
   margin-right: 5px;
 `;
 
-const SelectedGroupContainer = styled.div`
+const SelectedTeamContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,13 +38,13 @@ export default function NavBar(props: BarProps) {
     (state) => state.userProfileState
   ).userProfileState;
 
-  const myGroups = useAppSelector((state) => state.myGroupsState).myGroupsState;
+  const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
 
   return (
     <Container>
-      <SelectedGroupContainer>
-        {props.selectedTeamId == -1 ? "" : myGroups[props.selectedTeamId].name}
-      </SelectedGroupContainer>
+      <SelectedTeamContainer>
+        {props.selectedTeamId == -1 ? "" : myTeams[props.selectedTeamId].name}
+      </SelectedTeamContainer>
       <ProfileImgContainer>
         <UserProfileImg
           src={userProfile.profileImage}

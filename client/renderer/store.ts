@@ -16,7 +16,7 @@ import {
 } from "redux-persist";
 import listStateSlice from "./slices/listSlices";
 import loginSlice from "./slices/loginSlices";
-import myGroupsStateSlice from "./slices/myGroupsStateSlice";
+import myTeamsStateSlice from "./slices/myTeamsStateSlice";
 import userProfileSlices from "./slices/userProfileSlices";
 import axiosSlice from "./slices/axiosSlice";
 import storage from "redux-persist/lib/storage";
@@ -26,7 +26,7 @@ export const rootReducer = combineReducers({
   login: loginSlice,
   axiosState: axiosSlice,
   listState: listStateSlice,
-  myGroupsState: myGroupsStateSlice,
+  myTeamsState: myTeamsStateSlice,
   userProfileState: userProfileSlices,
 });
 

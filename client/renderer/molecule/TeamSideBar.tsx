@@ -16,14 +16,14 @@ const Container = styled.div`
   background-color: var(--main-color);
 `;
 
-const GroupContainer = styled.div`
+const TeamContainer = styled.div`
   overflow: auto;
   ::-webkit-scrollbar {
     display: none;
   }
 `;
 
-const GroupProfileImg = styled.img`
+const TeamProfileImg = styled.img`
   border-radius: 50%;
   display: block;
   margin: 8px auto;
@@ -72,49 +72,49 @@ const clickedCss = {
   fontSize: "16px",
 };
 
-export default function GroupSideBar(props: BarProps) {
-  const selectGroup = (num: number): void => {
+export default function TeamSideBar(props: BarProps) {
+  const selectTeam = (num: number): void => {
     props.setSelectedTeamId(num);
   };
-  const myGroups = useAppSelector((state) => state.myGroupsState).myGroupsState;
+  const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
 
   return (
     <Container>
-      <GroupContainer>
-        {myGroups.map((group, idx) => (
+      <TeamContainer>
+        {myTeams.map((team, idx) => (
           <div key={idx}>
-            {group.imageUrl === BASIC_PHOTO_URL ? (
+            {team.imageUrl === BASIC_PHOTO_URL ? (
               <NoProfileContainer
                 style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
                 onClick={() => {
-                  selectGroup(idx);
+                  selectTeam(idx);
                 }}
               >
-                {group.name}
+                {team.name}
               </NoProfileContainer>
             ) : (
-              <GroupProfileImg
+              <TeamProfileImg
                 src={
-                  typeof group.imageUrl === "string"
-                    ? group.imageUrl
+                  typeof team.imageUrl === "string"
+                    ? team.imageUrl
                     : BASIC_PHOTO_URL
                 }
                 style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
                 onClick={() => {
-                  selectGroup(idx);
+                  selectTeam(idx);
                 }}
-              ></GroupProfileImg>
+              ></TeamProfileImg>
             )}
           </div>
         ))}
         <PlusButtonContainer
           onClick={() => {
-            Router.push(PATH.CREATE_GROUP);
+            Router.push(PATH.CREATE_TEAM);
           }}
         >
           +
         </PlusButtonContainer>
-      </GroupContainer>
+      </TeamContainer>
     </Container>
   );
 }

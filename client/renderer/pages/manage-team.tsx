@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 import { H2, H3, Label, Button, Input } from "../styles";
 import { BASIC_PHOTO_URL } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import GroupDropDown from "../molecule/GroupDropdown";
-import { GroupUserType } from "../types";
+import TeamDropDown from "../molecule/TeamDropdown";
+import { TeamUserType } from "../types";
 import SearchResults from "../molecule/SearchResults";
 
 const LayoutContainer = styled.div`
@@ -29,11 +29,11 @@ const Container = styled.div`
   max-width: 560px;
 `;
 
-const GroupProfileContainer = styled.div`
+const TeamProfileContainer = styled.div`
   width: 100%;
 `;
 
-const GroupMemberManageContainer = styled.div`
+const TeamMemberManageContainer = styled.div`
   width: 100%;
 `;
 
@@ -87,7 +87,7 @@ const SearchInput = styled.input`
   }
 `;
 
-const testGroupMembers = [
+const testTeamMembers = [
   {
     userId: 0,
     name: "박싸피",
@@ -138,40 +138,40 @@ const testGroupMembers = [
   },
 ];
 
-export default function ManageGroup() {
+export default function ManageTeam() {
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
     BASIC_PHOTO_URL
   );
   // nickname 변경
-  const [groupName, setGroupName] = useState<string>("");
+  const [teamName, setTeamName] = useState<string>("");
 
-  function handleGroupNameInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setGroupName(event.target.value);
+  function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
+    setTeamName(event.target.value);
   }
 
   // role dropdown
   const [role, setRole] = useState<string>("");
   // serach dropdown
   const searchMenues = { name: "이름", nickName: "닉네임" };
-  // //group member
+  // //team member
   const [searchMemberCategory, setSearchMemberCategory] =
     useState<string>("name");
   // //all member
   const [searchAddCategory, setSearchAddCategory] = useState<string>("name");
   // searchInput
-  // // group member
-  const [searchGroupInput, setSearchGroupInput] = useState<string>("");
-  const handleGroupSearchInput = (
+  // // team member
+  const [searchTeamInput, setSearchTeamInput] = useState<string>("");
+  const handleTeamSearchInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSearchGroupInput(event.target.value);
+    setSearchTeamInput(event.target.value);
   };
-  const [searchGroupResultList, setSearchGroupResultList] =
-    useState<Array<GroupUserType>>(testGroupMembers);
-  const fetchGroupResultList = () => {
-    setSearchGroupResultList(testGroupMembers);
+  const [searchTeamResultList, setSearchTeamResultList] =
+    useState<Array<TeamUserType>>(testTeamMembers);
+  const fetchTeamResultList = () => {
+    setSearchTeamResultList(testTeamMembers);
   };
   // // all member
   const [searchAllInput, setSearchAllInput] = useState<string>("");
@@ -179,16 +179,16 @@ export default function ManageGroup() {
     setSearchAllInput(event.target.value);
   };
   const [searchAllResultList, setSearchAllResultList] = useState<
-    Array<GroupUserType>
+    Array<TeamUserType>
   >([]);
   const fetchAllResultList = () => {
-    setSearchAllResultList(testGroupMembers);
+    setSearchAllResultList(testTeamMembers);
   };
 
   return (
     <LayoutContainer>
       <Container>
-        <GroupProfileContainer>
+        <TeamProfileContainer>
           <TitleContainer>
             <H2 style={{ fontWeight: "bold" }}>팀 관리</H2>
           </TitleContainer>
@@ -199,17 +199,17 @@ export default function ManageGroup() {
             setPhotoUrl={setPhotoUrl}
           ></ProfilePhotos>
           <NameContainer>
-            <Label htmlFor="groupNameInput">팀 이름</Label>
+            <Label htmlFor="teamNameInput">팀 이름</Label>
             <Input
-              id="groupNameInput"
-              name="groupname"
+              id="teamNameInput"
+              name="teamname"
               height="50px"
-              onChange={handleGroupNameInput}
+              onChange={handleTeamNameInput}
               style={{ margin: "10px auto" }}
             ></Input>
           </NameContainer>
-        </GroupProfileContainer>
-        <GroupMemberManageContainer>
+        </TeamProfileContainer>
+        <TeamMemberManageContainer>
           <TitleContainer
             style={{ display: "flex", justifyContent: "space-between" }}
           >
@@ -224,19 +224,19 @@ export default function ManageGroup() {
             </MemberLabelContainer>
             <SearchContainer>
               <SearchCategoryInputContainer>
-                <GroupDropDown
+                <TeamDropDown
                   category={searchMemberCategory}
                   setCategory={setSearchMemberCategory}
                   MenuItems={searchMenues}
-                ></GroupDropDown>
-                <SearchInput onChange={handleGroupSearchInput}></SearchInput>
+                ></TeamDropDown>
+                <SearchInput onChange={handleTeamSearchInput}></SearchInput>
               </SearchCategoryInputContainer>
-              <Button width="60px" height="40px" onClick={fetchGroupResultList}>
+              <Button width="60px" height="40px" onClick={fetchTeamResultList}>
                 검색
               </Button>
             </SearchContainer>
             <SearchResults
-              ResultList={searchGroupResultList}
+              ResultList={searchTeamResultList}
               textButtonColor="#C74E4E"
               textButtonText="삭제"
               needDropdown={true}
@@ -248,11 +248,11 @@ export default function ManageGroup() {
             </MemberLabelContainer>
             <SearchContainer>
               <SearchCategoryInputContainer>
-                <GroupDropDown
+                <TeamDropDown
                   category={searchAddCategory}
                   setCategory={setSearchAddCategory}
                   MenuItems={searchMenues}
-                ></GroupDropDown>
+                ></TeamDropDown>
                 <SearchInput onChange={handleAllSearchInput}></SearchInput>
               </SearchCategoryInputContainer>
               <Button width="60px" height="40px" onClick={fetchAllResultList}>
@@ -266,7 +266,7 @@ export default function ManageGroup() {
               needDropdown={false}
             ></SearchResults>
           </MemberListContainer>
-        </GroupMemberManageContainer>
+        </TeamMemberManageContainer>
       </Container>
     </LayoutContainer>
   );

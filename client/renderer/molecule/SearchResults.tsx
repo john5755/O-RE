@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "@emotion/styled";
-import { GroupUserType } from "../types";
+import { TeamUserType } from "../types";
 import { H4 } from "../styles";
-import GroupDropDown from "./GroupDropdown";
+import TeamDropDown from "./TeamDropdown";
 
 const ResultContainer = styled.div`
   height: 220px;
@@ -38,7 +38,7 @@ const TextButtonContainer = styled.div`
 `;
 
 interface SearchResultProps {
-  ResultList: Array<GroupUserType>;
+  ResultList: Array<TeamUserType>;
   textButtonColor: string;
   textButtonText: string;
   needDropdown: boolean;
@@ -66,7 +66,7 @@ export default function SearchResults(props: SearchResultProps) {
           </ItemNameConatiner>
           <div style={{ display: "flex" }}>
             {props.needDropdown ? (
-              <GroupDropDown
+              <TeamDropDown
                 category={
                   props.category !== undefined ? props.category : tempCategory
                 }
@@ -77,8 +77,8 @@ export default function SearchResults(props: SearchResultProps) {
                 }
                 MenuItems={RoleMenues}
                 member={member}
-                groupMembers={props.ResultList}
-              ></GroupDropDown>
+                teamMembers={props.ResultList}
+              ></TeamDropDown>
             ) : (
               <></>
             )}

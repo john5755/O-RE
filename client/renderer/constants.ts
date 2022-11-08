@@ -7,7 +7,7 @@ export const PATH = {
   CREATE_PAGE: "/create-page",
   SIGNUP: "/signup",
   ACCOUNT_OPTIONS: "/account-options",
-  CREATE_GROUP: "/create-group",
+  CREATE_TEAM: "/create-team",
   VIEW_PAGE: "/view-page",
 };
 
@@ -147,7 +147,7 @@ layoutInfo.onlyPage.add(PATH.LOGIN);
 layoutInfo.onlyPage.add(PATH.FIND_PASSWORD);
 layoutInfo.onlyPage.add(PATH.SIGNUP);
 layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
-layoutInfo.withOnlyNavBar.add(PATH.CREATE_GROUP);
+layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
 
 export const BASIC_PHOTO_URL: string =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
