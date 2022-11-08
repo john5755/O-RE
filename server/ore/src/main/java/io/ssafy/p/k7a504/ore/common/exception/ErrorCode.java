@@ -18,6 +18,8 @@ public enum ErrorCode {
     AUTHORITY_NOT_FOUND(HttpStatus.BAD_REQUEST, 40003, " 권한 정보를 찾을 수 없습니다."),
     NOT_VALID_USER_ROLE(HttpStatus.BAD_REQUEST, 40004, "유효한 USER_ROLE이 아닙니다."),
     NO_EMPTY_KEYWORD(HttpStatus.BAD_REQUEST, 40007, "검색어를 입력해야합니다."),
+    DUPLICATE_PASSWORD(HttpStatus.BAD_REQUEST, 40008, "비밀번호가 변경되기 전과 같습니다."),
+    NOT_VALID_PASSWORD(HttpStatus.BAD_REQUEST, 40009, "비밀번호가 일치하지 않습니다."),
 
 
     // Team

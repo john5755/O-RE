@@ -94,16 +94,16 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.findUserInfo()));
     }
 
-    @PostMapping("/default")
-    public ResponseEntity<? extends BasicResponse> initializeProfileImage() {
-        userService.initializeProfileImage();
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PostMapping("/mypage")
-    public ResponseEntity<? extends BasicResponse> modifyUserInfo(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage, @RequestPart(value = "profileInfo", required = false) UserModifyReqeustDto profileInfo) {
+    @PutMapping("/mypage")
+    public ResponseEntity<? extends BasicResponse> modifyUserInfo(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage, @RequestPart(value = "profileInfo") UserModifyReqeustDto profileInfo) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.modifyUserInfo(profileImage, profileInfo)));
+    }
+
+    @PutMapping("/mypage/pw")
+    public ResponseEntity<? extends BasicResponse> modifyUserPassword(@RequestBody UserPasswordRequestDto userPasswordRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.modifyUserPassword(userPasswordRequestDto)));
     }
 
 
