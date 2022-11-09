@@ -65,7 +65,7 @@ export default function Login() {
   const conditionEmail: boolean = /^[\w+_]\w+@\w+\.\w+/.test(emailInput);
   const [pwInput, setPwInput] = useState<string>("");
   const conditionPassword: boolean =
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(pwInput);
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pwInput);
 
   function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -87,10 +87,19 @@ export default function Login() {
         credentials
       );
       if (data.success === true) {
-        localStorage.setItem("token", data.data.token);
-        const now: Date = new Date();
-        const expiredAt: number = now.setDate(now.getDate() + 7);
-        localStorage.setItem("expiredAt", expiredAt.toLocaleString());
+        localStorage.setItem("accessToken", `Bearer ` + data.data.accessToken);
+        localStorage.setItem(
+          "refreshToken",
+          `Bearer ` + data.data.refreshToken
+        );
+        localStorage.setItem(
+          "accessExpiredAt",
+          data.data.accessTokenExpiration
+        );
+        localStorage.setItem(
+          "refreshExpiredAt",
+          data.data.refreshTokenExpiration
+        );
         dispatch(setLogIn("name"));
         Router.push(PATH.MAIN);
       }

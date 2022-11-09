@@ -63,7 +63,7 @@ export default function CreateTeam() {
   }
 
   const submitCreateTeam = async () => {
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
     const teamInfoJson = {
       name: teamName,
       imageUrl: photoUrl,
@@ -78,7 +78,7 @@ export default function CreateTeam() {
       const res = await axios.post(`${HOST}${TEAM_API.CREATE}`, formData, {
         headers: {
           ContentType: "multipart/formdata",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: accessToken,
         },
       });
       dispatch(

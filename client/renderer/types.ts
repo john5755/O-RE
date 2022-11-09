@@ -20,7 +20,7 @@ export interface UserProfileOptions extends Object {
   email: string;
   name: string;
   nickname: string;
-  role: string;
+  role: "OWNER" | "LEADER" | "ADMIN" | "USER";
   profileImage: string;
 }
 

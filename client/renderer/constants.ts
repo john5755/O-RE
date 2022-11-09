@@ -152,6 +152,7 @@ layoutInfo.onlyPage.add(PATH.FIND_PASSWORD);
 layoutInfo.onlyPage.add(PATH.SIGNUP);
 layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
 layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
+layoutInfo.withOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
 
 export const BASIC_PHOTO_URL: string =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
@@ -170,6 +171,7 @@ export const USERS_API = {
   SIGNUP: PORT + API + USERS + "signup",
   LOGIN: PORT + API + USERS + "signin",
   MYPAGE: PORT + API + USERS + "mypage",
+  LIST: PORT + API + USERS + "list",
 };
 export const TEAM_USER_API = {
   LIST: PORT + API + TEAM_USER + TEAMS + "list",

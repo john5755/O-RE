@@ -85,7 +85,7 @@ export default function Home() {
   };
 
   const setMyTeams = useCallback(async () => {
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
     try {
       const params = {
         page: 0,
@@ -94,7 +94,7 @@ export default function Home() {
       const { data } = await axios.get(`${HOST}${TEAM_USER_API.LIST}`, {
         params,
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: accessToken,
         },
       });
       const myTeams: Array<TeamOptions> = data.data.content;
@@ -103,11 +103,11 @@ export default function Home() {
   }, []);
 
   const setUserProfile = useCallback(async () => {
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
     try {
       const { data } = await axios.get(`${HOST}${USERS_API.MYPAGE}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: accessToken,
         },
       });
       dispatch(setUserProfileState(data.data));
