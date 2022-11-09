@@ -10,7 +10,7 @@ const initialState: UserProfileState = {
     email: "",
     name: "",
     nickname: "",
-    role: "",
+    role: "USER",
     profileImage: "",
   },
 };

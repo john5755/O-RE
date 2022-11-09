@@ -192,7 +192,7 @@ export default function Signup() {
   // Password 상태 및 조건 확인
   const [pwInput, setPwInput] = useState<string>("");
   const conditionPassword: boolean =
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(pwInput);
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pwInput);
 
   // Password 일치 확인
   const [pwConfirm, setPwConfirm] = useState<string>("");
@@ -397,7 +397,7 @@ export default function Signup() {
             <Input
               id="password"
               name="password"
-              placeholder="영문,숫자,특수문자 포함 10자리 이상"
+              placeholder="영문,숫자 포함 8~20자리, 특수문자는 @$!%*#?& 허용"
               type="password"
               height="40px"
               onChange={handleInput}

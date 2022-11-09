@@ -1,10 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Button, Input, Label } from "../styles";
-import { BASIC_PHOTO_URL } from "../constants";
-import ProfilePhotos from "../molecule/ProfilePhotos";
+import { H2, Label } from "../styles";
+import UserOption from "../molecule/UserOption";
+import ServerOption from "../molecule/ServerOption";
 import { useAppSelector } from "../hooks/reduxHook";
-import { useSelector } from "react-redux";
+import { Tab, Tabs, Box } from "@mui/material";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -29,88 +35,85 @@ const Container = styled.div`
   max-width: 560px;
 `;
 
-const TextContainer = styled.div`
-  width: 100%;
-  height: 30px;
-  margin: 10px 0 20px 0;
-`;
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
 
-const ExtraContainer = styled.div`
-  width: 100%;
-  margin-bottom: 15px;
-`;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
-const ButtonContainer = styled.div`
-  width: 100%;
-  margin: 5px auto;
-`;
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function AccountOptions() {
+  const [tabValue, setTabValue] = useState<number>(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
 
-  // profile 사진 설정
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
-    userProfile.profileImage
-  );
-
-  // nickname 변경
-  const [nickname, setNickName] = useState<string>(userProfile.nickname);
-
-  function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setNickName(event.target.value);
-  }
+  const isRole = userProfile.role === "OWNER" || userProfile.role === "ADMIN";
 
   return (
     <LayoutContainer>
       <Container>
-        <TextContainer>
-          <H2 style={{ fontWeight: "bold" }}>계정 설정</H2>
-        </TextContainer>
-        <ProfilePhotos
-          photo={photo}
-          setPhoto={setPhoto}
-          photoUrl={photoUrl}
-          setPhotoUrl={setPhotoUrl}
-        ></ProfilePhotos>
-        <ExtraContainer>
-          <Label htmlFor="nicknameInput">닉네임</Label>
-          <Input
-            id="nicknameInput"
-            name="nickname"
-            height="50px"
-            value={nickname}
-            onChange={handleNicknameInput}
-            style={{ margin: "10px auto" }}
-          ></Input>
-          <Label>직책</Label>
-          <H3 style={{ margin: "5px auto" }}>{userProfile.role}</H3>
-          <Label style={{ display: "block" }}>비밀번호 변경</Label>
-          <Button
-            width="120px"
-            height="35px"
-            style={{ background: "#C74E4E", margin: "3px 0 3px" }}
-          >
-            비밀번호 변경
-          </Button>
-        </ExtraContainer>
-        <ButtonContainer>
-          <Button
-            height="50px"
-            style={{
-              background: "white",
-              color: "#C74E4E",
-              border: "2px solid #C74E4E",
-            }}
-          >
-            로그아웃
-          </Button>
-        </ButtonContainer>
-        <ButtonContainer>
-          <Button height="50px">저장</Button>
-        </ButtonContainer>
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "white" }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              sx={{
+                ".MuiButtonBase-root": {
+                  color: "gray",
+                  "&.Mui-selected": {
+                    color: "var(--main-color)",
+                  },
+                },
+              }}
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: "var(--main-color)",
+                },
+              }}
+            >
+              <Tab
+                label="계정 설정"
+                {...a11yProps(0)}
+                sx={{ fontWeight: "bold" }}
+              />
+              {isRole && (
+                <Tab
+                  label="서버 관리"
+                  {...a11yProps(1)}
+                  sx={{ fontWeight: "bold" }}
+                />
+              )}
+            </Tabs>
+          </Box>
+          <TabPanel value={tabValue} index={0}>
+            <UserOption></UserOption>
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <ServerOption></ServerOption>
+          </TabPanel>
+        </Box>
       </Container>
     </LayoutContainer>
   );

@@ -69,7 +69,7 @@ export default function UserModal(props: ModalProps) {
               <Button
                 width="30%"
                 height="45px"
-                borderRadius="10%"
+                borderRadius="10px"
                 onClick={() => {
                   props.setOpen(false);
                   if (
