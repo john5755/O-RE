@@ -1,19 +1,11 @@
-server:
-  servlet:
-    contextPath: /
-    encoding:
-      enabled: "true"
-      force: "true"
-      charset: UTF-8
-  port: "8080"
 
 spring:
   #mail
   mail:
     port: 465
     host: smtp.naver.com
-    username: oreofficialcontact
-    password: ore1234!@#$
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         debug: true
@@ -27,7 +19,7 @@ spring:
           ssl:
             enable: true
   redis:
-    host: localhost
+    host: ${DOMAIN}
     port: 6379
 
   #mysql
@@ -47,12 +39,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-#      password: test504
-#      username: oretest
-#    url: jdbc:mysql://k7a504.p.ssafy.io:3306/oredb?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-      password: ore504%)$
-      username: ore504
-    url: jdbc:mysql://localhost:3306/ore?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${DOMAIN}:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
 
   devtools:
     livereload:
@@ -77,10 +66,10 @@ cloud:
     stack:
       auto: false
     region:
-      static: ap-northeast-2
+      static: ${REGION}
     credentials:
-      access-key: AKIAYYKS2KK4MUHS2OXO
-      secret-key: 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
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
     s3:
-      bucket: ore-s3
-      bucketUrl: https://ore-s3.s3.ap-northeast-2.amazonaws.com/
+      bucket: ${BUCKET}
+      bucketUrl: https://${BUCKET}.s3.${REGION}.amazonaws.com/

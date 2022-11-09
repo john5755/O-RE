@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UserService {
     long validateDomainUser();
     void sendCertificationEmail(String email);
@@ -21,4 +23,6 @@ public interface UserService {
     UserInfoResponseDto findUserInfo();
     Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo);
     Long modifyUserPassword(UserPasswordRequestDto userPasswordRequestDto);
+    Long leaveServer();
+    int removeUser(List<Long> userIds);
 }
