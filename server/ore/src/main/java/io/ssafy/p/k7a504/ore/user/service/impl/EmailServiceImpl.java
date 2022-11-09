@@ -54,6 +54,7 @@ public class EmailServiceImpl implements EmailService {
         if(email == null || !email.equals(requestDto.getEmail()))
             throw new CustomException(ErrorCode.NOT_VALID_CERTIFICATION_CODE);
         redisUtil.deleteData(requestDto.getCode());
+        redisUtil.setDataExpire("[Success]"+email, email, 60 * 60L);
         return true;
     }
 

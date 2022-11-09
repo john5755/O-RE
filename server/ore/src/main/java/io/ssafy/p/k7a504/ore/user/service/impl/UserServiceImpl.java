@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(userSignUpRequestDto.getEmail()))
             throw new CustomException(ErrorCode.DUPLICATE_USER_EMAIL);
 
+        String verification = redisUtil.getData("[Success]"+userSignUpRequestDto.getEmail());
+        if(verification == null)
+            throw new CustomException(ErrorCode.NOT_VALID_EMAIL);
+        redisUtil.deleteData("[Success]"+userSignUpRequestDto.getEmail());
+
         return userRepository.save(userSignUpRequestDto.toEntityWithOwner(encoder)).getEmail();
     }
 
