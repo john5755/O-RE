@@ -60,16 +60,8 @@ public class ExcelUtil {
                     else duplication.add(email);
 
                     map.put("email", email);
-                    map.put("password", encoder.encode(getCellValue(row.getCell(1))));
-                    map.put("name", getCellValue(row.getCell(2)));
-
-                    String role = getCellValue(row.getCell(3));
-                    if(role.equals(UserRole.OWNER.toString()))
-                        throw new CustomException(ErrorCode.AUTHORITY_NOT_FOUND);
-                    else if(role.equals(UserRole.USER.toString()) || role.equals(UserRole.ADMIN.toString()))
-                        map.put("role", UserRole.valueOf(role));
-                    else
-                        throw new CustomException(ErrorCode.NOT_VALID_USER_ROLE);
+                    map.put("password", encoder.encode(email.split("@")[0] + "123!"));
+                    map.put("name", getCellValue(row.getCell(1)));
 
                     excelList.add(map);
                 }
