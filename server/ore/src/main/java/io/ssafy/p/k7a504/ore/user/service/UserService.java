@@ -15,6 +15,7 @@ public interface UserService {
     String signUp(UserSignUpRequestDto userSignUpRequestDto);
     TokenDto signIn(UserSignInRequestDto userSignInRequestDto);
     TokenDto reissue(TokenRequestDto tokenRequestDto);
+    boolean logout();
     void findUserPassword(UserInfoRequestDto userInfoRequestDto);
     int addUserList(MultipartFile file);
     Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable);
