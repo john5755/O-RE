@@ -9,6 +9,20 @@ const Container = styled.div`
 
 const HeaderContainer = styled.div`
   padding-bottom: 10px;
+  font-size: 15px;
+  font-weight: 600;
+`;
+
+const InputConainer = styled.input`
+  border: 1px solid var(--light-gray-color);
+  border-radius: 2px;
+  outline: none;
+  font-weight: 500;
+  font-size: 13px;
+  padding-left: 5px;
+  :focus {
+    border-color: var(--main-color);
+  }
 `;
 
 type InputProps = PropsWithChildren<{
@@ -40,7 +54,10 @@ const Input = ({
   return (
     <Container>
       {header !== "" && <HeaderContainer>{header}</HeaderContainer>}
-      <input {...props} onChange={(e) => handleChange(e)}></input>
+      <InputConainer
+        {...props}
+        onChange={(e) => handleChange(e)}
+      ></InputConainer>
     </Container>
   );
 };
