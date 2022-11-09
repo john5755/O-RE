@@ -16,6 +16,17 @@ export interface TeamOptions {
   imageUrl: string | null | ArrayBuffer;
 }
 
+export interface PageOption {
+  pageId: number;
+  name: string;
+  pageUserRole: string;
+}
+
+export interface SelectPageType {
+  idx: number;
+  pageId: number;
+}
+
 export interface UserProfileOptions extends Object {
   email: string;
   name: string;

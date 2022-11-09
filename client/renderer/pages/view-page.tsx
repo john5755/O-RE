@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import CheckBox from "../atom/CheckBox";
 import DatePicker from "../atom/DatePicker";
 import Input from "../atom/Input";
@@ -7,7 +8,8 @@ import List from "../atom/List";
 import RadioButton from "../atom/RadioButton";
 import Table from "../atom/Table";
 import Text from "../atom/Text";
-import { INPUT_LIST } from "../constants";
+import { INPUT_LIST, PAGE_API } from "../constants";
+import { useAppSelector } from "../hooks/reduxHook";
 import { Button } from "../styles";
 import { TagType } from "../types";
 
@@ -101,9 +103,16 @@ const arr = [
 const tmp = JSON.stringify(arr);
 
 export default function ViewPage() {
-  const [pageTagList, _] = useState<TagType[]>(JSON.parse(tmp));
+  const [pageTagList, setPageTagList] = useState<TagType[]>();
   const [userInput, setUserInput] = useState<any>({});
+  const pageInfo = useAppSelector((state) => state.pageState).selectPageState;
+  const pageList = useAppSelector((state) => state.pageState).pageState;
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
   const isInput =
+    pageTagList !== undefined &&
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
@@ -112,9 +121,29 @@ export default function ViewPage() {
     console.log(userInput);
   };
 
+  const getPageList = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    const { data } = await axios.get(
+      `${HOST}${PAGE_API.DETAIL}${pageInfo.pageId}`,
+      {
+        headers: { Authorization: accessToken },
+      }
+    );
+    setPageTagList(data.data.contents);
+  };
+
+  useEffect(() => {
+    if (pageList.length === 0 || pageInfo.idx === -1) {
+      setPageTagList([]);
+      return;
+    }
+    getPageList();
+  }, [pageInfo.pageId, pageList]);
+
   return (
     <Container>
-      {pageTagList.length > 0 &&
+      {pageTagList !== undefined && pageTagList.length > 0 ? (
         pageTagList.map((v, index) => {
           const TagComponent = Component[v.type];
           return (
@@ -138,7 +167,10 @@ export default function ViewPage() {
               </TagContainer>
             )
           );
-        })}
+        })
+      ) : (
+        <div>Welcome O:RE</div>
+      )}
       {isInput && (
         <Button
           width="100px"

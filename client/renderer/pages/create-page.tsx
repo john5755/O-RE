@@ -1,11 +1,15 @@
 import styled from "@emotion/styled";
 import React, { ReactEventHandler, useRef, useState } from "react";
 import TagList from "../molecule/TagList";
-import { INPUT_LIST, TAG_LIST } from "../constants";
+import { INPUT_LIST, PAGE_API, TAG_LIST } from "../constants";
 import CustomTag from "../molecule/CustomTag";
 import { H4, Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
 import { TagType } from "../types";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import axios from "axios";
+import { addPageState } from "../slices/pageSlice";
+import Router from "next/router";
 
 const Wrapper = styled.div`
   display: grid;
@@ -57,6 +61,11 @@ export default function CreatePage() {
   const [isSideList, setIsSideList] = useState(false);
   const [isCustom, setIsCustom] = useState<number>(-1);
   const [pageName, setPageName] = useState("");
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
+  const dispatch = useAppDispatch();
 
   const dragStarted = (
     e: React.DragEvent<HTMLDivElement>,
@@ -143,19 +152,30 @@ export default function CreatePage() {
     setPageTagList((pre) => [...pre.slice(0, v), ...pre.slice(v + 1)]);
   };
 
-  const handleSave = () => {
-    const isInput =
-      pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
-        ? false
-        : true;
-    const data = {
-      teamId: 0,
-      //headerList: pageTagList.map((v) => v.tagProps.header),
-      name: pageName,
-      pageStatus: isInput ? "INCLUDE_INPUT" : "EXCLUDE_INPUT",
-      content: pageTagList,
-    };
-    console.log(data);
+  const handleSave = async () => {
+    try {
+      const isInput =
+        pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
+          ? false
+          : true;
+      const data = {
+        teamId: selectTeam.teamId,
+        headerList: pageTagList.map((v) => v.tagProps.header),
+        name: pageName,
+        pageStatus: isInput ? "INCLUDE_INPUT" : "EXCLUDE_INPUT",
+        content: pageTagList,
+      };
+
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.post(`${HOST}${PAGE_API.ADD}`, data, {
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+      Router.push("/view-page");
+    } catch (e) {
+      //      console.log(e.response.data.message);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

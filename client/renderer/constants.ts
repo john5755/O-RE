@@ -165,6 +165,7 @@ const TEAM_USER = "team-user/";
 const TEAM = "team/";
 const TEAMS = "teams/";
 const PAGE_USER = "page-user/";
+const PAGE = "pages";
 
 export const USERS_API = {
   DOMAIN: PORT + API + USERS + "domain",
@@ -184,4 +185,9 @@ export const TEAM_API = {
 
 export const PAGE_USER_API = {
   ALL: PORT + API + PAGE_USER + "list/p",
+};
+
+export const PAGE_API = {
+  ADD: PORT + API + PAGE,
+  DETAIL: PORT + API + PAGE + "/detail/",
 };

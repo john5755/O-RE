@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setAxiosState } from "../slices/axiosSlice";
-import { setTeamState } from "../slices/myTeamsStateSlice";
+import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
 import { setUserProfileState } from "../slices/userProfileSlices";
 import axios from "axios";
 import { TEAM_USER_API, USERS_API, PATH, TEAM_API } from "../constants";
@@ -99,6 +99,7 @@ export default function Home() {
       });
       const myTeams: Array<TeamOptions> = data.data.content;
       dispatch(setTeamState(myTeams));
+      dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
     } catch {}
   }, []);
 

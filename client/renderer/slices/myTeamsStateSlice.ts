@@ -7,13 +7,7 @@ export interface MyTeamsState {
 }
 
 const initialState: MyTeamsState = {
-  myTeamsState: [
-    {
-      teamId: 999,
-      name: "현재 속한 팀이 없습니다.",
-      imageUrl: "images/logo.png",
-    },
-  ],
+  myTeamsState: [],
   selectTeamState: {
     idx: -1,
     teamId: -1,
