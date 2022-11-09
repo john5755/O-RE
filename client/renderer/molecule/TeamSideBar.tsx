@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { useAppSelector } from "../hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { BASIC_PHOTO_URL } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
 import { BarProps } from "../types";
+import { setSelectTeamState } from "../slices/myTeamsStateSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -72,12 +73,12 @@ const clickedCss = {
   fontSize: "16px",
 };
 
-export default function TeamSideBar(props: BarProps) {
-  const selectTeam = (idx: number, teamId: number): void => {
-    props.setSelectedTeamId({ idx, teamId });
-  };
+export default function TeamSideBar() {
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
-
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
+  const dispatch = useAppDispatch();
   return (
     <Container>
       <TeamContainer>
@@ -85,11 +86,9 @@ export default function TeamSideBar(props: BarProps) {
           <div key={idx}>
             {team.imageUrl === BASIC_PHOTO_URL ? (
               <NoProfileContainer
-                style={
-                  idx === props.selectedTeamId.idx ? clickedCss : unClickedCss
-                }
+                style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                 onClick={() => {
-                  selectTeam(idx, team.teamId);
+                  dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
                 }}
               >
                 {team.name}
@@ -101,11 +100,9 @@ export default function TeamSideBar(props: BarProps) {
                     ? team.imageUrl
                     : BASIC_PHOTO_URL
                 }
-                style={
-                  idx === props.selectedTeamId.idx ? clickedCss : unClickedCss
-                }
+                style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                 onClick={() => {
-                  selectTeam(idx, team.teamId);
+                  dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
                 }}
               ></TeamProfileImg>
             )}

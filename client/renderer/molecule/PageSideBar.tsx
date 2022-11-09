@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { PAGE_USER_API, PATH } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
-import { SelectTeamType } from "../types";
 
 const Container = styled.div`
   width: 100%;
@@ -27,15 +26,11 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-type PageSideBarType = {
-  selectedTeamId: SelectTeamType;
-};
-
-export default function PageSideBar({ selectedTeamId }: PageSideBarType) {
+export default function PageSideBar() {
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
   const HOST = useAppSelector((state) => state.axiosState).axiosState;
-
-  console.log(selectedTeamId);
-
   const getPageList = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -43,8 +38,8 @@ export default function PageSideBar({ selectedTeamId }: PageSideBarType) {
         page: 0,
         size: 100,
       };
-      const res = await axios.get(
-        `${HOST}${PAGE_USER_API.ALL}/${selectedTeamId.teamId}`,
+      const { data } = await axios.get(
+        `${HOST}${PAGE_USER_API.ALL}/${selectTeam.teamId}`,
         {
           params,
           headers: {
@@ -52,16 +47,16 @@ export default function PageSideBar({ selectedTeamId }: PageSideBarType) {
           },
         }
       );
-      console.log(res);
+      console.log(data);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    if (selectedTeamId.teamId === -1) return;
+    if (selectTeam.teamId === -1) return;
     getPageList();
-  }, [selectedTeamId]);
+  }, [selectTeam]);
 
   return (
     <Container>

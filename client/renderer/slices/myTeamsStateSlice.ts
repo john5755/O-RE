@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TeamOptions } from "../types";
+import { SelectTeamType, TeamOptions } from "../types";
 
 export interface MyTeamsState {
   myTeamsState: Array<TeamOptions>;
+  selectTeamState: SelectTeamType;
 }
 
 const initialState: MyTeamsState = {
@@ -13,6 +14,10 @@ const initialState: MyTeamsState = {
       imageUrl: "images/logo.png",
     },
   ],
+  selectTeamState: {
+    idx: -1,
+    teamId: -1,
+  },
 };
 
 export const myTeamsStateSlice = createSlice({
@@ -21,6 +26,9 @@ export const myTeamsStateSlice = createSlice({
   reducers: {
     setTeamState: (state, action: PayloadAction<Array<TeamOptions>>) => {
       state.myTeamsState = action.payload;
+    },
+    setSelectTeamState: (state, action: PayloadAction<SelectTeamType>) => {
+      state.selectTeamState = action.payload;
     },
     addTeamState: (state, action: PayloadAction<TeamOptions>) => {
       state.myTeamsState = [...state.myTeamsState, action.payload];
@@ -33,7 +41,7 @@ export const myTeamsStateSlice = createSlice({
   },
 });
 
-export const { addTeamState, delTeamState, setTeamState } =
+export const { addTeamState, delTeamState, setTeamState, setSelectTeamState } =
   myTeamsStateSlice.actions;
 
 export default myTeamsStateSlice.reducer;

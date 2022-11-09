@@ -42,10 +42,6 @@ const PageContainer = styled.div`
 export default function Layout({ children }: PropsWithChildren<{}>) {
   const { pathname } = useRouter();
   const isLogin = useAppSelector((state) => state.login).isLogin;
-  const [selectedTeamId, setSelectedTeamId] = useState<SelectTeamType>({
-    idx: -1,
-    teamId: -1,
-  });
 
   return (
     <Container>
@@ -54,20 +50,14 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         <PageContainer>{children}</PageContainer>
       ) : (
         <WrapBodyContainer>
-          <TeamSideBar
-            selectedTeamId={selectedTeamId}
-            setSelectedTeamId={setSelectedTeamId}
-          />
+          <TeamSideBar />
           <WrapMainContainer>
-            <NavBar
-              selectedTeamId={selectedTeamId}
-              setSelectedTeamId={setSelectedTeamId}
-            />
+            <NavBar />
             {layoutInfo.withOnlyNavBar.has(pathname) ? (
               <PageContainer>{children}</PageContainer>
             ) : (
               <WrapPageContainer>
-                <PageSideBar selectedTeamId={selectedTeamId} />
+                <PageSideBar />
                 <PageContainer>{children}</PageContainer>
               </WrapPageContainer>
             )}
