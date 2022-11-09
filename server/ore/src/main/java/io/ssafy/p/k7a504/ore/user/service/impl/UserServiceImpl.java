@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         if(!extension.equals("xls") && !extension.equals("xlsx"))
             throw new CustomException(ErrorCode.NOT_EXCEL_FILE);
 
-        List<User> userList = excelUtil.getListData(file, 1, 4, encoder)
+        List<User> userList = excelUtil.getListData(file, 1, 2, encoder)
                 .stream().map(User::mapToUser)
                 .filter(user -> userRepository.existsByEmail(user.getEmail()) == false)
                 .collect(Collectors.toList());

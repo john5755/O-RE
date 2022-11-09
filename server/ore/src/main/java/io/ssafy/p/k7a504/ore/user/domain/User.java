@@ -52,7 +52,7 @@ public class User {
                 .password(map.get("password").toString())
                 .name(map.get("name").toString())
                 .nickname(map.get("name").toString())
-                .role(UserRole.valueOf(map.get("role").toString()))
+                .role(UserRole.USER)
                 .build();
     }
 
