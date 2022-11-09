@@ -1,5 +1,7 @@
 package io.ssafy.p.k7a504.ore.jwt;
 
+import io.ssafy.p.k7a504.ore.common.exception.CustomException;
+import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -32,7 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
         if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+        } else
+            throw new CustomException(ErrorCode.NOT_VALID_ACCESS_TOKEN);
 
         filterChain.doFilter(request, response);
     }

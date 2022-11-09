@@ -58,6 +58,12 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.reissue(tokenRequestDto)));
     }
 
+    @PutMapping("/logout")
+    public ResponseEntity<? extends BasicResponse> logout() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.logout()));
+    }
+
     @PostMapping("/password")
     public ResponseEntity<? extends BasicResponse> findUserPassword(@Valid @RequestBody UserInfoRequestDto userInfoRequestDto) {
         userService.findUserPassword(userInfoRequestDto);
