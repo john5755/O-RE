@@ -8,6 +8,7 @@ body {
 * {
   box-sizing: border-box;
   min-height: 0px;
+  color: #222222;
 }
 
 *::-webkit-scrollbar {
@@ -33,6 +34,7 @@ body {
   --super-light-main-color: #e0eaeb;
   --light-gray-color: #c6c6c6;
   --dark-gray-color: #3c3c3c;
+  --font-color: #1d1d1f;
   --body-s: 12px;
   --body-m: 14px;
   --body-l: 16px;

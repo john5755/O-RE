@@ -150,6 +150,7 @@ export default function CreatePage() {
         : true;
     const data = {
       teamId: 0,
+      //headerList: pageTagList.map((v) => v.tagProps.header),
       name: pageName,
       pageStatus: isInput ? "INCLUDE_INPUT" : "EXCLUDE_INPUT",
       content: pageTagList,
