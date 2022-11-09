@@ -10,7 +10,7 @@ export interface TeamUserType {
   profileImg?: string;
 }
 
-export interface TeamOptions extends Object {
+export interface TeamOptions {
   teamId: number;
   name: string;
   imageUrl: string | null | ArrayBuffer;
@@ -25,8 +25,8 @@ export interface UserProfileOptions extends Object {
 }
 
 export interface BarProps {
-  selectedTeamId: number;
-  setSelectedTeamId: Dispatch<SetStateAction<number>>;
+  selectedTeamId: SelectTeamType;
+  setSelectedTeamId: Dispatch<SetStateAction<SelectTeamType>>;
 }
 
 interface TagPropsType {
@@ -52,4 +52,9 @@ export interface TagType {
 
 export interface InputType {
   [key: string]: string | string[];
+}
+
+export interface SelectTeamType {
+  idx: number;
+  teamId: number;
 }

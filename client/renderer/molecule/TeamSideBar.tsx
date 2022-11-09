@@ -73,8 +73,8 @@ const clickedCss = {
 };
 
 export default function TeamSideBar(props: BarProps) {
-  const selectTeam = (num: number): void => {
-    props.setSelectedTeamId(num);
+  const selectTeam = (idx: number, teamId: number): void => {
+    props.setSelectedTeamId({ idx, teamId });
   };
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
 
@@ -85,9 +85,11 @@ export default function TeamSideBar(props: BarProps) {
           <div key={idx}>
             {team.imageUrl === BASIC_PHOTO_URL ? (
               <NoProfileContainer
-                style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
+                style={
+                  idx === props.selectedTeamId.idx ? clickedCss : unClickedCss
+                }
                 onClick={() => {
-                  selectTeam(idx);
+                  selectTeam(idx, team.teamId);
                 }}
               >
                 {team.name}
@@ -99,9 +101,11 @@ export default function TeamSideBar(props: BarProps) {
                     ? team.imageUrl
                     : BASIC_PHOTO_URL
                 }
-                style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
+                style={
+                  idx === props.selectedTeamId.idx ? clickedCss : unClickedCss
+                }
                 onClick={() => {
-                  selectTeam(idx);
+                  selectTeam(idx, team.teamId);
                 }}
               ></TeamProfileImg>
             )}

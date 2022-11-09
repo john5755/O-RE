@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
+import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
-import { PATH } from "../constants";
+import React, { useEffect } from "react";
+import { PAGE_USER_API, PATH } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
+import { SelectTeamType } from "../types";
 
 const Container = styled.div`
   width: 100%;
@@ -26,7 +27,42 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-export default function PageSideBar() {
+type PageSideBarType = {
+  selectedTeamId: SelectTeamType;
+};
+
+export default function PageSideBar({ selectedTeamId }: PageSideBarType) {
+  const HOST = useAppSelector((state) => state.axiosState).axiosState;
+
+  console.log(selectedTeamId);
+
+  const getPageList = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const params = {
+        page: 0,
+        size: 100,
+      };
+      const res = await axios.get(
+        `${HOST}${PAGE_USER_API.ALL}/${selectedTeamId.teamId}`,
+        {
+          params,
+          headers: {
+            Authorization: accessToken,
+          },
+        }
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedTeamId.teamId === -1) return;
+    getPageList();
+  }, [selectedTeamId]);
+
   return (
     <Container>
       <Link href={PATH.VIEW_PAGE}>

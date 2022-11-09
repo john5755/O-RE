@@ -43,7 +43,9 @@ export default function NavBar(props: BarProps) {
   return (
     <Container>
       <SelectedTeamContainer>
-        {props.selectedTeamId == -1 ? "" : myTeams[props.selectedTeamId].name}
+        {props.selectedTeamId.idx == -1
+          ? ""
+          : myTeams[props.selectedTeamId.idx].name}
       </SelectedTeamContainer>
       <ProfileImgContainer>
         <UserProfileImg

@@ -7,6 +7,7 @@ import NavBar from "../molecule/NavBar";
 import { useRouter } from "next/router";
 import { layoutInfo } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
+import { SelectTeamType } from "../types";
 
 const Container = styled.div`
   height: 100vh;
@@ -41,7 +42,10 @@ const PageContainer = styled.div`
 export default function Layout({ children }: PropsWithChildren<{}>) {
   const { pathname } = useRouter();
   const isLogin = useAppSelector((state) => state.login).isLogin;
-  const [selectedTeamId, setSelectedTeamId] = useState<number>(-1);
+  const [selectedTeamId, setSelectedTeamId] = useState<SelectTeamType>({
+    idx: -1,
+    teamId: -1,
+  });
 
   return (
     <Container>
@@ -63,7 +67,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
               <PageContainer>{children}</PageContainer>
             ) : (
               <WrapPageContainer>
-                <PageSideBar />
+                <PageSideBar selectedTeamId={selectedTeamId} />
                 <PageContainer>{children}</PageContainer>
               </WrapPageContainer>
             )}
