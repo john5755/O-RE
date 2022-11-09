@@ -7,10 +7,7 @@ import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
-import io.ssafy.p.k7a504.ore.teamUser.dto.ModifyAuthorityRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamInfoResponseDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamMemberAddRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.UserInfoResponseDto;
+import io.ssafy.p.k7a504.ore.teamUser.dto.*;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.service.TeamUserService;
 import io.ssafy.p.k7a504.ore.user.domain.User;
@@ -20,8 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,23 +42,32 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
     @Override
     @Transactional
-    public Long inviteMember(TeamMemberAddRequestDto teamMemberAddRequestDto) {
-        Long userId = teamMemberAddRequestDto.getUserId();
-        Long teamId = teamMemberAddRequestDto.getTeamId();
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkTeamUserRoleToInviteMember()){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE);
-        }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        if(teamUserRepository.existsByUserAndTeam(user, team)){
+    public Long inviteMembers(TeamMemberAddRequestDto teamMemberAddRequestDto) {
+        if(teamUserRepository.countByUserIdListAndTeamId(teamMemberAddRequestDto.getUserIdList(), teamMemberAddRequestDto.getTeamId())!=0){
             throw new CustomException(ErrorCode.DUPLICATE_TEAM_USER);
         }
-        TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.MEMBER);
-        return teamUserRepository.save(teamUser).getId();
+
+        Long teamId = teamMemberAddRequestDto.getTeamId();
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+        if(modifier.getRole().getPriority()==1){
+            throw new CustomException(ErrorCode.NO_AUTH_TO_INVITE);
+        }
+
+        List<TeamUser> teamUserList = new ArrayList<>();
+        List<User> userList = userRepository.findByIdIn(teamMemberAddRequestDto.getUserIdList());
+        if(userList.size()!=teamMemberAddRequestDto.getUserIdList().size())
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        for(User user: userList){
+            TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.MEMBER);
+            teamUserList.add(teamUser);
+        }
+
+        teamUserRepository.saveAll(teamUserList);
+        return SecurityUtil.getCurrentUserId();
     }
 
     @Override
@@ -72,7 +79,7 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     public Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable) {
         Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, pageable);
-        if(teamUsers.getNumberOfElements()==0){
+        if (teamUsers.getNumberOfElements() == 0) {
             throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
         }
         return teamUsers.map(UserInfoResponseDto::new);
@@ -80,34 +87,51 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     @Transactional
-    public Long grantAuthority(ModifyAuthorityRequestDto modifyAuthorityRequestDto, TeamUserRole role) {
-        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), modifyAuthorityRequestDto.getTeamId())
+    public void changeAuthorites(List<ModifyAuthoritiesParamDto> modifyAuthoritiesParamList, Long teamId) {
+        TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser member = teamUserRepository.findByUserIdAndTeamId(modifyAuthorityRequestDto.getUserId(), modifyAuthorityRequestDto.getTeamId())
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkHavingAuthorityOverUser(member)){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
-        }
-        if(!modifier.checkPriorityOfAuthority(role)){
-            throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
-        }
-        member.modifyTeamUserAuthority(role);
-        return modifyAuthorityRequestDto.getUserId();
-    }
 
+        List<Long>teamUserIdList = modifyAuthoritiesParamList.stream().map(ModifyAuthoritiesParamDto::getTeamUserId).collect(Collectors.toList());
+
+        if(teamUserRepository.countById(teamUserIdList)!=teamUserIdList.size())
+            throw new CustomException(ErrorCode.TEAM_USER_NOT_FOUND);
+
+        for(ModifyAuthoritiesParamDto modifyAuthoritiesParamDto: modifyAuthoritiesParamList){
+            TeamUser member = teamUserRepository.findById(modifyAuthoritiesParamDto.getTeamUserId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
+            if(!modifier.checkHavingAuthorityOverUser(member)){
+                throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+            }
+            if(!modifier.checkPriorityOfAuthority(modifyAuthoritiesParamDto.getTeamUserRole())){
+                throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
+            }
+            member.modifyTeamUserAuthority(modifyAuthoritiesParamDto.getTeamUserRole());
+        }
+    }
 
     @Override
     @Transactional
-    public Long removeMember(Long userId, Long teamId) {
+    public Long removeMembers(DeleteMemberRequestDto deleteMemberRequestDto) {
+
+        Long teamId = deleteMemberRequestDto.getTeamId();
+        if(teamUserRepository.countByTeamUserIdListAndTeamId(deleteMemberRequestDto.getTeamUserIdList(), teamId)!=deleteMemberRequestDto.getTeamUserIdList().size()){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        TeamUser member = teamUserRepository.findByUserIdAndTeamId(userId, teamId)
-                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
-        if(!modifier.checkHavingAuthorityOverUser(member)){
-            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+
+        if(modifier.getRole()==TeamUserRole.MEMBER) {
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+        }else if(modifier.getRole()==TeamUserRole.MANAGER){
+            if(teamUserRepository.countByLeaderAndManager(deleteMemberRequestDto.getTeamUserIdList())>0)
+                throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+        }else{
+            if(teamUserRepository.countByLeader(deleteMemberRequestDto.getTeamUserIdList())>0)
+                throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }
-        teamUserRepository.delete(member);
-        return userId;
+
+        teamUserRepository.deleteAllByIdInBatch(deleteMemberRequestDto.getTeamUserIdList());
+        return SecurityUtil.getCurrentUserId();
     }
 
     @Override
@@ -123,4 +147,15 @@ public class TeamUserServiceImpl implements TeamUserService {
         return SecurityUtil.getCurrentUserId();
     }
 
+    @Override
+    public Slice<UserInfoResponseDto> findUserByName(String name, Long teamId, Pageable pageable) {
+        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNameAndTeamId(name, teamId,  pageable);
+        return teamUsers.map(UserInfoResponseDto::new);
+    }
+
+    @Override
+    public Slice<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId, Pageable pageable) {
+        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNicknameAndTeamId(nickName, teamId, pageable);
+        return teamUsers.map(UserInfoResponseDto::new);
+    }
 }

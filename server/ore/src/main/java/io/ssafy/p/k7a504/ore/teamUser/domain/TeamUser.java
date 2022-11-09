@@ -62,7 +62,7 @@ public class TeamUser {
         return true;
     }
     public boolean checkPriorityOfAuthority(TeamUserRole role){
-        if(this.getRole().getPriority()>role.getPriority())
+        if(this.getRole().getPriority()>=role.getPriority())
             return true;
         return false;
     }

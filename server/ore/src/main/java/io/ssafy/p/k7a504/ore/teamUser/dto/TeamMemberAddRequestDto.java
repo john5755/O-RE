@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,5 +14,5 @@ public class TeamMemberAddRequestDto {
     @NotNull
     private Long teamId;
     @NotNull
-    private Long userId;
+    private List<Long> userIdList;
 }
