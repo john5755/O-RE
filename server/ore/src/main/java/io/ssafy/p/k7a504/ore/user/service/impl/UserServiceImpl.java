@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
 
         TokenDto newTokenDto = tokenProvider.generateTokenDto(authentication);
-        redisUtil.setDataExpire("[RefreshToken]"+user.getEmail(), newTokenDto.getRefreshToken(), newTokenDto.getRefreshTokenExpiration().getTime()/1000);
+        redisUtil.setDataExpire("[RefreshToken]"+user.getId(), newTokenDto.getRefreshToken(), newTokenDto.getRefreshTokenExpiration().getTime()/1000);
         return newTokenDto;
     }
 
