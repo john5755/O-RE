@@ -1,24 +1,21 @@
 package io.ssafy.p.k7a504.ore.teamUser.service;
 
-import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
-import io.ssafy.p.k7a504.ore.teamUser.dto.ModifyAuthorityRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamInfoResponseDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.TeamMemberAddRequestDto;
-import io.ssafy.p.k7a504.ore.teamUser.dto.UserInfoResponseDto;
+import io.ssafy.p.k7a504.ore.teamUser.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface TeamUserService {
     Long beFirstMember(Long teamId);
-    Long inviteMember(TeamMemberAddRequestDto teamMemberAddRequestDto);
+    Long inviteMembers(TeamMemberAddRequestDto teamMemberAddRequestDto);
     Slice<TeamInfoResponseDto> findTeamsUserBelongTo(Pageable pageable);
     Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable);
-    Long grantAuthority(ModifyAuthorityRequestDto modifyAuthorityRequestDto, TeamUserRole role);
-    Long removeMember(Long userId, Long teamId);
+    void changeAuthorites(List<ModifyAuthoritiesParamDto> modifyAuthoritiesParamList, Long teamId);
+    Long removeMembers(DeleteMemberRequestDto deleteMemberRequestDto);
     Long leaveTeam(Long teamId);
 
+    Slice<UserInfoResponseDto> findUserByName(String name, Long teamId, Pageable pageable);
+    Slice<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId, Pageable pageable);
 
 }
