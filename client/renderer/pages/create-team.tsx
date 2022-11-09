@@ -78,7 +78,7 @@ export default function CreateTeam() {
       const res = await axios.post(`api/team/`, formData, {
         headers: {
           ContentType: "multipart/formdata",
-          Authorization: accessToken,
+          Authorization: localStorage.getItem("accessToken"),
         },
       });
       dispatch(

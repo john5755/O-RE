@@ -6,7 +6,11 @@ axios.interceptors.request.use(async function (config) {
   const PORT = "8080";
   const BASE_URL = `${HOST}:${PORT}`;
   config.baseURL = BASE_URL;
-  if (!config.headers) return config;
+  if (config.headers !== undefined){
+    if( !config.headers.Authorization)
+    {      return config;
+    }
+  } 
 
   const accessExpiredAt = localStorage.getItem("accessExpiredAt");
   if (accessExpiredAt === null) {
@@ -16,6 +20,7 @@ axios.interceptors.request.use(async function (config) {
   const needReissueDate = new Date(accessExpiredAt);
   const isAccessExpired = needReissueDate.getTime() - now.getTime() < 300000;
   if (isAccessExpired === true) {
+    console.log('a')
     try {
       const response = await axios.post(BASE_URL + "/api/users/reissue", {
         accessToken: localStorage.getItem("accessToken")?.substring(7),
@@ -38,6 +43,7 @@ axios.interceptors.request.use(async function (config) {
         response.data.data.refreshTokenExpiration
       );
     } catch (e: unknown) {
+      console.log(e)
       if (isAxiosError<{ code: number }>(e)) {
         if (e.response?.data.code === 40102 || 40103) {
           localStorage.clear();
