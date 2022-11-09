@@ -140,7 +140,12 @@ export default function ViewPage() {
           );
         })}
       {isInput && (
-        <Button width="100px" height="50px" onClick={handleClick}>
+        <Button
+          width="100px"
+          height="50px"
+          onClick={handleClick}
+          borderRadius="10px"
+        >
           저장
         </Button>
       )}
