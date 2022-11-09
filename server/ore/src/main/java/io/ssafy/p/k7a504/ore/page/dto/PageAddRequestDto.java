@@ -23,6 +23,9 @@ public class PageAddRequestDto {
 
     List<Map<String, Object>> content;
 
+    @NotNull
+    List<String> headerList;
+
     @NotBlank
     String pageStatus;
 }
