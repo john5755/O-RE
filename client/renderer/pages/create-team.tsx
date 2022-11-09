@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { addTeamState } from "../slices/myTeamsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -75,7 +75,7 @@ export default function CreateTeam() {
     }
     formData.append("info", new Blob([teamInfo], { type: "application/json" }));
     try {
-      const res = await axios.post(`${HOST}${TEAM_API.CREATE}`, formData, {
+      const res = await axios.post(`api/team/`, formData, {
         headers: {
           ContentType: "multipart/formdata",
           Authorization: accessToken,
@@ -88,7 +88,9 @@ export default function CreateTeam() {
           imageUrl: photoUrl,
         })
       );
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

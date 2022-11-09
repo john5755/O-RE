@@ -172,6 +172,7 @@ export const USERS_API = {
   LOGIN: PORT + API + USERS + "signin",
   MYPAGE: PORT + API + USERS + "mypage",
   LIST: PORT + API + USERS + "list",
+  REISSUE: PORT + API + USERS + "reissue",
 };
 export const TEAM_USER_API = {
   LIST: PORT + API + TEAM_USER + TEAMS + "list",

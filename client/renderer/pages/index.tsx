@@ -9,6 +9,7 @@ import { TEAM_USER_API, USERS_API, PATH, TEAM_API } from "../constants";
 import { TeamOptions } from "../types";
 import Router from "next/router";
 import { H1, Input, Label, Button } from "../styles";
+import { persistor } from "../store";
 // import { wrapper } from "../store";
 
 const LayoutContainer = styled.div`
@@ -76,6 +77,7 @@ export default function Home() {
       const { data } = await axios.get(`${domainInput}${USERS_API.DOMAIN}`);
       const userNum: number = data.data;
       dispatch(setAxiosState(domainInput));
+      localStorage.setItem("domain", domainInput);
       if (userNum === 0) {
         Router.push(PATH.SIGNUP);
       } else {
