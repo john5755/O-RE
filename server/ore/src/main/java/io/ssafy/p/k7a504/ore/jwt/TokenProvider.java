@@ -69,8 +69,8 @@ public class TokenProvider {
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpiration(accessTokenExpiration.getTime())
-                .refreshTokenExpiration(refreshTokenExpiration.getTime())
+                .accessTokenExpiration(accessTokenExpiration)
+                .refreshTokenExpiration(refreshTokenExpiration)
                 .build();
     }
 
