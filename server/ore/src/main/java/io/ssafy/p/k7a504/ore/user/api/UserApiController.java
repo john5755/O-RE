@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -104,6 +105,20 @@ public class UserApiController {
     public ResponseEntity<? extends BasicResponse> modifyUserPassword(@RequestBody UserPasswordRequestDto userPasswordRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.modifyUserPassword(userPasswordRequestDto)));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @DeleteMapping("")
+    public ResponseEntity<? extends BasicResponse> leaveServer() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.leaveServer()));
+    }
+
+    @PreAuthorize("hasAnyAuthority('OWNER', 'ADMIN')")
+    @DeleteMapping("/list")
+    public ResponseEntity<? extends BasicResponse> removeUser(@RequestBody List<Long> userIds) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse<>(userService.removeUser(userIds)));
     }
 
 

@@ -9,6 +9,7 @@ import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.domain.UserRole;
 import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -212,6 +214,33 @@ public class UserServiceImpl implements UserService {
 
         user.changePassword(encoder.encode(userPasswordRequestDto.getNewPassword()));
         return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long leaveServer() {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        userRepository.delete(user);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public int removeUser(List<Long> userIds) {
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        List<User> others = userRepository.findByIdIn(userIds);
+
+        if(others.size() != userIds.size())
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+
+        for(User other : others)
+            if(user.getRole().getPriority() <= other.getRole().getPriority())
+                throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+
+        userRepository.deleteAllInBatch(others);
+        return others.size();
     }
 
     private String generateTempPassword() {
