@@ -24,10 +24,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -51,6 +48,13 @@ public class PageServiceImpl implements PageService {
         if(!pageStatus.equals("INCLUDE_INPUT")&&!pageStatus.equals("EXCLUDE_INPUT")){
             throw new CustomException(ErrorCode.PAGE_STATUS_NOT_FOUND);
         }
+        List<String> headerList = pageAddRequestDto.getHeaderList();
+        Set<String> headerSet = new HashSet<>(headerList);
+
+        if(headerList.size()!= headerSet.size()){
+            throw new CustomException(ErrorCode.DUPLICATE_PAGE_HEADER);
+        }
+
         Page page = Page.createPage(teamUser, pageAddRequestDto);
         pageRepository.save(page);
 

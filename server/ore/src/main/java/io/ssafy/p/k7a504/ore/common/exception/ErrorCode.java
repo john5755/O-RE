@@ -30,6 +30,7 @@ public enum ErrorCode {
     PAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40051, " 페이지 정보를 찾을 수 없습니다."),
     PAGE_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 40052, "페이지 유저 정보를 찾을 수 없습니다."),
     PAGE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, 40053, "허용되지 않는 페이지 타입입니다."),
+    DUPLICATE_PAGE_HEADER(HttpStatus.BAD_REQUEST, 40054, "중복된 헤더 이름이 있습니다."),
 
     // JWT
     NOT_FOUND_CREDENTIALS(HttpStatus.UNAUTHORIZED, 40101, "인증정보가 없습니다."),
