@@ -96,6 +96,7 @@ export default function TeamSideBar() {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
                     dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
+                    Router.push("/view-page");
                   }}
                 >
                   {team.name}
@@ -112,6 +113,7 @@ export default function TeamSideBar() {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
                     dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
+                    Router.push("/view-page");
                   }}
                 ></TeamProfileImg>
               )}

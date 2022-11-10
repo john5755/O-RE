@@ -95,6 +95,7 @@ export default function Home() {
         },
       });
       const myTeams: Array<TeamOptions> = data.data.content;
+      console.log(myTeams);
       dispatch(setTeamState(myTeams));
       dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
       dispatch(setNavName(myTeams[0].name));
