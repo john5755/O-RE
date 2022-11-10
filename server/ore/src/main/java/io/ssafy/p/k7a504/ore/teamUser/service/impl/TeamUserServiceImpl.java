@@ -50,10 +50,9 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     @Transactional
     public Long inviteMembers(TeamMemberAddRequestDto teamMemberAddRequestDto) {
-        if(!teamUserRepository.countByUserIdListAndTeamId(teamMemberAddRequestDto.getUserIdList(), teamMemberAddRequestDto.getTeamId()).equals(0)){
+        if(teamUserRepository.countByUserIdListAndTeamId(teamMemberAddRequestDto.getUserIdList(), teamMemberAddRequestDto.getTeamId())!=Long.valueOf(0)){
             throw new CustomException(ErrorCode.DUPLICATE_TEAM_USER);
         }
-
         Long teamId = teamMemberAddRequestDto.getTeamId();
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
@@ -100,7 +99,7 @@ public class TeamUserServiceImpl implements TeamUserService {
 
         List<Long>teamUserIdList = modifyAuthoritiesParamList.stream().map(ModifyAuthoritiesParamDto::getTeamUserId).collect(Collectors.toList());
 
-        if(!teamUserRepository.countById(teamUserIdList).equals(teamUserIdList.size()))
+        if(teamUserRepository.countById(teamUserIdList)!=Long.valueOf(teamUserIdList.size()))
             throw new CustomException(ErrorCode.TEAM_USER_NOT_FOUND);
 
         for(ModifyAuthoritiesParamDto modifyAuthoritiesParamDto: modifyAuthoritiesParamList){
@@ -121,7 +120,7 @@ public class TeamUserServiceImpl implements TeamUserService {
     public Long removeMembers(DeleteMemberRequestDto deleteMemberRequestDto) {
 
         Long teamId = deleteMemberRequestDto.getTeamId();
-        if(!teamUserRepository.countByTeamUserIdListAndTeamId(deleteMemberRequestDto.getTeamUserIdList(), teamId).equals(deleteMemberRequestDto.getTeamUserIdList().size())){
+        if(teamUserRepository.countByTeamUserIdListAndTeamId(deleteMemberRequestDto.getTeamUserIdList(), teamId)!=Long.valueOf(deleteMemberRequestDto.getTeamUserIdList().size())){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
         TeamUser modifier = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
@@ -130,10 +129,10 @@ public class TeamUserServiceImpl implements TeamUserService {
         if(modifier.getRole()==TeamUserRole.MEMBER) {
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }else if(modifier.getRole()==TeamUserRole.MANAGER){
-            if(!teamUserRepository.countRoleOverManager(deleteMemberRequestDto.getTeamUserIdList()).equals(0))
+            if(teamUserRepository.countRoleOverManager(deleteMemberRequestDto.getTeamUserIdList())>Long.valueOf(0))
                 throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }else{
-            if(!teamUserRepository.countRoleOverLeader(deleteMemberRequestDto.getTeamUserIdList()).equals(0))
+            if(teamUserRepository.countRoleOverLeader(deleteMemberRequestDto.getTeamUserIdList())>Long.valueOf(0))
                 throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }
 
