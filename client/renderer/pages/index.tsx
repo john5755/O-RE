@@ -1,15 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { setAxiosState } from "../slices/axiosSlice";
 import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
 import { setUserProfileState } from "../slices/userProfileSlices";
-import axios from "axios";
-import { TEAM_USER_API, USERS_API, PATH, TEAM_API } from "../constants";
+import axios from "../utils/axios";
+import { TEAM_USER_API, USERS_API, PATH } from "../constants";
 import { TeamOptions } from "../types";
 import Router from "next/router";
 import { H1, Input, Label, Button } from "../styles";
-// import { wrapper } from "../store";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -57,7 +55,6 @@ const domainLabelText = [
 ];
 
 export default function Home() {
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const dispatch = useAppDispatch();
   const isLogin = useAppSelector((state) => state.login).isLogin;
   // Domain 상태 및 조건 확인
@@ -72,10 +69,10 @@ export default function Home() {
   }
 
   const submitDomainInput = async () => {
+    localStorage.setItem("domain", domainInput);
     try {
-      const { data } = await axios.get(`${domainInput}${USERS_API.DOMAIN}`);
+      const { data } = await axios.get(USERS_API.DOMAIN);
       const userNum: number = data.data;
-      dispatch(setAxiosState(domainInput));
       if (userNum === 0) {
         Router.push(PATH.SIGNUP);
       } else {
@@ -85,16 +82,15 @@ export default function Home() {
   };
 
   const setMyTeams = useCallback(async () => {
-    const accessToken = localStorage.getItem("accessToken");
     try {
       const params = {
         page: 0,
         size: 20,
       };
-      const { data } = await axios.get(`${HOST}${TEAM_USER_API.LIST}`, {
+      const { data } = await axios.get(TEAM_USER_API.LIST, {
         params,
         headers: {
-          Authorization: accessToken,
+          Authorization: localStorage.getItem("accessToken"),
         },
       });
       const myTeams: Array<TeamOptions> = data.data.content;
@@ -104,11 +100,10 @@ export default function Home() {
   }, []);
 
   const setUserProfile = useCallback(async () => {
-    const accessToken = localStorage.getItem("accessToken");
     try {
-      const { data } = await axios.get(`${HOST}${USERS_API.MYPAGE}`, {
+      const { data } = await axios.get(USERS_API.MYPAGE, {
         headers: {
-          Authorization: accessToken,
+          Authorization: localStorage.getItem("accessToken"),
         },
       });
       dispatch(setUserProfileState(data.data));

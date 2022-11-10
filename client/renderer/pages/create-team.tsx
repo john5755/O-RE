@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { addTeamState } from "../slices/myTeamsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -47,7 +47,6 @@ const ButtonContainer = styled.div`
 `;
 
 export default function CreateTeam() {
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const dispatch = useAppDispatch();
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
   // profile 사진 설정
@@ -63,7 +62,6 @@ export default function CreateTeam() {
   }
 
   const submitCreateTeam = async () => {
-    const accessToken = localStorage.getItem("accessToken");
     const teamInfoJson = {
       name: teamName,
       imageUrl: photoUrl,
@@ -75,10 +73,10 @@ export default function CreateTeam() {
     }
     formData.append("info", new Blob([teamInfo], { type: "application/json" }));
     try {
-      const res = await axios.post(`${HOST}${TEAM_API.CREATE}`, formData, {
+      const res = await axios.post(TEAM_API.CREATE, formData, {
         headers: {
           ContentType: "multipart/formdata",
-          Authorization: accessToken,
+          Authorization: localStorage.getItem("accessToken"),
         },
       });
       dispatch(
@@ -88,7 +86,7 @@ export default function CreateTeam() {
           imageUrl: photoUrl,
         })
       );
-    } catch {}
+    } catch (e) {}
   };
 
   return (

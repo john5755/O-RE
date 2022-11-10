@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import axios from "axios";
+import axios from "../utils/axios";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { PAGE_USER_API, PATH } from "../constants";
@@ -43,20 +43,18 @@ export default function PageSideBar() {
   const pageList = useAppSelector((state) => state.pageState).pageState;
   const dispatch = useAppDispatch();
 
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const getPageList = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
       const params = {
         page: 0,
         size: 100,
       };
       const { data } = await axios.get(
-        `${HOST}${PAGE_USER_API.ALL}/${selectTeam.teamId}`,
+        `${PAGE_USER_API.ALL}/${selectTeam.teamId}`,
         {
           params,
           headers: {
-            Authorization: accessToken,
+            Authorization: localStorage.getItem("accessToken"),
           },
         }
       );
