@@ -35,11 +35,14 @@ public class TeamUserServiceImpl implements TeamUserService {
     public Long beFirstMember(Long teamId) {
         User user = userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User owner = userRepository.findByRole("OWNER").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-        TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.LEADER);
-        teamUserRepository.save(teamUser);
-        return  teamId;
+        List<TeamUser> userList = new ArrayList<>();
+        userList.add(TeamUser.createTeamUser(owner, team, TeamUserRole.OWNER));
+        userList.add(TeamUser.createTeamUser(user, team, TeamUserRole.LEADER));
+        teamUserRepository.saveAll(userList);
+        return teamId;
     }
     @Override
     @Transactional
@@ -79,7 +82,7 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     public Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable) {
-        Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, pageable);
+        Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, SecurityUtil.getCurrentUserId(), pageable);
         if (teamUsers.getNumberOfElements() == 0) {
             throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
         }
@@ -124,10 +127,10 @@ public class TeamUserServiceImpl implements TeamUserService {
         if(modifier.getRole()==TeamUserRole.MEMBER) {
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }else if(modifier.getRole()==TeamUserRole.MANAGER){
-            if(teamUserRepository.countByLeaderAndManager(deleteMemberRequestDto.getTeamUserIdList())>0)
+            if(teamUserRepository.countRoleOverManager(deleteMemberRequestDto.getTeamUserIdList())>0)
                 throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }else{
-            if(teamUserRepository.countByLeader(deleteMemberRequestDto.getTeamUserIdList())>0)
+            if(teamUserRepository.countRoleOverLeader(deleteMemberRequestDto.getTeamUserIdList())>0)
                 throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }
 
@@ -138,25 +141,24 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     @Transactional
     public Long leaveTeam(Long teamId) {
+        User owner = userRepository.findByRole("OWNER").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(SecurityUtil.getCurrentUserId().equals(owner.getId())) throw new CustomException(ErrorCode.OWNER_CANT_LEAVE);
         TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));
         teamUserRepository.delete(teamUser);
-
-        List<TeamUser> list = teamUserRepository.findByTeamId(teamId);
-        if(list.size()==0) teamRepository.deleteById(teamId);
 
         return SecurityUtil.getCurrentUserId();
     }
 
     @Override
     public Slice<UserInfoResponseDto> findUserByName(String name, Long teamId, Pageable pageable) {
-        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNameAndTeamId(name, teamId,  pageable);
+        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNameAndTeamId(name, teamId, SecurityUtil.getCurrentUserId(), pageable);
         return teamUsers.map(UserInfoResponseDto::new);
     }
 
     @Override
     public Slice<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId, Pageable pageable) {
-        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNicknameAndTeamId(nickName, teamId, pageable);
+        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNicknameAndTeamId(nickName, teamId, SecurityUtil.getCurrentUserId(),pageable);
         return teamUsers.map(UserInfoResponseDto::new);
     }
 }

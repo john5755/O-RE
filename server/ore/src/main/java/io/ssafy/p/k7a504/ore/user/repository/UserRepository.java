@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Slice<User> findByNameContains(String name, Pageable pageable);
     Slice<User> findByNicknameContains(String nickname, Pageable pageable);
     List<User> findByIdIn(List<Long> ids);
+    Optional<User> findByRole(String role);
 }
