@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserProfileOptions } from "../types";
+import { PURGE } from "redux-persist";
 
 interface UserProfileState {
   userProfileState: UserProfileOptions;
@@ -22,6 +23,9 @@ export const userProfileStateSlice = createSlice({
     setUserProfileState: (state, action: PayloadAction<UserProfileOptions>) => {
       state.userProfileState = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

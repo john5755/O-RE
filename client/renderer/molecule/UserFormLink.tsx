@@ -14,12 +14,9 @@ const LinkOptions = styled.li`
   :first-of-type {
     border-right: 1px solid var(--main-color);
     padding-right: 10px;
-    margin-right: 10px;
   }
   :last-child {
-    border-left: 1px solid var(--main-color);
     padding-left: 10px;
-    margin-left: 10px;
   }
   > a {
     color: var(--main-color);
@@ -31,8 +28,6 @@ interface UserLinkProps {
   firstPathName: string;
   secondPath: string;
   secondPathName: string;
-  thirdPath: string;
-  thirdPathName: string;
 }
 
 export default function UserFormLink(props: UserLinkProps) {
@@ -43,9 +38,6 @@ export default function UserFormLink(props: UserLinkProps) {
       </LinkOptions>
       <LinkOptions>
         <Link href={props.secondPath}>{props.secondPathName}</Link>
-      </LinkOptions>
-      <LinkOptions>
-        <Link href={props.thirdPath}>{props.thirdPathName}</Link>
       </LinkOptions>
     </LinkContainer>
   );

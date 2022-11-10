@@ -171,6 +171,7 @@ export const USERS_API = {
   VERIFICATION: API + USERS + "/verification",
   SIGNUP: API + USERS + "/signup",
   LOGIN: API + USERS + "/signin",
+  LOGOUT: API + USERS + "/logout",
   MYPAGE: API + USERS + "/mypage",
   LIST: API + USERS + "/list",
 };

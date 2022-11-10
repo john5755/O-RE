@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PageOption, SelectPageType } from "../types";
+import { PURGE } from "redux-persist";
 
 export interface PageState {
   pageState: Array<PageOption>;
@@ -32,6 +33,9 @@ export const myPageStateSlice = createSlice({
         (prev) => prev !== action.payload
       );
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 
