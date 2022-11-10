@@ -70,6 +70,11 @@ export interface SelectTeamType {
   teamId: number;
 }
 
+export interface SearchMenues {
+  name: string;
+  nickName: string;
+}
+
 export interface ServerRoleMenues {
   OWNER: string;
   ADMIN: string;

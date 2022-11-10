@@ -6,12 +6,9 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
+import { TeamUserType,  SearchMenues, ServerRoleMenues, TeamRoleMenues } from "../types";
 
-interface SearchMenues {
-  name: string;
-  nickName: string;
-}
+
 
 interface SearchDropDownProps {
   category: string;
