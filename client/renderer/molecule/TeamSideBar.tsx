@@ -94,6 +94,7 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
                   }}
                 >
@@ -109,6 +110,7 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
                   }}
                 ></TeamProfileImg>
