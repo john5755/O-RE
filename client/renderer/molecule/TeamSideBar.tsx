@@ -1,10 +1,12 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { useAppSelector } from "../hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { BASIC_PHOTO_URL } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
 import { BarProps } from "../types";
+import { setSelectTeamState } from "../slices/myTeamsStateSlice";
+import { setSelectPageState } from "../slices/pageSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -72,41 +74,42 @@ const clickedCss = {
   fontSize: "16px",
 };
 
-export default function TeamSideBar(props: BarProps) {
-  const selectTeam = (num: number): void => {
-    props.setSelectedTeamId(num);
-  };
+export default function TeamSideBar() {
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
-
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
+  const dispatch = useAppDispatch();
   return (
     <Container>
       <TeamContainer>
-        {myTeams.map((team, idx) => (
-          <div key={idx}>
-            {team.imageUrl === BASIC_PHOTO_URL ? (
-              <NoProfileContainer
-                style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
-                onClick={() => {
-                  selectTeam(idx);
-                }}
-              >
-                {team.name}
-              </NoProfileContainer>
-            ) : (
-              <TeamProfileImg
-                src={
-                  typeof team.imageUrl === "string"
-                    ? team.imageUrl
-                    : BASIC_PHOTO_URL
-                }
-                style={idx === props.selectedTeamId ? clickedCss : unClickedCss}
-                onClick={() => {
-                  selectTeam(idx);
-                }}
-              ></TeamProfileImg>
-            )}
-          </div>
-        ))}
+        {myTeams.length > 0 &&
+          myTeams.map((team, idx) => (
+            <div key={idx}>
+              {team.imageUrl === BASIC_PHOTO_URL ? (
+                <NoProfileContainer
+                  style={idx === selectTeam.idx ? clickedCss : unClickedCss}
+                  onClick={() => {
+                    dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                  }}
+                >
+                  {team.name}
+                </NoProfileContainer>
+              ) : (
+                <TeamProfileImg
+                  src={
+                    typeof team.imageUrl === "string"
+                      ? team.imageUrl
+                      : BASIC_PHOTO_URL
+                  }
+                  style={idx === selectTeam.idx ? clickedCss : unClickedCss}
+                  onClick={() => {
+                    dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                  }}
+                ></TeamProfileImg>
+              )}
+            </div>
+          ))}
         <PlusButtonContainer
           onClick={() => {
             Router.push(PATH.CREATE_TEAM);

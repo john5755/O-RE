@@ -33,17 +33,20 @@ const UserProfileImg = styled.img`
   cursor: pointer;
 `;
 
-export default function NavBar(props: BarProps) {
+export default function NavBar() {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
 
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
 
   return (
     <Container>
       <SelectedTeamContainer>
-        {props.selectedTeamId == -1 ? "" : myTeams[props.selectedTeamId].name}
+        {selectTeam.idx == -1 ? "" : myTeams[selectTeam.idx].name}
       </SelectedTeamContainer>
       <ProfileImgContainer>
         <UserProfileImg
