@@ -49,6 +49,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
     if (selectTeam.idx === -1) return;
     Router.push("/view-page");
   }, [selectTeam.idx]);
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   return (
     <Container>
       <TopBar />
@@ -59,7 +60,8 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
           <TeamSideBar />
           <WrapMainContainer>
             <NavBar />
-            {layoutInfo.withOnlyNavBar.has(pathname) ? (
+            {layoutInfo.withOnlyNavBar.has(pathname) ||
+            teamList.length === 0 ? (
               <PageContainer>{children}</PageContainer>
             ) : (
               <WrapPageContainer>

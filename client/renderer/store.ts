@@ -21,12 +21,14 @@ import userProfileSlices from "./slices/userProfileSlices";
 import storage from "redux-persist/lib/storage";
 import { createWrapper, MakeStore } from "next-redux-wrapper";
 import myPageStateSlice from "./slices/pageSlice";
+import navNameSlice from "./slices/navNameSlice";
 
 export const rootReducer = combineReducers({
   login: loginSlice,
   listState: listStateSlice,
   myTeamsState: myTeamsStateSlice,
   pageState: myPageStateSlice,
+  navName: navNameSlice,
   userProfileState: userProfileSlices,
 });
 

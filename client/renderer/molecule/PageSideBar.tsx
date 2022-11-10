@@ -6,6 +6,7 @@ import { PAGE_USER_API, PATH } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setPageState, setSelectPageState } from "../slices/pageSlice";
 import { Button } from "../styles";
+import { setNavName } from "../slices/navNameSlice";
 
 const Container = styled.div`
   display: flex;
@@ -59,9 +60,7 @@ export default function PageSideBar() {
         }
       );
       dispatch(setPageState(data.data.content));
-      if (pageList.length > 0) {
-        dispatch(setSelectPageState({ idx: 0, pageId: pageList[0].pageId }));
-      }
+      dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e) {
       console.log(e);
     }
@@ -69,13 +68,12 @@ export default function PageSideBar() {
 
   useEffect(() => {
     if (selectTeam.idx === -1) return;
-    dispatch(setPageState([]));
-    dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     getPageList();
   }, [selectTeam.idx]);
 
-  const handleClickPage = (idx: number, pageId: number) => {
+  const handleClickPage = (idx: number, pageId: number, pageName: string) => {
     dispatch(setSelectPageState({ idx, pageId }));
+    dispatch(setNavName(pageName));
   };
 
   return (
@@ -85,7 +83,7 @@ export default function PageSideBar() {
           <ButtonContainer key={v.pageId}>
             <Link href={PATH.VIEW_PAGE}>
               <Button
-                onClick={() => handleClickPage(idx, v.pageId)}
+                onClick={() => handleClickPage(idx, v.pageId, v.name)}
                 width="100%"
                 borderRadius="5px"
                 height="30px"
