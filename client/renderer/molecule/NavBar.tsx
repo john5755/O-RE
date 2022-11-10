@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { useAppSelector } from "../hooks/reduxHook";
-import { BarProps } from "../types";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import Router from "next/router";
+import { useResetPage } from "../hooks/resetPageHook";
+import { setNavName } from "../slices/navNameSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -24,7 +25,10 @@ const SelectedTeamContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 10px;
+  color: var(--dark-gray-color);
+  font-weight: 600;
+  font-size: 19px;
+  margin-left: 15px;
 `;
 
 const UserProfileImg = styled.img`
@@ -37,22 +41,19 @@ export default function NavBar() {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
-  const selectTeam = useAppSelector(
-    (state) => state.myTeamsState
-  ).selectTeamState;
-
-  const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
-
+  const resetPage = useResetPage();
+  const title = useAppSelector((state) => state.navName).navName;
+  const dispatch = useAppDispatch();
   return (
     <Container>
-      <SelectedTeamContainer>
-        {selectTeam.idx == -1 ? "" : myTeams[selectTeam.idx].name}
-      </SelectedTeamContainer>
+      <SelectedTeamContainer>{title}</SelectedTeamContainer>
       <ProfileImgContainer>
         <UserProfileImg
           src={userProfile.profileImage}
           onClick={() => {
             Router.push("/account-options");
+            resetPage();
+            dispatch(setNavName("O:RE 설정"));
           }}
         ></UserProfileImg>
       </ProfileImgContainer>

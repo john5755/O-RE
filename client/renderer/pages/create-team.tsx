@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { addTeamState } from "../slices/myTeamsStateSlice";
+import { addTeamState, setSelectTeamState } from "../slices/myTeamsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "../utils/axios";
@@ -73,7 +73,7 @@ export default function CreateTeam() {
     }
     formData.append("info", new Blob([teamInfo], { type: "application/json" }));
     try {
-      const res = await axios.post(TEAM_API.CREATE, formData, {
+      const { data } = await axios.post(TEAM_API.CREATE, formData, {
         headers: {
           ContentType: "multipart/formdata",
           Authorization: localStorage.getItem("accessToken"),
@@ -86,15 +86,13 @@ export default function CreateTeam() {
           imageUrl: photoUrl,
         })
       );
+      dispatch(setSelectTeamState({ idx: myTeams.length, teamId: data.data }));
     } catch (e) {}
   };
 
   return (
     <LayoutContainer>
       <Container>
-        <TextContainer>
-          <H2 style={{ fontWeight: "bold" }}>그룹 생성</H2>
-        </TextContainer>
         <ProfilePhotos
           photo={photo}
           setPhoto={setPhoto}

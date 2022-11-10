@@ -7,6 +7,8 @@ import Router from "next/router";
 import { BarProps } from "../types";
 import { setSelectTeamState } from "../slices/myTeamsStateSlice";
 import { setSelectPageState } from "../slices/pageSlice";
+import { useResetPage } from "../hooks/resetPageHook";
+import { setNavName } from "../slices/navNameSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -80,6 +82,7 @@ export default function TeamSideBar() {
     (state) => state.myTeamsState
   ).selectTeamState;
   const dispatch = useAppDispatch();
+  const resetPage = useResetPage();
   return (
     <Container>
       <TeamContainer>
@@ -91,6 +94,7 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setNavName(team.name));
                   }}
                 >
                   {team.name}
@@ -105,6 +109,7 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setNavName(team.name));
                   }}
                 ></TeamProfileImg>
               )}
@@ -113,6 +118,8 @@ export default function TeamSideBar() {
         <PlusButtonContainer
           onClick={() => {
             Router.push(PATH.CREATE_TEAM);
+            resetPage();
+            dispatch(setNavName("팀 생성"));
           }}
         >
           +

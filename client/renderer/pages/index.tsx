@@ -8,6 +8,7 @@ import { TEAM_USER_API, USERS_API, PATH } from "../constants";
 import { TeamOptions } from "../types";
 import Router from "next/router";
 import { H1, Input, Label, Button } from "../styles";
+import { setNavName } from "../slices/navNameSlice";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -96,6 +97,7 @@ export default function Home() {
       const myTeams: Array<TeamOptions> = data.data.content;
       dispatch(setTeamState(myTeams));
       dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
+      dispatch(setNavName(myTeams[0].name));
     } catch {}
   }, []);
 
