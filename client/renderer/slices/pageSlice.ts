@@ -5,6 +5,7 @@ import { PURGE } from "redux-persist";
 export interface PageState {
   pageState: Array<PageOption>;
   selectPageState: SelectPageType;
+  isCreate: boolean;
 }
 
 const initialState: PageState = {
@@ -13,6 +14,7 @@ const initialState: PageState = {
     idx: -1,
     pageId: -1,
   },
+  isCreate: false,
 };
 
 export const myPageStateSlice = createSlice({
@@ -33,13 +35,21 @@ export const myPageStateSlice = createSlice({
         (prev) => prev !== action.payload
       );
     },
+    setIsCreate: (state, action: PayloadAction<boolean>) => {
+      state.isCreate = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
   },
 });
 
-export const { addPageState, delPageState, setPageState, setSelectPageState } =
-  myPageStateSlice.actions;
+export const {
+  addPageState,
+  delPageState,
+  setPageState,
+  setSelectPageState,
+  setIsCreate,
+} = myPageStateSlice.actions;
 
 export default myPageStateSlice.reducer;

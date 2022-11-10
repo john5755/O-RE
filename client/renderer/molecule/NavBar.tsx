@@ -5,7 +5,7 @@ import Router from "next/router";
 import { useResetPage } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { TEAM_ROLE } from "../constants";
+import { PATH, TEAM_ROLE } from "../constants";
 
 const Container = styled.div`
   width: 100%;
@@ -60,16 +60,24 @@ export default function NavBar() {
       <LeftContainer>
         <TitleContainer>{title}</TitleContainer>
         {teamIdx !== -1 &&
+          teamIdx < teamList.length &&
           teamList[teamIdx].teamUserRole !== undefined &&
           TEAM_ROLE.MANAGER.includes(teamList[teamIdx].teamUserRole) && (
-            <SettingsIcon fontSize="small"></SettingsIcon>
+            <SettingsIcon
+              fontSize="small"
+              onClick={() => {
+                dispatch(setNavName(`${title}팀 관리`));
+                Router.push(PATH.MANAGE_TEAM);
+              }}
+              sx={{ cursor: "pointer" }}
+            ></SettingsIcon>
           )}
       </LeftContainer>
       <RightContainer>
         <UserProfileImg
           src={userProfile.profileImage}
           onClick={() => {
-            Router.push("/account-options");
+            Router.push(PATH.ACCOUNT_OPTIONS);
             resetPage();
             dispatch(setNavName("O:RE 설정"));
           }}

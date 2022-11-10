@@ -6,7 +6,7 @@ import { PATH } from "../constants";
 import Router from "next/router";
 import { BarProps, TeamOptions } from "../types";
 import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
-import { setSelectPageState } from "../slices/pageSlice";
+import { setIsCreate, setSelectPageState } from "../slices/pageSlice";
 import { useResetPage } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
 import axios from "../utils/axios";
@@ -83,6 +83,7 @@ export default function TeamSideBar() {
     (state) => state.myTeamsState
   ).selectTeamState;
   const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+  const isCreate = useAppSelector((state) => state.pageState).isCreate;
   const dispatch = useAppDispatch();
   const resetPage = useResetPage();
 
@@ -100,13 +101,24 @@ export default function TeamSideBar() {
       });
       const myTeams: Array<TeamOptions> = data.data.content;
       dispatch(setTeamState(myTeams));
-      dispatch(
-        setSelectTeamState({
-          idx: myTeams.length - 1,
-          teamId: myTeams[myTeams.length - 1].teamId,
-        })
-      );
-      dispatch(setNavName(myTeams[myTeams.length - 1].name));
+      if (isCreate) {
+        dispatch(
+          setSelectTeamState({
+            idx: myTeams.length - 1,
+            teamId: myTeams[myTeams.length - 1].teamId,
+          })
+        );
+        dispatch(setNavName(myTeams[myTeams.length - 1].name));
+        dispatch(setIsCreate(false));
+      } else {
+        dispatch(
+          setSelectTeamState({
+            idx: 0,
+            teamId: myTeams[0].teamId,
+          })
+        );
+        dispatch(setNavName(myTeams[0].name));
+      }
     } catch {}
   }, [teamList.length]);
 
