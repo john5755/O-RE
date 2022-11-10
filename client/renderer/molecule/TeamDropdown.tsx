@@ -6,23 +6,17 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { TeamUserType } from "../types";
+import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
 
 interface SearchMenues {
   name: string;
   nickName: string;
 }
 
-interface RoleMenues {
-  LEADER: string;
-  MANAGER: string;
-  USER: string;
-}
-
 interface SearchDropDownProps {
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
-  MenuItems: SearchMenues | RoleMenues;
+  MenuItems: SearchMenues | ServerRoleMenues | TeamRoleMenues;
   member?: TeamUserType;
   teamMembers?: Array<TeamUserType>;
 }

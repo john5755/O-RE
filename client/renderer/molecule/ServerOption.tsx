@@ -5,6 +5,9 @@ import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
+import SearchBarTab from "./SearchBarTab";
+import SearchResults from "./SearchResults";
+import { TeamUserType } from "../types";
 
 const TextContainer = styled.div`
   width: 100%;
@@ -59,6 +62,13 @@ const ButtonContainer = styled.div`
 const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
+// serach dropdown
+const searchMenues = { name: "이름", nickName: "닉네임" };
+const serverRoleMenues = {
+  OWNER: "오너",
+  ADMIN: "관리자",
+  USER: "사용자",
+};
 export default function ServerOption() {
   const [userExcel, setUserExcel] = useState<File | null>(null);
   const excelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +92,67 @@ export default function ServerOption() {
         },
       });
     } catch {}
+  };
+
+  const [nameCategory, setNameCategory] = useState<string>("name");
+  const [textButtonColor, setTextButtonColor] = useState<string>("#4F68A6");
+  const [userRole, setUserRole] = useState<string>("");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+  const [searchResultList, setSearchResultList] = useState<Array<TeamUserType>>(
+    []
+  );
+  const [searchPage, setSearchPage] = useState<number>(0);
+
+  const fetchResultList = async () => {
+    if (searchInput === "") {
+      try {
+        const { data } = await axios.get(USERS_API.LIST, {
+          headers: { Authorization: localStorage.getItem("accessToken") },
+        });
+        setSearchResultList(data.data.content);
+      } catch (e) {}
+    } else if (nameCategory === "name") {
+      try {
+        const params = {
+          keyword: searchInput,
+          page: searchPage,
+          size: 20,
+        };
+        const { data } = await axios.get(USERS_API.NAME, {
+          params,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        setSearchResultList(data.data.content);
+      } catch {}
+    } else if (nameCategory === "nickName") {
+      try {
+        const params = {
+          keyword: searchInput,
+          page: searchPage,
+          size: 20,
+        };
+        const { data } = await axios.get(USERS_API.NICKNAME, {
+          params,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        setSearchResultList(data.data.content);
+      } catch {}
+    }
+  };
+
+  const tempChangeRole = () => {
+    if (textButtonColor === "#4F68A6") {
+      setTextButtonColor("#C74E4E");
+    } else {
+      setTextButtonColor("#4F68A6");
+    }
   };
 
   return (
@@ -125,6 +196,26 @@ export default function ServerOption() {
         <TextContainer>
           <H3 style={{ fontWeight: "bold" }}>권한 변경</H3>
         </TextContainer>
+        <SearchBarTab
+          category={nameCategory}
+          setCategory={setNameCategory}
+          MenuItems={searchMenues}
+          handleSearchInput={handleSearchInput}
+          fetchResultList={fetchResultList}
+        ></SearchBarTab>
+        <SearchResults
+          ResultList={searchResultList}
+          textButtonColor={textButtonColor}
+          textButtonText="변경"
+          needDropdown={true}
+          category={userRole}
+          setCategory={setUserRole}
+          menuItems={serverRoleMenues}
+          handleButtonEvent={tempChangeRole}
+        ></SearchResults>
+        <ButtonContainer>
+          <Button borderRadius="10px">저장</Button>
+        </ButtonContainer>
       </AddRoleContainer>
     </>
   );

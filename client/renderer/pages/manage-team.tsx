@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 import { H2, H3, Label, Button, Input } from "../styles";
 import { BASIC_PHOTO_URL } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
-import TeamDropDown from "../molecule/TeamDropdown";
 import { TeamUserType } from "../types";
+import SearchBarTab from "../molecule/SearchBarTab";
 import SearchResults from "../molecule/SearchResults";
 
 const LayoutContainer = styled.div`
@@ -59,84 +59,21 @@ const MemberLabelContainer = styled.div`
   align-items: center;
 `;
 
-const SearchContainer = styled.div`
-  height: 50px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-`;
+// serach dropdown
+const searchMenues = { name: "이름", nickName: "닉네임" };
+// result dropdown
+const serverRoleMenues = {
+  OWNER: "오너",
+  ADMIN: "관리자",
+  USER: "사용자",
+};
 
-const SearchCategoryInputContainer = styled.div`
-  width: 80%;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const SearchInput = styled.input`
-  border-width: 0 0 1px 0;
-  width: 85%;
-  height: 90%;
-  font-size: 20px;
-  ::placeholder {
-    text-align: center;
-    font-size: 18px;
-  }
-  &:focus {
-    outline: none;
-  }
-`;
-
-const testTeamMembers = [
-  {
-    userId: 0,
-    name: "박싸피",
-    email: "",
-    nickName: "프론트천재",
-    role: "LEADER",
-    profileImg: "images/logo.png",
-  },
-  {
-    userId: 1,
-    name: "치싸피",
-    email: "",
-    nickName: "11번가",
-    role: "MANAGER",
-    profileImg: BASIC_PHOTO_URL,
-  },
-  {
-    userId: 2,
-    name: "홍길동",
-    email: "",
-    nickName: "홍길동",
-    role: "USER",
-    profileImg: BASIC_PHOTO_URL,
-  },
-  {
-    userId: 3,
-    name: "맘모쓰",
-    email: "",
-    nickName: "900원",
-    role: "USER",
-    profileImg: BASIC_PHOTO_URL,
-  },
-  {
-    userId: 3,
-    name: "맘모쓰",
-    email: "",
-    nickName: "900원",
-    role: "USER",
-    profileImg: BASIC_PHOTO_URL,
-  },
-  {
-    userId: 3,
-    name: "맘모쓰",
-    email: "",
-    nickName: "900원",
-    role: "USER",
-    profileImg: BASIC_PHOTO_URL,
-  },
-];
+const teamRoleMenues = {
+  OWNER: "오너",
+  LEADER: "리더",
+  MANAGER: "관리자",
+  MEMBER: "사용자",
+};
 
 export default function ManageTeam() {
   // profile 사진 설정
@@ -153,8 +90,7 @@ export default function ManageTeam() {
 
   // role dropdown
   const [role, setRole] = useState<string>("");
-  // serach dropdown
-  const searchMenues = { name: "이름", nickName: "닉네임" };
+
   // //team member
   const [searchMemberCategory, setSearchMemberCategory] =
     useState<string>("name");
@@ -168,10 +104,11 @@ export default function ManageTeam() {
   ) => {
     setSearchTeamInput(event.target.value);
   };
-  const [searchTeamResultList, setSearchTeamResultList] =
-    useState<Array<TeamUserType>>(testTeamMembers);
+  const [searchTeamResultList, setSearchTeamResultList] = useState<
+    Array<TeamUserType>
+  >([]);
   const fetchTeamResultList = () => {
-    setSearchTeamResultList(testTeamMembers);
+    setSearchTeamResultList([]);
   };
   // // all member
   const [searchAllInput, setSearchAllInput] = useState<string>("");
@@ -182,7 +119,17 @@ export default function ManageTeam() {
     Array<TeamUserType>
   >([]);
   const fetchAllResultList = () => {
-    setSearchAllResultList(testTeamMembers);
+    setSearchAllResultList([]);
+  };
+
+  // 권한 변경 list 저장 --- 임시 두 경우 구분해서 바꿔야
+  const [textButtonColor, setTextButtonColor] = useState<string>("#4F68A6");
+  const tempChangeRole = () => {
+    if (textButtonColor === "#4F68A6") {
+      setTextButtonColor("#C74E4E");
+    } else {
+      setTextButtonColor("#4F68A6");
+    }
   };
 
   return (
@@ -222,19 +169,13 @@ export default function ManageTeam() {
             <MemberLabelContainer>
               <Label style={{ marginRight: 10 }}>멤버 목록</Label>
             </MemberLabelContainer>
-            <SearchContainer>
-              <SearchCategoryInputContainer>
-                <TeamDropDown
-                  category={searchMemberCategory}
-                  setCategory={setSearchMemberCategory}
-                  MenuItems={searchMenues}
-                ></TeamDropDown>
-                <SearchInput onChange={handleTeamSearchInput}></SearchInput>
-              </SearchCategoryInputContainer>
-              <Button width="60px" height="40px" onClick={fetchTeamResultList}>
-                검색
-              </Button>
-            </SearchContainer>
+            <SearchBarTab
+              category={searchMemberCategory}
+              setCategory={setSearchMemberCategory}
+              MenuItems={searchMenues}
+              handleSearchInput={handleTeamSearchInput}
+              fetchResultList={fetchTeamResultList}
+            ></SearchBarTab>
             <SearchResults
               ResultList={searchTeamResultList}
               textButtonColor="#C74E4E"
@@ -242,28 +183,26 @@ export default function ManageTeam() {
               needDropdown={true}
               category={role}
               setCategory={setRole}
+              menuItems={teamRoleMenues}
+              handleButtonEvent={tempChangeRole}
             ></SearchResults>
             <MemberLabelContainer>
               <Label>멤버 추가</Label>
             </MemberLabelContainer>
-            <SearchContainer>
-              <SearchCategoryInputContainer>
-                <TeamDropDown
-                  category={searchAddCategory}
-                  setCategory={setSearchAddCategory}
-                  MenuItems={searchMenues}
-                ></TeamDropDown>
-                <SearchInput onChange={handleAllSearchInput}></SearchInput>
-              </SearchCategoryInputContainer>
-              <Button width="60px" height="40px" onClick={fetchAllResultList}>
-                검색
-              </Button>
-            </SearchContainer>
+            <SearchBarTab
+              category={searchMemberCategory}
+              setCategory={setSearchAddCategory}
+              MenuItems={searchMenues}
+              handleSearchInput={handleAllSearchInput}
+              fetchResultList={fetchAllResultList}
+            ></SearchBarTab>
             <SearchResults
               ResultList={searchAllResultList}
               textButtonColor="#4F68A6"
               textButtonText="추가"
               needDropdown={false}
+              menuItems={teamRoleMenues}
+              handleButtonEvent={tempChangeRole}
             ></SearchResults>
           </MemberListContainer>
         </TeamMemberManageContainer>
