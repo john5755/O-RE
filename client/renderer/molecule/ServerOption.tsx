@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import axios from "axios";
+import axios from "../utils/axios";
 import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
@@ -60,7 +60,6 @@ const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
 export default function ServerOption() {
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const [userExcel, setUserExcel] = useState<File | null>(null);
   const excelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null && event.target.files.length !== 0) {
@@ -76,7 +75,7 @@ export default function ServerOption() {
       formData.append("file", userExcel);
     }
     try {
-      const res = await axios.post(`${HOST}${USERS_API.LIST}`, formData, {
+      const res = await axios.post(USERS_API.LIST, formData, {
         headers: {
           ContentType: "multipart/formdata",
           Authorization: accessToken,

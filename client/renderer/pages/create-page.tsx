@@ -7,7 +7,7 @@ import { H4, Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
 import { TagType } from "../types";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import axios from "axios";
+import axios from "../utils/axios";
 import { addPageState } from "../slices/pageSlice";
 import Router from "next/router";
 
@@ -61,7 +61,6 @@ export default function CreatePage() {
   const [isSideList, setIsSideList] = useState(false);
   const [isCustom, setIsCustom] = useState<number>(-1);
   const [pageName, setPageName] = useState("");
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
@@ -166,10 +165,9 @@ export default function CreatePage() {
         content: pageTagList,
       };
 
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.post(`${HOST}${PAGE_API.ADD}`, data, {
+      await axios.post(PAGE_API.ADD, data, {
         headers: {
-          Authorization: accessToken,
+          Authorization: localStorage.getItem("accessToken"),
         },
       });
       Router.push("/view-page");

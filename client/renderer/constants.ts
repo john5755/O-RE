@@ -158,36 +158,35 @@ export const BASIC_PHOTO_URL: string =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
 
 // API
-const PORT = ":8080/";
-const API = "api/";
-const USERS = "users/";
-const TEAM_USER = "team-user/";
-const TEAM = "team/";
-const TEAMS = "teams/";
-const PAGE_USER = "page-user/";
-const PAGE = "pages";
+const API = "/api";
+const USERS = "/users";
+const TEAM_USER = "/team-user";
+const TEAM = "/team";
+const TEAMS = "/teams";
+const PAGE_USER = "/page-user";
+const PAGE = "/pages";
 
 export const USERS_API = {
-  DOMAIN: PORT + API + USERS + "domain",
-  VERIFICATION: PORT + API + USERS + "verification",
-  SIGNUP: PORT + API + USERS + "signup",
-  LOGIN: PORT + API + USERS + "signin",
-  MYPAGE: PORT + API + USERS + "mypage",
-  LIST: PORT + API + USERS + "list",
+  DOMAIN: API + USERS + "/domain",
+  VERIFICATION: API + USERS + "/verification",
+  SIGNUP: API + USERS + "/signup",
+  LOGIN: API + USERS + "/signin",
+  MYPAGE: API + USERS + "/mypage",
+  LIST: API + USERS + "/list",
 };
 export const TEAM_USER_API = {
-  LIST: PORT + API + TEAM_USER + TEAMS + "list",
+  LIST: API + TEAM_USER + TEAMS + "/list",
 };
 
 export const TEAM_API = {
-  CREATE: PORT + API + TEAM,
+  CREATE: API + TEAM,
 };
 
 export const PAGE_USER_API = {
-  ALL: PORT + API + PAGE_USER + "list/p",
+  ALL: API + PAGE_USER + "/list/p",
 };
 
 export const PAGE_API = {
-  ADD: PORT + API + PAGE,
-  DETAIL: PORT + API + PAGE + "/detail/",
+  ADD: API + PAGE,
+  DETAIL: API + PAGE + "/detail/",
 };

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 export interface LoginState {
   isLogin: boolean;
@@ -22,6 +23,9 @@ export const loginSlice = createSlice({
       state.isLogin = false;
       state.name = "";
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

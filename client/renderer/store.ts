@@ -18,14 +18,12 @@ import listStateSlice from "./slices/listSlices";
 import loginSlice from "./slices/loginSlices";
 import myTeamsStateSlice from "./slices/myTeamsStateSlice";
 import userProfileSlices from "./slices/userProfileSlices";
-import axiosSlice from "./slices/axiosSlice";
 import storage from "redux-persist/lib/storage";
 import { createWrapper, MakeStore } from "next-redux-wrapper";
 import myPageStateSlice from "./slices/pageSlice";
 
 export const rootReducer = combineReducers({
   login: loginSlice,
-  axiosState: axiosSlice,
   listState: listStateSlice,
   myTeamsState: myTeamsStateSlice,
   pageState: myPageStateSlice,

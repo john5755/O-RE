@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import axios from "axios";
+import axios from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import CheckBox from "../atom/CheckBox";
 import DatePicker from "../atom/DatePicker";
@@ -107,7 +107,6 @@ export default function ViewPage() {
   const [userInput, setUserInput] = useState<any>({});
   const pageInfo = useAppSelector((state) => state.pageState).selectPageState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
@@ -122,14 +121,9 @@ export default function ViewPage() {
   };
 
   const getPageList = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
-    const { data } = await axios.get(
-      `${HOST}${PAGE_API.DETAIL}${pageInfo.pageId}`,
-      {
-        headers: { Authorization: accessToken },
-      }
-    );
+    const { data } = await axios.get(`${PAGE_API.DETAIL}${pageInfo.pageId}`, {
+      headers: { Authorization: localStorage.getItem("accessToken") },
+    });
     setPageTagList(data.data.contents);
   };
 

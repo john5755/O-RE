@@ -5,10 +5,9 @@ import UserModal from "../molecule/UserModal";
 import Router from "next/router";
 import { PATH } from "../constants";
 import UserFormLink from "../molecule/UserFormLink";
-import axios from "axios";
+import axios from "../utils/axios";
 import { isAxiosError } from "../utils/axios";
 import { USERS_API } from "../constants";
-import { useAppSelector } from "../hooks/reduxHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -78,10 +77,6 @@ const pwLabelText = [
   { text: "비밀번호", color: "black" },
   { text: "비밀번호가 조건에 맞지 않습니다.", color: "red" },
 ];
-const domainLabelText = [
-  { text: "도메인", color: "black" },
-  { text: "적합하지 않은 도메인 입니다.", color: "red" },
-];
 const confirmLabelText = [
   { text: "비밀번호 확인", color: "black" },
   { text: "비밀번호가 일치하지 않습니다.", color: "red" },
@@ -132,7 +127,6 @@ const LinkOptions = [
 ];
 
 export default function Signup() {
-  const HOST = useAppSelector((state) => state.axiosState).axiosState;
   // name 상태 및 조건 확인
   const [nameInput, setNameInput] = useState<string>("");
   const conditionName: boolean = /^[가-힣]{2,10}$/.test(nameInput);
@@ -151,7 +145,7 @@ export default function Signup() {
       const params = {
         email: emailInput,
       };
-      const res = await axios.get(`${HOST}${USERS_API.VERIFICATION}`, {
+      const res = await axios.get(USERS_API.VERIFICATION, {
         params,
       });
       setIsEmailDuplicated(false);
@@ -179,7 +173,7 @@ export default function Signup() {
         code: verificationCode,
       };
       const { data } = await axios.post(
-        `${HOST}${USERS_API.VERIFICATION}`,
+        USERS_API.VERIFICATION,
         codeCredentials
       );
       if (data.success === true) {
@@ -222,10 +216,7 @@ export default function Signup() {
         password: pwInput,
         name: nameInput,
       };
-      const { data } = await axios.post(
-        `${HOST}${USERS_API.SIGNUP}`,
-        credentials
-      );
+      const { data } = await axios.post(USERS_API.SIGNUP, credentials);
       if (data.success === true) {
         setOpenSignupModal(true);
       }
