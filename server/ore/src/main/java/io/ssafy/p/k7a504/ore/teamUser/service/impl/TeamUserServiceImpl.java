@@ -38,7 +38,8 @@ public class TeamUserServiceImpl implements TeamUserService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         TeamUser teamUser = TeamUser.createTeamUser(user, team, TeamUserRole.LEADER);
-        return teamUserRepository.save(teamUser).getId();
+        teamUserRepository.save(teamUser);
+        return  teamId;
     }
     @Override
     @Transactional
