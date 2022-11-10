@@ -9,6 +9,7 @@ import io.ssafy.p.k7a504.ore.team.dto.TeamEditRequestDto;
 import io.ssafy.p.k7a504.ore.team.dto.TeamResponseDto;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.team.service.TeamService;
+import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUserRole;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
@@ -48,7 +49,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public TeamResponseDto modifyTeam(TeamEditRequestDto teamEditReqDTO, MultipartFile multipartFile){
         User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getRole().getPriority()<3){
+        if(user.getRole().getPriority()< TeamUserRole.MANAGER.getPriority()){
             throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
         }
         Team team = teamRepository.findById(teamEditReqDTO.getTeamId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
@@ -70,7 +71,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public Long removeTeam(final Long teamId){
         User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getRole().getPriority()<3){
+        if(user.getRole().getPriority()<TeamUserRole.MANAGER.getPriority()){
             throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
         }
         Team team = teamRepository.findById(teamId).orElseThrow(()->new CustomException(ErrorCode.TEAM_NOT_FOUND));
