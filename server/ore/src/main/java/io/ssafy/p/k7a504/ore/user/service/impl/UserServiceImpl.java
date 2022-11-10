@@ -9,6 +9,7 @@ import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.domain.UserRole;
 import io.ssafy.p.k7a504.ore.user.dto.*;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import io.ssafy.p.k7a504.ore.user.service.EmailService;
@@ -248,6 +249,40 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteAllInBatch(others);
         return others.size();
+    }
+
+    @Override
+    @Transactional
+    public int modifyUserAuthority(List<UserAuthModifyRequestDto> requestDtos) {
+        User modifier = userRepository.findById(SecurityUtil.getCurrentUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<Long> userIds = requestDtos.stream().map(UserAuthModifyRequestDto::getUserId).collect(Collectors.toList());
+        if(userRepository.countByIdIn(userIds).longValue() != (long) userIds.size())
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+
+        for (UserAuthModifyRequestDto requestDto : requestDtos) {
+            User user = userRepository.findById(requestDto.getUserId()).get();
+
+            checkModifierAuthority(modifier, user, requestDto.getRole());
+
+            user.modifyUserAuthority(requestDto.getRole());
+        }
+        return userIds.size();
+    }
+
+    private void checkModifierAuthority(User modifier, User user, UserRole role) {
+        if(modifier.getId().equals(user.getId()))
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY_FOR_YOURSELF);
+
+        if(modifier.getRole().getPriority() <= user.getRole().getPriority())
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+
+        if(modifier.getRole().getPriority() < role.getPriority())
+            throw new CustomException(ErrorCode.CANT_GIVE_HIGHER_AUTH);
+
+        if(role == UserRole.OWNER)
+            throw new CustomException(ErrorCode.CANT_BE_OWNER);
     }
 
     private String generateTempPassword() {

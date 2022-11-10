@@ -26,4 +26,5 @@ public interface UserService {
     Long modifyUserPassword(UserPasswordRequestDto userPasswordRequestDto);
     Long leaveServer();
     int removeUser(List<Long> userIds);
+    int modifyUserAuthority(List<UserAuthModifyRequestDto> requestDtos);
 }

@@ -69,6 +69,10 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void modifyUserAuthority(UserRole role) {
+        this.role = role;
+    }
+
     public static String getDefaultImageUrl() {
         return "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/UserDefault.png";
     }

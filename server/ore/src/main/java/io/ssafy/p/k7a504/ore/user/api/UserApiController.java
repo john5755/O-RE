@@ -127,5 +127,12 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.removeUser(userIds)));
     }
 
+    @PreAuthorize("hasAnyAuthority('OWNER', 'ADMIN')")
+    @PutMapping("/auth")
+    public ResponseEntity<? extends BasicResponse> modifyUserAuthority(@Valid @RequestBody List<UserAuthModifyRequestDto> requestDtos) {
+        return ResponseEntity.ok()
+                .body(new CommonResponse<>(userService.modifyUserAuthority(requestDtos)));
+    }
+
 
 }
