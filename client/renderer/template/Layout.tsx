@@ -1,10 +1,11 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import TopBar from "../molecule/TopBar";
 import TeamSideBar from "../molecule/TeamSideBar";
 import PageSideBar from "../molecule/PageSideBar";
 import NavBar from "../molecule/NavBar";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
+
 import { layoutInfo } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
 
@@ -41,8 +42,13 @@ const PageContainer = styled.div`
 export default function Layout({ children }: PropsWithChildren<{}>) {
   const { pathname } = useRouter();
   const isLogin = useAppSelector((state) => state.login).isLogin;
-  const [selectedTeamId, setSelectedTeamId] = useState<number>(-1);
-
+  const selectTeam = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
+  useEffect(() => {
+    if (selectTeam.idx === -1) return;
+    Router.push("/view-page");
+  }, [selectTeam.idx]);
   return (
     <Container>
       <TopBar />
@@ -50,15 +56,9 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         <PageContainer>{children}</PageContainer>
       ) : (
         <WrapBodyContainer>
-          <TeamSideBar
-            selectedTeamId={selectedTeamId}
-            setSelectedTeamId={setSelectedTeamId}
-          />
+          <TeamSideBar />
           <WrapMainContainer>
-            <NavBar
-              selectedTeamId={selectedTeamId}
-              setSelectedTeamId={setSelectedTeamId}
-            />
+            <NavBar />
             {layoutInfo.withOnlyNavBar.has(pathname) ? (
               <PageContainer>{children}</PageContainer>
             ) : (
