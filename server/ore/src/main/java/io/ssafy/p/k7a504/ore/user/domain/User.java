@@ -70,7 +70,7 @@ public class User {
     }
 
     public static String getDefaultImageUrl() {
-        return "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
+        return "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/UserDefault.png";
     }
 
 }
