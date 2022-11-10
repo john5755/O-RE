@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import Router from "next/router";
 import { useResetPage } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { TEAM_ROLE } from "../constants";
 
 const Container = styled.div`
   width: 100%;
@@ -14,21 +16,26 @@ const Container = styled.div`
   background-color: var(--light-main-color);
 `;
 
-const ProfileImgContainer = styled.div`
+const LeftContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const RightContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 5px;
 `;
 
-const SelectedTeamContainer = styled.div`
+const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--dark-gray-color);
   font-weight: 600;
   font-size: 19px;
-  margin-left: 15px;
+  margin: 0 15px;
 `;
 
 const UserProfileImg = styled.img`
@@ -43,11 +50,22 @@ export default function NavBar() {
   ).userProfileState;
   const resetPage = useResetPage();
   const title = useAppSelector((state) => state.navName).navName;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+  const teamIdx = useAppSelector((state) => state.myTeamsState).selectTeamState
+    .idx;
   const dispatch = useAppDispatch();
+
   return (
     <Container>
-      <SelectedTeamContainer>{title}</SelectedTeamContainer>
-      <ProfileImgContainer>
+      <LeftContainer>
+        <TitleContainer>{title}</TitleContainer>
+        {teamIdx !== -1 &&
+          teamList[teamIdx].teamUserRole !== undefined &&
+          TEAM_ROLE.MANAGER.includes(teamList[teamIdx].teamUserRole) && (
+            <SettingsIcon fontSize="small"></SettingsIcon>
+          )}
+      </LeftContainer>
+      <RightContainer>
         <UserProfileImg
           src={userProfile.profileImage}
           onClick={() => {
@@ -56,7 +74,7 @@ export default function NavBar() {
             dispatch(setNavName("O:RE 설정"));
           }}
         ></UserProfileImg>
-      </ProfileImgContainer>
+      </RightContainer>
     </Container>
   );
 }

@@ -84,6 +84,7 @@ export default function CreateTeam() {
           teamId: myTeams.length,
           name: teamName,
           imageUrl: photoUrl,
+          teamUserRole: "asd",
         })
       );
       dispatch(setSelectTeamState({ idx: myTeams.length, teamId: data.data }));

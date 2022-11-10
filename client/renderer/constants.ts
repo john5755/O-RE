@@ -191,3 +191,9 @@ export const PAGE_API = {
   ADD: API + PAGE,
   DETAIL: API + PAGE + "/detail/",
 };
+
+export const TEAM_ROLE = {
+  OWNER: ["OWNER"],
+  LEADER: ["OWNER", "LEADER"],
+  MANAGER: ["OWNER", "LEADER", "MANAGER"],
+};

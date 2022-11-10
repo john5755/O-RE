@@ -1,14 +1,15 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { BASIC_PHOTO_URL } from "../constants";
+import { BASIC_PHOTO_URL, TEAM_USER_API } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
-import { BarProps } from "../types";
-import { setSelectTeamState } from "../slices/myTeamsStateSlice";
+import { BarProps, TeamOptions } from "../types";
+import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
 import { setSelectPageState } from "../slices/pageSlice";
 import { useResetPage } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
+import axios from "../utils/axios";
 
 const Container = styled.div`
   width: 100%;
@@ -81,8 +82,38 @@ export default function TeamSideBar() {
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const dispatch = useAppDispatch();
   const resetPage = useResetPage();
+
+  const setMyTeams = useCallback(async () => {
+    try {
+      const params = {
+        page: 0,
+        size: 20,
+      };
+      const { data } = await axios.get(TEAM_USER_API.LIST, {
+        params,
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+      const myTeams: Array<TeamOptions> = data.data.content;
+      dispatch(setTeamState(myTeams));
+      dispatch(
+        setSelectTeamState({
+          idx: myTeams.length - 1,
+          teamId: myTeams[myTeams.length - 1].teamId,
+        })
+      );
+      dispatch(setNavName(myTeams[myTeams.length - 1].name));
+    } catch {}
+  }, [teamList.length]);
+
+  useEffect(() => {
+    setMyTeams();
+  }, [teamList.length]);
+
   return (
     <Container>
       <TeamContainer>

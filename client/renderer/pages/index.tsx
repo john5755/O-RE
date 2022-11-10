@@ -58,6 +58,7 @@ const domainLabelText = [
 export default function Home() {
   const dispatch = useAppDispatch();
   const isLogin = useAppSelector((state) => state.login).isLogin;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   // Domain 상태 및 조건 확인
   const [domainInput, setDomainInput] = useState<string>("http://");
   const conditionDomain: boolean =
@@ -95,7 +96,6 @@ export default function Home() {
         },
       });
       const myTeams: Array<TeamOptions> = data.data.content;
-      console.log(myTeams);
       dispatch(setTeamState(myTeams));
       dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
       dispatch(setNavName(myTeams[0].name));
