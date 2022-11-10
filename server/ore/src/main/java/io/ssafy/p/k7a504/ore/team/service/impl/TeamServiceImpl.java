@@ -2,6 +2,7 @@ package io.ssafy.p.k7a504.ore.team.service.impl;
 
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
+import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.dto.TeamCreateRequestDto;
 import io.ssafy.p.k7a504.ore.team.dto.TeamEditRequestDto;
@@ -9,6 +10,8 @@ import io.ssafy.p.k7a504.ore.team.dto.TeamResponseDto;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.team.service.TeamService;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
+import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
 
     @Override
@@ -43,6 +47,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public TeamResponseDto modifyTeam(TeamEditRequestDto teamEditReqDTO, MultipartFile multipartFile){
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(user.getRole().getPriority()<3){
+            throw new CustomException(ErrorCode.NO_AUTH_TO_MODIFY);
+        }
         Team team = teamRepository.findById(teamEditReqDTO.getTeamId()).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         String teamImg = teamEditReqDTO.getImageUrl();
         if(teamImg.length()==0){
@@ -61,6 +69,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public Long removeTeam(final Long teamId){
+        User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(user.getRole().getPriority()<3){
+            throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
+        }
         Team team = teamRepository.findById(teamId).orElseThrow(()->new CustomException(ErrorCode.TEAM_NOT_FOUND));
         teamRepository.deleteById(teamId);
         return teamId;

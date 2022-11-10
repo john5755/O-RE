@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TeamUserRole {
+    OWNER(4),
     LEADER(3),
     MANAGER(2),
     MEMBER(1);
@@ -17,6 +18,8 @@ public enum TeamUserRole {
     public static TeamUserRole matchTeamUserRole(String role){
         TeamUserRole teamUserRole;
         switch(role){
+            case "OWNER":
+                throw new CustomException(ErrorCode.CANT_BE_OWNER);
             case "LEADER":
                 teamUserRole = TeamUserRole.LEADER;
                 break;
