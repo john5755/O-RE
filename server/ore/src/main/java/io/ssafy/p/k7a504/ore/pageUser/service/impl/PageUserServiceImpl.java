@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,7 +41,8 @@ public class PageUserServiceImpl implements PageUserService {
 
     @Override
     public Slice<PageUserResponseDto> getPageUserList(Long pageId, Pageable pageable) {
-        Slice<PageUser> pageUserList = pageUserRepository.findAllByPageId(pageId, pageable);
+        Long userId = SecurityUtil.getCurrentUserId();
+        Slice<PageUser> pageUserList = pageUserRepository.findAllByPageId(pageId, userId, pageable);
         if(pageUserList.getSize()==0){
             throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
         }
@@ -105,8 +107,9 @@ public class PageUserServiceImpl implements PageUserService {
         Long userId = SecurityUtil.getCurrentUserId();
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
+        if(pageUser.getPageUserRole()==PageUserRole.OWNER)
+            throw new CustomException(ErrorCode.OWNER_CANT_LEAVE);
         pageUserRepository.deleteById(pageUser.getId());
-        deleteEmptyPage(pageId);
         return pageUser.getId();
     }
 
@@ -126,25 +129,18 @@ public class PageUserServiceImpl implements PageUserService {
             case 1:
                 throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
             case 2:
-                if(pageUserRepository.countByIdAndPageUserRole(pageUserIdList,PageUserRole.VIEWER )!=pageUserIdList.size()){
+                if(pageUserRepository.countByIdAndPageUserRole(pageUserIdList,Arrays.asList(PageUserRole.VIEWER) )!=pageUserIdList.size()){
                     throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
                 }
                 break;
             case 3:
-                if(pageUserRepository.countByIdAndPageUserRole(pageUserIdList,PageUserRole.MAINTAINER )!=0){
+                if(pageUserRepository.countByIdAndPageUserRole(pageUserIdList,Arrays.asList(PageUserRole.MAINTAINER, PageUserRole.OWNER))!=0){
                     throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
                 }
                 break;
         }
         pageUserRepository.deleteAllById(pageUserIdList);
-        deleteEmptyPage(pageId);
         return fromUserId;
-    }
-
-    public void deleteEmptyPage(Long pageId){
-        if(pageUserRepository.countByPageId(pageId)==0){
-            pageRepository.deleteById(pageId);
-        }
     }
 
     @Override
@@ -162,7 +158,8 @@ public class PageUserServiceImpl implements PageUserService {
         if(!pageRepository.existsById(pageId)){
             throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
         }
-        Slice<PageUser> pageUserList = pageUserRepository.findAllByUserName(pageId, name, pageable);
+        Long userId = SecurityUtil.getCurrentUserId();
+        Slice<PageUser> pageUserList = pageUserRepository.findAllByUserName(pageId, name, userId, pageable);
         return pageUserList.map(PageUserResponseDto::new);
     }
 
@@ -171,7 +168,8 @@ public class PageUserServiceImpl implements PageUserService {
         if(!pageRepository.existsById(pageId)){
             throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
         }
-        Slice<PageUser> pageUserList = pageUserRepository.findAllByNickName(pageId, nickName, pageable);
+        Long userId = SecurityUtil.getCurrentUserId();
+        Slice<PageUser> pageUserList = pageUserRepository.findAllByNickName(pageId, nickName, userId, pageable);
         return pageUserList.map(PageUserResponseDto::new);
     }
 }

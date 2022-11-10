@@ -59,8 +59,10 @@ public class UserInputServiceImpl implements UserInputService {
         List<String> userInputs = userInputList.stream().map(UserInput::getInputValue).collect(Collectors.toList());
         List<HashMap<String,Object>> userInputMaps = new ArrayList<>();
         try {
-            for(String userInput : userInputs){
+            for(int i=0; i<userInputs.size(); i++){
+                String userInput = userInputs.get(i);
                 HashMap<String, Object> map = new ObjectMapper().readValue(userInput, HashMap.class);
+                map.put("입력시간",userInputList.get(i).getInputDate());
                 userInputMaps.add(map);
             }
         }
