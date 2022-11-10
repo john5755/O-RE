@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { H2, Label } from "../styles";
 import UserOption from "../molecule/UserOption";
 import ServerOption from "../molecule/ServerOption";
 import { useAppSelector } from "../hooks/reduxHook";

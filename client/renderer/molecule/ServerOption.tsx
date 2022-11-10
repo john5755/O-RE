@@ -108,7 +108,7 @@ export default function ServerOption() {
             <strong>전송</strong>버튼을 누르시면 회원이 추가 됩니다.
           </ExplainItem>
           <ExplainItem>
-            첫 비밀번호는 <strong>이메일 + 123!</strong> 입니다.
+            첫 비밀번호는 <strong>이메일ID + 123!</strong> 입니다.
           </ExplainItem>
           <ExplainItem>
             최초 사용자 추가 시 권한은 모두 <strong>사용자</strong>입니다.

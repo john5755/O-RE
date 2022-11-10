@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SelectTeamType, TeamOptions } from "../types";
+import { PURGE } from "redux-persist";
 
 export interface MyTeamsState {
   myTeamsState: Array<TeamOptions>;
@@ -32,6 +33,9 @@ export const myTeamsStateSlice = createSlice({
         (prev) => prev !== action.payload
       );
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

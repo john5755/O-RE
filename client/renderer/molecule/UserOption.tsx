@@ -3,6 +3,10 @@ import styled from "@emotion/styled";
 import { H2, H3, Button, Label, Input } from "../styles";
 import ProfilePhotos from "./ProfilePhotos";
 import { useAppSelector } from "../hooks/reduxHook";
+import axios from "../utils/axios";
+import { USERS_API } from "../constants";
+import { persistor } from "../store";
+import Router from "next/router";
 
 const TextContainer = styled.div`
   width: 100%;
@@ -42,6 +46,26 @@ export default function UserOption() {
   function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setNickName(event.target.value);
   }
+  // logout
+  const submitLogout = async () => {
+    try {
+      await axios.put(
+        USERS_API.LOGOUT,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        }
+      );
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("accessExpiredAt");
+      localStorage.removeItem("refreshExpiredAt");
+      persistor.purge();
+      Router.push("/login");
+    } catch (e) {}
+  };
   return (
     <>
       <TextContainer>
@@ -82,6 +106,7 @@ export default function UserOption() {
             color: "#C74E4E",
             border: "2px solid #C74E4E",
           }}
+          onClick={submitLogout}
         >
           로그아웃
         </Button>

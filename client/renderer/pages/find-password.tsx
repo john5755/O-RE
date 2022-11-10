@@ -47,34 +47,9 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-const CantFindContainer = styled.ul`
-  width: 100%;
-  text-align: center;
-  padding: 0;
-`;
-
-const CantFindOptions = styled.li`
-  display: inline-block;
-  list-style: none;
-  :first-child {
-    border-right: 1px solid var(--main-color);
-    padding-right: 10px;
-    margin-right: 10px;
-  }
-  :last-child {
-    border-left: 1px solid var(--main-color);
-    padding-left: 10px;
-    margin-left: 10px;
-  }
-  > a {
-    color: var(--main-color);
-  }
-`;
-
 const LinkOptions = [
   { pathLink: PATH.MAIN, pathName: "메인페이지로" },
   { pathLink: PATH.LOGIN, pathName: "로그인" },
-  { pathLink: PATH.SIGNUP, pathName: "회원가입" },
 ];
 
 export default function FindPassword() {
@@ -111,8 +86,6 @@ export default function FindPassword() {
             firstPathName={LinkOptions[0].pathName}
             secondPath={LinkOptions[1].pathLink}
             secondPathName={LinkOptions[1].pathName}
-            thirdPath={LinkOptions[2].pathLink}
-            thirdPathName={LinkOptions[2].pathName}
           ></UserFormLink>
         </FindContainer>
       </Container>

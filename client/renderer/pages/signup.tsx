@@ -121,9 +121,8 @@ const codeModalText = [
 ];
 
 const LinkOptions = [
-  { pathLink: PATH.MAIN, pathName: "메인페이지로" },
+  { pathLink: PATH.MAIN, pathName: "도메인 입력" },
   { pathLink: PATH.LOGIN, pathName: "로그인" },
-  { pathLink: PATH.FIND_PASSWORD, pathName: "비밀번호 찾기" },
 ];
 
 export default function Signup() {
@@ -439,8 +438,6 @@ export default function Signup() {
             firstPathName={LinkOptions[0].pathName}
             secondPath={LinkOptions[1].pathLink}
             secondPathName={LinkOptions[1].pathName}
-            thirdPath={LinkOptions[2].pathLink}
-            thirdPathName={LinkOptions[2].pathName}
           ></UserFormLink>
         </SignupContainer>
       </Container>

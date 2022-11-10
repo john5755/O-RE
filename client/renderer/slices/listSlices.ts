@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 export interface ListState {
   listState: boolean;
@@ -18,6 +19,9 @@ export const listStateSlice = createSlice({
     setListStateFalse: (state) => {
       state.listState = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 
