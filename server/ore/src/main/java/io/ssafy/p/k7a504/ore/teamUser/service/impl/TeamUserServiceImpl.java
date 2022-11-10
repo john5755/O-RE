@@ -11,6 +11,7 @@ import io.ssafy.p.k7a504.ore.teamUser.dto.*;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.service.TeamUserService;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.domain.UserRole;
 import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -35,12 +36,14 @@ public class TeamUserServiceImpl implements TeamUserService {
     public Long beFirstMember(Long teamId) {
         User user = userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User owner = userRepository.findByRole("OWNER").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         List<TeamUser> userList = new ArrayList<>();
+        User owner = userRepository.findOwner().orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         userList.add(TeamUser.createTeamUser(owner, team, TeamUserRole.OWNER));
-        userList.add(TeamUser.createTeamUser(user, team, TeamUserRole.LEADER));
+        if(user.getRole()!= UserRole.OWNER){
+            userList.add(TeamUser.createTeamUser(user, team, TeamUserRole.LEADER));
+        }
         teamUserRepository.saveAll(userList);
         return teamId;
     }
@@ -141,7 +144,7 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Override
     @Transactional
     public Long leaveTeam(Long teamId) {
-        User owner = userRepository.findByRole("OWNER").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User owner = userRepository.findOwner().orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if(SecurityUtil.getCurrentUserId().equals(owner.getId())) throw new CustomException(ErrorCode.OWNER_CANT_LEAVE);
         TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(SecurityUtil.getCurrentUserId(), teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_USER_NOT_FOUND));

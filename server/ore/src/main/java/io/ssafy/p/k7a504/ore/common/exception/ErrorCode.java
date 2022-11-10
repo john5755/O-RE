@@ -49,6 +49,7 @@ public enum ErrorCode {
     NOT_VALID_EMAIL(HttpStatus.UNAUTHORIZED, 40140, "이메일 인증이 완료되지 않았습니다."),
     CANT_BE_OWNER(HttpStatus.UNAUTHORIZED, 40141, "OWNER 권한을 부여할 수 없습니다. "),
     OWNER_CANT_LEAVE(HttpStatus.UNAUTHORIZED, 40142, "OWNER는 떠날 수 없습니다. "),
+
     // ETC
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, 40081, "파일이 없습니다."),
     NOT_EXCEL_FILE(HttpStatus.BAD_REQUEST, 40082, "Excel 파일이 아닙니다."),

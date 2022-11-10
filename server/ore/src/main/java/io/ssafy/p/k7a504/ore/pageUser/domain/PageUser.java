@@ -85,6 +85,9 @@ public class PageUser {
         if(this.pageUserRole.getPriority() <= pageUser.getPageUserRole().getPriority()) {
             return false;
         }
+        if(pageUserRole==PageUserRole.OWNER||this.pageUserRole.getPriority() < pageUserRole.getPriority()){
+            return false;
+        }
         return true;
     }
 

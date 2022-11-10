@@ -5,11 +5,11 @@ import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.page.domain.Content;
-import io.ssafy.p.k7a504.ore.page.repository.ContentRepository;
 import io.ssafy.p.k7a504.ore.page.domain.Page;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddRequestDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageAddResponseDto;
 import io.ssafy.p.k7a504.ore.page.dto.PageDetailResponseDto;
+import io.ssafy.p.k7a504.ore.page.repository.ContentRepository;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.page.service.PageService;
 import io.ssafy.p.k7a504.ore.pageUser.domain.PageUser;
@@ -18,6 +18,9 @@ import io.ssafy.p.k7a504.ore.pageUser.dto.PageContainInputResponseDto;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
+import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.user.domain.UserRole;
+import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -35,6 +38,7 @@ public class PageServiceImpl implements PageService {
     private final TeamUserRepository teamUserRepository;
     private final PageUserRepository pageUserRepository;
     private final ContentRepository contentRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -71,9 +75,18 @@ public class PageServiceImpl implements PageService {
         }
         contentRepository.saveAll(contents);
 
-        PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
-        pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
-        pageUserRepository.save(pageUser);
+        User ownerUser = userRepository.findOwner()
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        PageUser ownerPageUser = PageUser.enrollPage(page, ownerUser);
+        ownerPageUser.adjustRoleByMaintainer(ownerPageUser, PageUserRole.OWNER);
+        List<PageUser> list = new ArrayList<>();
+        list.add(ownerPageUser);
+        if(teamUser.getUser().getRole()!= UserRole.OWNER){
+            PageUser pageUser = PageUser.enrollPage(page, teamUser.getUser());
+            pageUser.adjustRoleByMaintainer(pageUser, PageUserRole.MAINTAINER);
+            list.add(pageUser);
+        }
+        pageUserRepository.saveAll(list);
 
         return new PageAddResponseDto(page, pageAddRequestDto.getContent());
     }
@@ -106,7 +119,7 @@ public class PageServiceImpl implements PageService {
         Long userId = SecurityUtil.getCurrentUserId();
         PageUser pageUser = pageUserRepository.findByPageIdAndUserId(pageId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_USER_NOT_FOUND));
-        if(pageUser.getPageUserRole()!=PageUserRole.MAINTAINER){
+        if(pageUser.getPageUserRole().getPriority()<=PageUserRole.EDITOR.getPriority()){
             throw new CustomException(ErrorCode.NO_AUTH_TO_DELETE);
         }
         pageRepository.deleteById(pageId);
