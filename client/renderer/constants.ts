@@ -176,6 +176,7 @@ export const USERS_API = {
   LIST: API + USERS + "/list",
   NAME: API + USERS + "/name",
   NICKNAME: API + USERS + "/nickname",
+  AUTH: API + USERS + "/auth",
 };
 export const TEAM_USER_API = {
   LIST: API + TEAM_USER + TEAMS + "/list",
