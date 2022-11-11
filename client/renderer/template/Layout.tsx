@@ -1,13 +1,21 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styled from "@emotion/styled";
 import TopBar from "../molecule/TopBar";
 import TeamSideBar from "../molecule/TeamSideBar";
 import PageSideBar from "../molecule/PageSideBar";
 import NavBar from "../molecule/NavBar";
 import Router, { useRouter } from "next/router";
-
-import { layoutInfo } from "../constants";
-import { useAppSelector } from "../hooks/reduxHook";
+import axios from "../utils/axios";
+import { layoutInfo, TEAM_USER_API } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { TeamOptions } from "../types";
+import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
+import { setNavName } from "../slices/navNameSlice";
 
 const Container = styled.div`
   height: 100vh;
@@ -45,11 +53,13 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+
   useEffect(() => {
     if (selectTeam.idx === -1) return;
     Router.push("/view-page");
   }, [selectTeam.idx]);
-  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+
   return (
     <Container>
       <TopBar />

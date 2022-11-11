@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, H3, Label, Button, Input } from "../styles";
-import { BASIC_PHOTO_URL } from "../constants";
+import { BASIC_PHOTO_URL, PATH, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import TeamDropDown from "../molecule/TeamDropdown";
 import { TeamUserType } from "../types";
 import SearchResults from "../molecule/SearchResults";
+import axios from "../utils/axios";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { delTeamState } from "../slices/myTeamsStateSlice";
+import Router from "next/router";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -139,13 +143,19 @@ const testTeamMembers = [
 ];
 
 export default function ManageTeam() {
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+  const teamIdx = useAppSelector((state) => state.myTeamsState).selectTeamState
+    .idx;
+
+  const dispatch = useAppDispatch();
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
-    BASIC_PHOTO_URL
+    teamList[teamIdx]?.imageUrl
   );
   // nickname 변경
-  const [teamName, setTeamName] = useState<string>("");
+  const [teamName, setTeamName] = useState<string>(teamList[teamIdx]?.name);
+  //  const HOST = localStorage.getItem();
 
   function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setTeamName(event.target.value);
@@ -185,13 +195,21 @@ export default function ManageTeam() {
     setSearchAllResultList(testTeamMembers);
   };
 
+  const deleteTeam = async () => {
+    try {
+      await axios.delete(`${TEAM_API.DELETE}/${teamList[teamIdx].teamId}`, {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+      dispatch(delTeamState(teamList[teamIdx]));
+    } catch (e) {}
+  };
+
   return (
     <LayoutContainer>
       <Container>
         <TeamProfileContainer>
-          <TitleContainer>
-            <H2 style={{ fontWeight: "bold" }}>팀 관리</H2>
-          </TitleContainer>
           <ProfilePhotos
             photo={photo}
             setPhoto={setPhoto}
@@ -267,6 +285,17 @@ export default function ManageTeam() {
             ></SearchResults>
           </MemberListContainer>
         </TeamMemberManageContainer>
+        <Button
+          background="red"
+          width="60px"
+          height="40px"
+          onClick={() => {
+            deleteTeam();
+            Router.push(PATH.VIEW_PAGE);
+          }}
+        >
+          삭제
+        </Button>
       </Container>
     </LayoutContainer>
   );
