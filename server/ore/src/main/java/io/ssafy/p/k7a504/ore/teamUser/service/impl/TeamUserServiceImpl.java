@@ -84,10 +84,9 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     public Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable) {
+        Team team = teamRepository.findById(teamId)
+        .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, SecurityUtil.getCurrentUserId(), pageable);
-        if (teamUsers.getNumberOfElements() == 0) {
-            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
-        }
         return teamUsers.map(UserInfoResponseDto::new);
     }
 
