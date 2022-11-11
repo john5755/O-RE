@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import styled from "@emotion/styled";
+import TablePagination from "@mui/material/TablePagination";
 
 const Container = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ type TableProps = {
   style?: React.CSSProperties;
   header: string;
   title: string[];
-  data: string[];
+  data: Array<string[]>;
 };
 
 const BasicTable = ({ header, title, data }: TableProps) => {
@@ -37,7 +38,7 @@ const BasicTable = ({ header, title, data }: TableProps) => {
           <TableBody>
             {data.map((row, i) => (
               <TableRow key={`${row}-${i}`}>
-                {Object.values(row).map((col, idx) => (
+                {row.map((col, idx) => (
                   <TableCell key={`${col}-${idx}`}>{col}</TableCell>
                 ))}
               </TableRow>

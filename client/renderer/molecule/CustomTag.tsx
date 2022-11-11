@@ -430,7 +430,7 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
   };
 
   const handleSave = () => {
-    setObj((pre: TagType[]) => {
+    setObj((pre: any[]) => {
       const row = Object.keys(tableInfo[0]).filter((_, idx) =>
         tableIdx.includes(idx)
       );
@@ -454,6 +454,7 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
   console.log("table idx : ", tableIdx);
   console.log("tableInfo : ", tableInfo);
   console.log("table Row : ", tableRow);
+  console.log("obj ", obj);
   return (
     <CustomContainer>
       <Label>라벨</Label>
