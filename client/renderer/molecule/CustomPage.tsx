@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
 import List from "../atom/List";
-import Table from "../atom/Table";
+import BasicTable from "../atom/BasicTable";
 import Text from "../atom/Text";
 import Input from "../atom/Input";
 import { Button } from "../styles";
@@ -97,12 +97,12 @@ const ComponentBox = styled.div<ComponentBoxProps>`
 // };
 
 const Component: {
-  [key: string]: React.FunctionComponent<{ [key: string]: any }>;
+  [key: string]: React.FunctionComponent<any>;
 } = {
   text: Text,
   "date picker": DatePicker,
   input: Input,
-  table: Table,
+  table: BasicTable,
   "check box": CheckBox,
   "radio button": RadioButton,
 };

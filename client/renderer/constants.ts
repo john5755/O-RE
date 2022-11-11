@@ -65,9 +65,13 @@ export const PAGE_USER_API = {
 export const PAGE_API = {
   ADD: API + PAGE,
   DETAIL: API + PAGE + "/detail/",
+  ALL: API + PAGE + "/status/",
 };
 
-export const USER_INPUT_API = API + USER_INPUT;
+export const USER_INPUT_API = {
+  ALL: API + USER_INPUT,
+  GET: API + USER_INPUT + "/list",
+};
 
 export const TEAM_ROLE = {
   OWNER: ["OWNER"],
@@ -137,8 +141,8 @@ export const TAG_LIST: TagType[] = [
     type: "table",
     tagProps: {
       header: "테이블 제목",
-      row: 3,
-      column: 3,
+      title: [],
+      data: [],
       style: {
         width: "100px",
         height: "100px",

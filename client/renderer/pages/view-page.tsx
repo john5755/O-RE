@@ -6,12 +6,15 @@ import DatePicker from "../atom/DatePicker";
 import Input from "../atom/Input";
 import List from "../atom/List";
 import RadioButton from "../atom/RadioButton";
-import Table from "../atom/Table";
+import BasicTable from "../atom/BasicTable";
 import Text from "../atom/Text";
-import { INPUT_LIST, PAGE_API, USER_INPUT_API } from "../constants";
-import { useAppSelector } from "../hooks/reduxHook";
+import { INPUT_LIST, PAGE_API, PATH, USER_INPUT_API } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { Button } from "../styles";
 import { TagType } from "../types";
+import { useClickTeam, useResetPage } from "../hooks/resetPageHook";
+import { setSelectTeamState } from "../slices/myTeamsStateSlice";
+import Router from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -23,84 +26,16 @@ const TagContainer = styled.div`
 `;
 
 const Component: {
-  [key: string]: React.FunctionComponent<{ [key: string]: any }>;
+  [key: string]: React.FunctionComponent<any>;
 } = {
   text: Text,
   list: List,
   input: Input,
-  table: Table,
+  table: BasicTable,
   "radio button": RadioButton,
   "date picker": DatePicker,
   "check box": CheckBox,
 };
-
-const arr = [
-  {
-    type: "text",
-    tagProps: {
-      header: "A504팀 MVP",
-      style: {
-        width: "",
-        height: "",
-        color: "black",
-        fontSize: "30px",
-        fontWeight: "500",
-      },
-    },
-  },
-  {
-    type: "radio button",
-    tagProps: {
-      type: "radio",
-      header: "A504 MVP",
-      name: "radio",
-      label: ["동윤", "민지", "창엽", "수빈", "민석"],
-      style: { width: "", height: "" },
-    },
-  },
-  {
-    type: "input",
-
-    tagProps: {
-      header: "MVP 선정 이유",
-      placeholder: "내용을 입력하세요",
-      style: {
-        width: "250px",
-        height: "40px",
-      },
-    },
-  },
-  {
-    type: "input",
-
-    tagProps: {
-      header: "기타 건의사항",
-      placeholder: "내용을 입력하세요",
-      style: {
-        width: "250px",
-        height: "40px",
-      },
-    },
-  },
-  {
-    type: "date picker",
-    tagProps: {
-      type: "date",
-      header: "투표 날짜를 기입하세요",
-      style: { width: "200px", height: "30px" },
-    },
-  },
-  {
-    type: "check box",
-    tagProps: {
-      type: "checkbox",
-      header: "좋아하는 사람을 모두 고르시오.",
-      label: ["동윤", "민지", "창엽", "수빈", "민석"],
-      style: { width: "", height: "" },
-    },
-  },
-];
-const tmp = JSON.stringify(arr);
 
 export default function ViewPage() {
   const [pageTagList, setPageTagList] = useState<TagType[]>();
@@ -108,20 +43,31 @@ export default function ViewPage() {
   const pageInfo = useAppSelector((state) => state.pageState).selectPageState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
   const selectPage = useAppSelector((state) => state.pageState).selectPageState;
+  const teamInfo = useAppSelector(
+    (state) => state.myTeamsState
+  ).selectTeamState;
   const isInput =
     pageTagList !== undefined &&
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
-
+  const dispatch = useAppDispatch();
+  const clickTeam = useClickTeam();
+  const resetPage = useResetPage();
   const handleClick = async () => {
     try {
       const data = { input: userInput, pageId: selectPage.pageId };
-      await axios.post(USER_INPUT_API, data, {
+      await axios.post(USER_INPUT_API.ALL, data, {
         headers: {
           Authorization: localStorage.getItem("accessToken"),
         },
       });
+      resetPage();
+      dispatch(
+        setSelectTeamState({ idx: teamInfo.idx, teamId: teamInfo.teamId })
+      );
+      clickTeam();
+      Router.push(PATH.VIEW_PAGE);
     } catch (e) {}
   };
 
@@ -151,9 +97,10 @@ export default function ViewPage() {
                 <TagComponent
                   {...{
                     ...v.tagProps,
-                    ...(INPUT_LIST.includes(v.type)
-                      ? { userInput, setUserInput }
-                      : {}),
+                    ...(INPUT_LIST.includes(v.type) && {
+                      userInput,
+                      setUserInput,
+                    }),
                   }}
                 />
 

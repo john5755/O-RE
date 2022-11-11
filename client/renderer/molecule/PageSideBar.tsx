@@ -63,6 +63,8 @@ export default function PageSideBar() {
           },
         }
       );
+      console.log(selectTeam);
+      console.log(data);
       dispatch(setPageState(data.data.content));
       dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e) {
