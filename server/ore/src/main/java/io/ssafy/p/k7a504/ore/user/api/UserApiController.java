@@ -95,6 +95,12 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.searchAllUser(pageable)));
     }
 
+    @GetMapping("/list/{teamId}")
+    public ResponseEntity<? extends BasicResponse> searchUserNotInTeam(@PathVariable Long teamId, Pageable pageable) {
+        return ResponseEntity.ok()
+                .body(new CommonResponse<>(userService.searchUserNotInTeam(teamId, pageable)));
+    }
+
     @GetMapping("/mypage")
     public ResponseEntity<? extends BasicResponse> findUserInfo() {
         return ResponseEntity.status(HttpStatus.OK)
