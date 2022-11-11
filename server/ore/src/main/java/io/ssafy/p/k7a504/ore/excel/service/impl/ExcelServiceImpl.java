@@ -94,7 +94,7 @@ public class ExcelServiceImpl implements ExcelService {
             }
         }
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename="+userInputOfPageResponseDto.getPageName()+".xlsx");
+        response.setHeader("Content-Disposition", "attachment;filename=ore.xlsx");
         workbook.write(response.getOutputStream());
         workbook.close();
 
