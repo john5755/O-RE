@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import axios from "../utils/axios";
 import { addPageState } from "../slices/pageSlice";
 import Router from "next/router";
+import { useClickTeam } from "../hooks/resetPageHook";
 
 const Wrapper = styled.div`
   display: grid;
@@ -180,6 +181,8 @@ export default function CreatePage() {
     setPageName(e.target.value);
   };
 
+  const clickTeam = useClickTeam();
+
   return (
     <Wrapper>
       <SideContainer>
@@ -210,6 +213,7 @@ export default function CreatePage() {
             fontSize="13px"
             onClick={() => {
               handleSave();
+              clickTeam();
             }}
           >
             생성

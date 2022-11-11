@@ -130,19 +130,19 @@ export const TAG_LIST: TagType[] = [
   //     },
   //   },
   // },
-  // {
-  //   type: "table",
-  //   tagProps: {
-  //     header: "테이블 제목",
-  //     row: 3,
-  //     column: 3,
-  //     style: {
-  //       width: "100px",
-  //       height: "100px",
-  //       borderCollapse: "collapse",
-  //     },
-  //   },
-  // },
+  {
+    type: "table",
+    tagProps: {
+      header: "테이블 제목",
+      row: 3,
+      column: 3,
+      style: {
+        width: "100px",
+        height: "100px",
+        borderCollapse: "collapse",
+      },
+    },
+  },
   {
     type: "check box",
     tagProps: {

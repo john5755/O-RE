@@ -7,6 +7,7 @@ import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "../utils/axios";
 import { setIsCreate } from "../slices/pageSlice";
+import { useClickTeam } from "../hooks/resetPageHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -61,6 +62,7 @@ export default function CreateTeam() {
   function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setTeamName(event.target.value);
   }
+  const clickTeam = useClickTeam();
 
   const submitCreateTeam = async () => {
     const teamInfoJson = {
@@ -90,6 +92,7 @@ export default function CreateTeam() {
       );
       dispatch(setSelectTeamState({ idx: myTeams.length, teamId: data.data }));
       dispatch(setIsCreate(true));
+      clickTeam();
     } catch (e) {}
   };
 

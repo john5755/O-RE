@@ -32,85 +32,79 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   border: ${(props) => props.highlighted && `2px solid var(--main-color)`};
 `;
 
-type TextAreaProps = {
-  style?: React.CSSProperties;
-  header?: string;
-};
+// type TextAreaProps = {
+//   style?: React.CSSProperties;
+//   header?: string;
+// };
 
-const TextArea = ({ header, ...props }: TextAreaProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <textarea {...props}></textarea>
-    </div>
-  );
-};
+// const TextArea = ({ header, ...props }: TextAreaProps) => {
+//   return (
+//     <div style={{ display: "grid" }}>
+//       {header !== "" && <div>{header}</div>}
+//       <textarea {...props}></textarea>
+//     </div>
+//   );
+// };
 
-type FileUploadProps = {
-  style?: React.CSSProperties;
-  header?: string;
-};
+// type FileUploadProps = {
+//   style?: React.CSSProperties;
+//   header?: string;
+// };
 
-const FileUpload = ({ header, ...props }: FileUploadProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <input {...props}></input>
-    </div>
-  );
-};
+// const FileUpload = ({ header, ...props }: FileUploadProps) => {
+//   return (
+//     <div style={{ display: "grid" }}>
+//       {header !== "" && <div>{header}</div>}
+//       <input {...props}></input>
+//     </div>
+//   );
+// };
 
-type HyperLinkProps = {
-  style?: React.CSSProperties;
-  header?: string;
-  children?: string;
-};
+// type HyperLinkProps = {
+//   style?: React.CSSProperties;
+//   header?: string;
+//   children?: string;
+// };
 
-const HyperLink = ({ header, children, ...props }: HyperLinkProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <a {...props}>{children}</a>
-    </div>
-  );
-};
+// const HyperLink = ({ header, children, ...props }: HyperLinkProps) => {
+//   return (
+//     <div style={{ display: "grid" }}>
+//       {header !== "" && <div>{header}</div>}
+//       <a {...props}>{children}</a>
+//     </div>
+//   );
+// };
 
-type DropDownProps = {
-  style?: React.CSSProperties;
-  header?: string;
-  option?: string[];
-};
+// type DropDownProps = {
+//   style?: React.CSSProperties;
+//   header?: string;
+//   option?: string[];
+// };
 
-const DropDown = ({ header, option, ...props }: DropDownProps) => {
-  return (
-    <div style={{ display: "grid" }}>
-      {header !== "" && <div>{header}</div>}
-      <select {...props}>
-        {option?.map((v) => (
-          <option key={v} value={v}>
-            {v}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+// const DropDown = ({ header, option, ...props }: DropDownProps) => {
+//   return (
+//     <div style={{ display: "grid" }}>
+//       {header !== "" && <div>{header}</div>}
+//       <select {...props}>
+//         {option?.map((v) => (
+//           <option key={v} value={v}>
+//             {v}
+//           </option>
+//         ))}
+//       </select>
+//     </div>
+//   );
+// };
 
 const Component: {
   [key: string]: React.FunctionComponent<{ [key: string]: any }>;
 } = {
   text: Text,
-  list: List,
   "date picker": DatePicker,
   input: Input,
-  "file upload": FileUpload,
   table: Table,
   "check box": CheckBox,
   "radio button": RadioButton,
-  "drop down": DropDown,
-  "text area": TextArea,
-  hyperlink: HyperLink,
-  //  button: ButtonComponent,
 };
 
 interface MutableRefObject<T> {
