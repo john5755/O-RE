@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponseDto {
     private Long userId;
+    private Long teamUserId;
     private String name;
     private String nickName;
     private String email;
@@ -19,6 +20,7 @@ public class UserInfoResponseDto {
     @Builder
     public UserInfoResponseDto(TeamUser teamUser){
         this.userId = teamUser.getUser().getId();
+        this.teamUserId = teamUser.getId();
         this.name = teamUser.getUser().getName();
         this.nickName = teamUser.getUser().getNickname();
         this.email = teamUser.getUser().getEmail();
