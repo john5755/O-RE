@@ -4,9 +4,8 @@ import axios from "../utils/axios";
 import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
-import { useAppSelector } from "../hooks/reduxHook";
 import SearchBarTab from "./SearchBarTab";
-import SearchResults from "./SearchResults";
+import SearchItem from "./SerachItem";
 import { TeamUserType } from "../types";
 
 const TextContainer = styled.div`
@@ -59,6 +58,12 @@ const ButtonContainer = styled.div`
   margin: 20px auto;
 `;
 
+const ResultContainer = styled.div`
+  height: 220px;
+  padding: 5px;
+  overflow-y: auto;
+`;
+
 const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
@@ -94,9 +99,11 @@ export default function ServerOption() {
     } catch {}
   };
 
+  // 권한변경
+
   const [nameCategory, setNameCategory] = useState<string>("name");
   const [textButtonColor, setTextButtonColor] = useState<string>("#4F68A6");
-  const [userRole, setUserRole] = useState<string>("");
+  const [textButtonText, setTextButtonText] = useState<string>("변경");
   const [searchInput, setSearchInput] = useState<string>("");
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
@@ -105,8 +112,12 @@ export default function ServerOption() {
     []
   );
   const [searchPage, setSearchPage] = useState<number>(0);
+  const [roleChangeList, setRoleChangeList] = useState<
+    Array<{ userId: number; role: string }>
+  >([]);
 
   const fetchResultList = async () => {
+    setSearchResultList([]);
     if (searchInput === "") {
       try {
         const { data } = await axios.get(USERS_API.LIST, {
@@ -147,12 +158,31 @@ export default function ServerOption() {
     }
   };
 
-  const tempChangeRole = () => {
-    if (textButtonColor === "#4F68A6") {
-      setTextButtonColor("#C74E4E");
+  const tempChangeRole = (
+    event: React.MouseEvent,
+    buttonText: string,
+    userId: number,
+    role: string
+  ) => {
+    if (buttonText === "변경") {
+      setRoleChangeList((prev) => {
+        return [...prev, { userId: userId, role: role }];
+      });
     } else {
-      setTextButtonColor("#4F68A6");
+      setRoleChangeList((prev) =>
+        prev.filter((user) => user.userId !== userId)
+      );
     }
+  };
+
+  const submitRoleChange = async () => {
+    try {
+      const { data } = await axios.put(USERS_API.AUTH, roleChangeList, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setRoleChangeList([]);
+      fetchResultList();
+    } catch {}
   };
 
   return (
@@ -203,18 +233,26 @@ export default function ServerOption() {
           handleSearchInput={handleSearchInput}
           fetchResultList={fetchResultList}
         ></SearchBarTab>
-        <SearchResults
-          ResultList={searchResultList}
-          textButtonColor={textButtonColor}
-          textButtonText="변경"
-          needDropdown={true}
-          category={userRole}
-          setCategory={setUserRole}
-          menuItems={serverRoleMenues}
-          handleButtonEvent={tempChangeRole}
-        ></SearchResults>
+        <ResultContainer>
+          {searchResultList.length === 0 ? (
+            <></>
+          ) : (
+            searchResultList.map((member, idx) => (
+              <SearchItem
+                key={idx}
+                member={member}
+                MenuItems={serverRoleMenues}
+                buttonText={textButtonText}
+                buttonColor={textButtonColor}
+                buttonFunction={tempChangeRole}
+              ></SearchItem>
+            ))
+          )}
+        </ResultContainer>
         <ButtonContainer>
-          <Button borderRadius="10px">저장</Button>
+          <Button borderRadius="10px" onClick={submitRoleChange}>
+            저장
+          </Button>
         </ButtonContainer>
       </AddRoleContainer>
     </>

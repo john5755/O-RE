@@ -1,8 +1,13 @@
-import React, {useState, Dispatch, SetStateAction, MouseEventHandler } from "react";
+import React, {
+  useState,
+  Dispatch,
+  SetStateAction,
+  MouseEventHandler,
+} from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
-import { TeamUserType ,ServerRoleMenues, TeamRoleMenues } from "../types";
+import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -20,8 +25,8 @@ const ItemProfileConatiner = styled.div`
 `;
 
 const ItemChangeContainer = styled.div`
-  display: flex
-`
+  display: flex;
+`;
 
 const TextButtonContainer = styled.div`
   display: flex;
@@ -40,22 +45,57 @@ interface ItemProps {
   MenuItems: ServerRoleMenues | TeamRoleMenues;
   buttonText: string;
   buttonColor: string;
-  buttonFunction: (event:MouseEventHandler<HTMLDivElement>, userId: number) => void
+  buttonFunction: (
+    event: React.MouseEvent,
+    buttonText: string,
+    userId: number,
+    role: string
+  ) => void;
 }
 
-export default function SearchItem(props: ItemProps){
-  const [itemRole, setItemRole] = useState<string>(props.member.role)
+export default function SearchItem(props: ItemProps) {
+  const [itemRole, setItemRole] = useState<string>(props.member.role);
+  const [buttonText, setButtonText] = useState<string>(props.buttonText);
+  const [buttonColor, setButtonColor] = useState<string>(props.buttonColor);
 
- return (
-  <SearchItemContainer>
-    <ItemProfileConatiner>
-      <CurrentProfile src={props.member.profileImage}></CurrentProfile>
-      <H4>{props.member.name}({props.member.nickname})</H4>
-    </ItemProfileConatiner>
-    <ItemChangeContainer>
-    <TeamDropDown category={itemRole} setCategory={setItemRole} MenuItems={props.MenuItems}></TeamDropDown>
-    <TextButtonContainer style={{ color: props.buttonColor }} onClick={(e)=>{props.buttonFunction(e,props.member.userId)}}>{props.buttonText}</TextButtonContainer>
-    </ItemChangeContainer>
-  </SearchItemContainer>
- )
+  const buttonUIChange = () => {
+    if (itemRole === props.member.role) {
+      return;
+    }
+    if (buttonColor === "#4F68A6") {
+      setButtonColor("#C74E4E");
+      setButtonText("취소");
+    } else {
+      setButtonColor("#4F68A6");
+      setButtonText("변경");
+      setItemRole(props.member.role);
+    }
+  };
+
+  return (
+    <SearchItemContainer>
+      <ItemProfileConatiner>
+        <CurrentProfile src={props.member.profileImage}></CurrentProfile>
+        <H4>
+          {props.member.name}({props.member.nickname})
+        </H4>
+      </ItemProfileConatiner>
+      <ItemChangeContainer>
+        <TeamDropDown
+          category={itemRole}
+          setCategory={setItemRole}
+          MenuItems={props.MenuItems}
+        ></TeamDropDown>
+        <TextButtonContainer
+          style={{ color: buttonColor }}
+          onClick={(e) => {
+            props.buttonFunction(e, buttonText, props.member.userId, itemRole);
+            buttonUIChange();
+          }}
+        >
+          {buttonText}
+        </TextButtonContainer>
+      </ItemChangeContainer>
+    </SearchItemContainer>
+  );
 }
