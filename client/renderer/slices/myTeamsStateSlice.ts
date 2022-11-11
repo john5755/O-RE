@@ -8,7 +8,14 @@ export interface MyTeamsState {
 }
 
 const initialState: MyTeamsState = {
-  myTeamsState: [],
+  myTeamsState: [
+    {
+      teamId: 0,
+      name: "",
+      imageUrl: "",
+      teamUserRole: "",
+    },
+  ],
   selectTeamState: {
     idx: -1,
     teamId: -1,
@@ -30,7 +37,7 @@ export const myTeamsStateSlice = createSlice({
     },
     delTeamState: (state, action: PayloadAction<TeamOptions>) => {
       state.myTeamsState = state.myTeamsState.filter(
-        (prev) => prev !== action.payload
+        (prev) => prev.teamId !== action.payload.teamId
       );
     },
   },

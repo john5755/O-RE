@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setPageState, setSelectPageState } from "../slices/pageSlice";
 import { Button } from "../styles";
 import { setNavName } from "../slices/navNameSlice";
+import { useClickOther, useClickPage } from "../hooks/resetPageHook";
 
 const Container = styled.div`
   display: flex;
@@ -43,6 +44,8 @@ export default function PageSideBar() {
   ).selectTeamState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
   const dispatch = useAppDispatch();
+  const clickPage = useClickPage();
+  const clickOther = useClickOther();
 
   const getPageList = async () => {
     try {
@@ -74,6 +77,7 @@ export default function PageSideBar() {
   const handleClickPage = (idx: number, pageId: number, pageName: string) => {
     dispatch(setSelectPageState({ idx, pageId }));
     dispatch(setNavName(pageName));
+    clickPage();
   };
 
   return (
@@ -94,7 +98,7 @@ export default function PageSideBar() {
           </ButtonContainer>
         ))}
       <Link href={PATH.CREATE_PAGE}>
-        <DotButton>+</DotButton>
+        <DotButton onClick={clickOther}>+</DotButton>
       </Link>
     </Container>
   );

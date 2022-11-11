@@ -13,6 +13,7 @@ export interface TeamUserType {
 export interface TeamOptions {
   teamId: number;
   name: string;
+  teamUserRole: string;
   imageUrl: string | null | ArrayBuffer;
 }
 

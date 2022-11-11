@@ -1,14 +1,19 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { BASIC_PHOTO_URL } from "../constants";
+import { BASIC_PHOTO_URL, TEAM_USER_API } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
-import { BarProps } from "../types";
-import { setSelectTeamState } from "../slices/myTeamsStateSlice";
-import { setSelectPageState } from "../slices/pageSlice";
-import { useResetPage } from "../hooks/resetPageHook";
+import { BarProps, TeamOptions } from "../types";
+import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
+import { setIsCreate, setSelectPageState } from "../slices/pageSlice";
+import {
+  useClickOther,
+  useClickTeam,
+  useResetPage,
+} from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
+import axios from "../utils/axios";
 
 const Container = styled.div`
   width: 100%;
@@ -81,8 +86,52 @@ export default function TeamSideBar() {
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
+  const isCreate = useAppSelector((state) => state.pageState).isCreate;
   const dispatch = useAppDispatch();
   const resetPage = useResetPage();
+  const clickTeam = useClickTeam();
+  const clickOther = useClickOther();
+
+  const setMyTeams = useCallback(async () => {
+    try {
+      const params = {
+        page: 0,
+        size: 20,
+      };
+      const { data } = await axios.get(TEAM_USER_API.LIST, {
+        params,
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+      const myTeams: Array<TeamOptions> = data.data.content;
+      dispatch(setTeamState(myTeams));
+      if (isCreate) {
+        dispatch(
+          setSelectTeamState({
+            idx: myTeams.length - 1,
+            teamId: myTeams[myTeams.length - 1].teamId,
+          })
+        );
+        dispatch(setNavName(myTeams[myTeams.length - 1].name));
+        dispatch(setIsCreate(false));
+      } else {
+        dispatch(
+          setSelectTeamState({
+            idx: 0,
+            teamId: myTeams[0].teamId,
+          })
+        );
+        dispatch(setNavName(myTeams[0].name));
+      }
+    } catch {}
+  }, [teamList.length]);
+
+  useEffect(() => {
+    setMyTeams();
+  }, [teamList.length]);
+
   return (
     <Container>
       <TeamContainer>
@@ -94,7 +143,10 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
+                    clickTeam();
+                    Router.push("/view-page");
                   }}
                 >
                   {team.name}
@@ -109,7 +161,10 @@ export default function TeamSideBar() {
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
+                    dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
+                    clickTeam();
+                    Router.push("/view-page");
                   }}
                 ></TeamProfileImg>
               )}
@@ -119,6 +174,7 @@ export default function TeamSideBar() {
           onClick={() => {
             Router.push(PATH.CREATE_TEAM);
             resetPage();
+            clickOther();
             dispatch(setNavName("팀 생성"));
           }}
         >

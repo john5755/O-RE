@@ -6,6 +6,7 @@ import { addTeamState, setSelectTeamState } from "../slices/myTeamsStateSlice";
 import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "../utils/axios";
+import { setIsCreate } from "../slices/pageSlice";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -84,9 +85,11 @@ export default function CreateTeam() {
           teamId: myTeams.length,
           name: teamName,
           imageUrl: photoUrl,
+          teamUserRole: "",
         })
       );
       dispatch(setSelectTeamState({ idx: myTeams.length, teamId: data.data }));
+      dispatch(setIsCreate(true));
     } catch (e) {}
   };
 

@@ -9,6 +9,67 @@ export const PATH = {
   ACCOUNT_OPTIONS: "/account-options",
   CREATE_TEAM: "/create-team",
   VIEW_PAGE: "/view-page",
+  MANAGE_TEAM: "/manage-team",
+};
+
+export const layoutInfo = {
+  onlyPage: new Set<string>(),
+  withOnlyNavBar: new Set<string>(),
+};
+
+layoutInfo.onlyPage.add(PATH.LOGIN);
+layoutInfo.onlyPage.add(PATH.FIND_PASSWORD);
+layoutInfo.onlyPage.add(PATH.SIGNUP);
+layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
+layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
+layoutInfo.withOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
+layoutInfo.withOnlyNavBar.add(PATH.MANAGE_TEAM);
+
+export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
+
+export const BASIC_PHOTO_URL: string =
+  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
+
+// API
+const API = "/api";
+const USERS = "/users";
+const TEAM_USER = "/team-user";
+const TEAM = "/team";
+const TEAMS = "/teams";
+const PAGE_USER = "/page-user";
+const PAGE = "/pages";
+
+export const USERS_API = {
+  DOMAIN: API + USERS + "/domain",
+  VERIFICATION: API + USERS + "/verification",
+  SIGNUP: API + USERS + "/signup",
+  LOGIN: API + USERS + "/signin",
+  LOGOUT: API + USERS + "/logout",
+  MYPAGE: API + USERS + "/mypage",
+  LIST: API + USERS + "/list",
+};
+export const TEAM_USER_API = {
+  LIST: API + TEAM_USER + TEAMS + "/list",
+};
+
+export const TEAM_API = {
+  CREATE: API + TEAM,
+  DELETE: API + TEAM,
+};
+
+export const PAGE_USER_API = {
+  ALL: API + PAGE_USER + "/list/p",
+};
+
+export const PAGE_API = {
+  ADD: API + PAGE,
+  DETAIL: API + PAGE + "/detail/",
+};
+
+export const TEAM_ROLE = {
+  OWNER: ["OWNER"],
+  LEADER: ["OWNER", "LEADER"],
+  MANAGER: ["OWNER", "LEADER", "MANAGER"],
 };
 
 export const TAG_LIST: TagType[] = [
@@ -69,19 +130,19 @@ export const TAG_LIST: TagType[] = [
   //     },
   //   },
   // },
-  {
-    type: "table",
-    tagProps: {
-      header: "테이블 제목",
-      row: 3,
-      column: 3,
-      style: {
-        width: "100px",
-        height: "100px",
-        borderCollapse: "collapse",
-      },
-    },
-  },
+  // {
+  //   type: "table",
+  //   tagProps: {
+  //     header: "테이블 제목",
+  //     row: 3,
+  //     column: 3,
+  //     style: {
+  //       width: "100px",
+  //       height: "100px",
+  //       borderCollapse: "collapse",
+  //     },
+  //   },
+  // },
   {
     type: "check box",
     tagProps: {
@@ -139,55 +200,3 @@ export const TAG_LIST: TagType[] = [
   //   },
   // },
 ];
-
-export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
-
-export const layoutInfo = {
-  onlyPage: new Set<string>(),
-  withOnlyNavBar: new Set<string>(),
-};
-
-layoutInfo.onlyPage.add(PATH.LOGIN);
-layoutInfo.onlyPage.add(PATH.FIND_PASSWORD);
-layoutInfo.onlyPage.add(PATH.SIGNUP);
-layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
-layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
-layoutInfo.withOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
-
-export const BASIC_PHOTO_URL: string =
-  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
-
-// API
-const API = "/api";
-const USERS = "/users";
-const TEAM_USER = "/team-user";
-const TEAM = "/team";
-const TEAMS = "/teams";
-const PAGE_USER = "/page-user";
-const PAGE = "/pages";
-
-export const USERS_API = {
-  DOMAIN: API + USERS + "/domain",
-  VERIFICATION: API + USERS + "/verification",
-  SIGNUP: API + USERS + "/signup",
-  LOGIN: API + USERS + "/signin",
-  LOGOUT: API + USERS + "/logout",
-  MYPAGE: API + USERS + "/mypage",
-  LIST: API + USERS + "/list",
-};
-export const TEAM_USER_API = {
-  LIST: API + TEAM_USER + TEAMS + "/list",
-};
-
-export const TEAM_API = {
-  CREATE: API + TEAM,
-};
-
-export const PAGE_USER_API = {
-  ALL: API + PAGE_USER + "/list/p",
-};
-
-export const PAGE_API = {
-  ADD: API + PAGE,
-  DETAIL: API + PAGE + "/detail/",
-};
