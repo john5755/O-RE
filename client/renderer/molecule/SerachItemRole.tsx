@@ -1,13 +1,9 @@
-import React, {
-  useState,
-  Dispatch,
-  SetStateAction,
-  MouseEventHandler,
-} from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
 import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
+import { useAppSelector } from "../hooks/reduxHook";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -53,10 +49,17 @@ interface ItemProps {
   ) => void;
 }
 
-export default function SearchItem(props: ItemProps) {
+export default function SearchItemRole(props: ItemProps) {
+  const userProfile = useAppSelector(
+    (state) => state.userProfileState
+  ).userProfileState;
   const [itemRole, setItemRole] = useState<string>(props.member.role);
   const [buttonText, setButtonText] = useState<string>(props.buttonText);
   const [buttonColor, setButtonColor] = useState<string>(props.buttonColor);
+  const id =
+    props.member.teamUserId !== undefined
+      ? props.member.teamUserId
+      : props.member.userId;
 
   const buttonUIChange = () => {
     if (itemRole === props.member.role) {
@@ -69,6 +72,25 @@ export default function SearchItem(props: ItemProps) {
       setButtonColor("#4F68A6");
       setButtonText("변경");
       setItemRole(props.member.role);
+    }
+  };
+
+  const [delButtonText, setDelButtonText] = useState<string>("삭제");
+  const [delButtonColor, setDelButtonColor] = useState<string>("#C74E4E");
+  const delButtonUIChange = () => {
+    const cantDelOwner = props.member.role === "OWNER";
+    const cantDelSame =
+      props.member.role === "LEADER" && userProfile.role !== "OWNER";
+    if (cantDelOwner && cantDelSame) {
+      alert("권한을 변경할 수 없습니다.");
+      return;
+    }
+    if (delButtonText === "삭제") {
+      setDelButtonText("복구");
+      setDelButtonColor("#4F68A6");
+    } else {
+      setDelButtonText("삭제");
+      setDelButtonColor("#C74E4E");
     }
   };
 
@@ -89,12 +111,23 @@ export default function SearchItem(props: ItemProps) {
         <TextButtonContainer
           style={{ color: buttonColor }}
           onClick={(e) => {
-            props.buttonFunction(e, buttonText, props.member.userId, itemRole);
+            props.buttonFunction(e, buttonText, id, itemRole);
             buttonUIChange();
           }}
         >
           {buttonText}
         </TextButtonContainer>
+        {props.MenuItems.hasOwnProperty("LEADER") && (
+          <TextButtonContainer
+            onClick={(e) => {
+              props.buttonFunction(e, "삭제", id, itemRole);
+              delButtonUIChange();
+            }}
+            style={{ color: delButtonColor, marginLeft: "5px" }}
+          >
+            {delButtonText}
+          </TextButtonContainer>
+        )}
       </ItemChangeContainer>
     </SearchItemContainer>
   );

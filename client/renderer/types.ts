@@ -3,6 +3,7 @@ import { SetStateAction, Dispatch } from "react";
 
 export interface TeamUserType {
   userId: number;
+  teamUserId?: number;
   name: string;
   email: string;
   nickname: string;

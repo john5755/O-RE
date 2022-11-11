@@ -53,6 +53,11 @@ export const USERS_API = {
 };
 export const TEAM_USER_API = {
   LIST: API + TEAM_USER + TEAMS + "/list",
+  USERLIST: API + TEAM_USER + TEAM + USERS + "/list",
+  NAME: API + TEAM_USER + USERS + "/name" + "/list",
+  NICKNAME: API + TEAM_USER + USERS + "/nickname" + "/list",
+  INVITE: API + TEAM_USER,
+  REMOVE: API + TEAM_USER + "/removal",
 };
 
 export const TEAM_API = {

@@ -5,7 +5,7 @@ import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
 import SearchBarTab from "./SearchBarTab";
-import SearchItem from "./SerachItem";
+import SearchItemRole from "./SerachItemRole";
 import { TeamUserType } from "../types";
 
 const TextContainer = styled.div`
@@ -238,14 +238,14 @@ export default function ServerOption() {
             <></>
           ) : (
             searchResultList.map((member, idx) => (
-              <SearchItem
+              <SearchItemRole
                 key={idx}
                 member={member}
                 MenuItems={serverRoleMenues}
                 buttonText={textButtonText}
                 buttonColor={textButtonColor}
                 buttonFunction={tempChangeRole}
-              ></SearchItem>
+              ></SearchItemRole>
             ))
           )}
         </ResultContainer>
