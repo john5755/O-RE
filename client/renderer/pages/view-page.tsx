@@ -8,7 +8,7 @@ import List from "../atom/List";
 import RadioButton from "../atom/RadioButton";
 import Table from "../atom/Table";
 import Text from "../atom/Text";
-import { INPUT_LIST, PAGE_API } from "../constants";
+import { INPUT_LIST, PAGE_API, USER_INPUT_API } from "../constants";
 import { useAppSelector } from "../hooks/reduxHook";
 import { Button } from "../styles";
 import { TagType } from "../types";
@@ -107,17 +107,22 @@ export default function ViewPage() {
   const [userInput, setUserInput] = useState<any>({});
   const pageInfo = useAppSelector((state) => state.pageState).selectPageState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
-  const selectTeam = useAppSelector(
-    (state) => state.myTeamsState
-  ).selectTeamState;
+  const selectPage = useAppSelector((state) => state.pageState).selectPageState;
   const isInput =
     pageTagList !== undefined &&
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
 
-  const handleClick = () => {
-    console.log(userInput);
+  const handleClick = async () => {
+    try {
+      const data = { input: userInput, pageId: selectPage.pageId };
+      await axios.post(USER_INPUT_API, data, {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+    } catch (e) {}
   };
 
   const getPageList = async () => {

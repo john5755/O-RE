@@ -38,6 +38,7 @@ const TEAM = "/team";
 const TEAMS = "/teams";
 const PAGE_USER = "/page-user";
 const PAGE = "/pages";
+const USER_INPUT = "/user-input";
 
 export const USERS_API = {
   DOMAIN: API + USERS + "/domain",
@@ -65,6 +66,8 @@ export const PAGE_API = {
   ADD: API + PAGE,
   DETAIL: API + PAGE + "/detail/",
 };
+
+export const USER_INPUT_API = API + USER_INPUT;
 
 export const TEAM_ROLE = {
   OWNER: ["OWNER"],
