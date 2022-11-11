@@ -46,7 +46,7 @@ public class TeamUser {
     }
 
     public boolean checkTeamUserCanCreatePage() {
-        if (this.role == TeamUserRole.LEADER || this.role == TeamUserRole.MANAGER) {
+        if (this.role.getPriority() >= TeamUserRole.MANAGER.getPriority()) {
             return true;
         }
         return false;
