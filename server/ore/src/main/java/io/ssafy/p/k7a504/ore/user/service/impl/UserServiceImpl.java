@@ -7,6 +7,7 @@ import io.ssafy.p.k7a504.ore.common.redis.RedisUtil;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
 import io.ssafy.p.k7a504.ore.jwt.TokenDto;
 import io.ssafy.p.k7a504.ore.jwt.TokenProvider;
+import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.upload.S3Uploader;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import io.ssafy.p.k7a504.ore.user.domain.UserRole;
@@ -17,6 +18,7 @@ import io.ssafy.p.k7a504.ore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
     private final ExcelUtil excelUtil;
     private final S3Uploader s3Uploader;
     private final RedisUtil redisUtil;
+    private final TeamRepository teamRepository;
 
     @Override
     public long validateDomainUser() {
@@ -174,6 +177,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Slice<UserSearchResponseDto> searchAllUser(Pageable pageable) {
         return userRepository.findAll(pageable)
+                .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
+    public Page<UserSearchResponseDto> searchUserNotInTeam(Long teamId, Pageable pageable) {
+        teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        return userRepository.findByUserNotInTeam(teamId, pageable)
                 .map(UserSearchResponseDto::toResponseDto);
     }
 

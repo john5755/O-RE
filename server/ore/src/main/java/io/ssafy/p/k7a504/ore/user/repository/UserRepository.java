@@ -1,10 +1,13 @@
 package io.ssafy.p.k7a504.ore.user.repository;
 
+import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByIdIn(List<Long> ids);
     Optional<User> findByRole(String role);
     Long countByIdIn(List<Long> ids);
+    @Query(value = "SELECT * FROM user u " +
+            "WHERE u.id not in (SELECT tu.user_id FROM team_user tu WHERE tu.team_id = :teamId)",
+            countQuery = "SELECT count(*) FROM user u "+
+                    "WHERE u.id not in (SELECT tu.user_id FROM team_user tu WHERE tu.team_id = :teamId)",
+            nativeQuery = true)
+    Page<User> findByUserNotInTeam(@Param("teamId") Long teamId, Pageable pageable);
 }
