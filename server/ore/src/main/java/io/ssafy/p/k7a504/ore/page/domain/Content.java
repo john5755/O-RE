@@ -22,6 +22,7 @@ public class Content {
     @JoinColumn(name="page_id")
     private Page page;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String contentValue;
 
     private Content(Page page, String contentValue) {
