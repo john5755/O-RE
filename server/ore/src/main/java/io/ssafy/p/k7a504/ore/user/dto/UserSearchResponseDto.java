@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSearchResponseDto {
 
-    private Long id;
+    private Long userId;
     private String email;
     private String name;
     private String nickname;
@@ -18,8 +18,8 @@ public class UserSearchResponseDto {
     private String profileImage;
 
     @Builder
-    public UserSearchResponseDto(Long id, String email, String name, String nickname, UserRole role, String profileImage) {
-        this.id = id;
+    public UserSearchResponseDto(Long userId, String email, String name, String nickname, UserRole role, String profileImage) {
+        this.userId = userId;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -29,7 +29,7 @@ public class UserSearchResponseDto {
 
     public static UserSearchResponseDto toResponseDto(User user) {
         return UserSearchResponseDto.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickname(user.getNickname())
