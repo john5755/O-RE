@@ -5,9 +5,9 @@ export interface TeamUserType {
   userId: number;
   name: string;
   email: string;
-  nickName: string;
+  nickname: string;
   role: string;
-  profileImg?: string;
+  profileImage?: string;
 }
 
 export interface TeamOptions {
@@ -69,4 +69,17 @@ export interface InputType {
 export interface SelectTeamType {
   idx: number;
   teamId: number;
+}
+
+export interface ServerRoleMenues {
+  OWNER: string;
+  ADMIN: string;
+  USER: string;
+}
+
+export interface TeamRoleMenues {
+  OWNER: string;
+  LEADER: string;
+  MANAGER: string;
+  MEMBER: string;
 }

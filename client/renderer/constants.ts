@@ -47,6 +47,8 @@ export const USERS_API = {
   LOGOUT: API + USERS + "/logout",
   MYPAGE: API + USERS + "/mypage",
   LIST: API + USERS + "/list",
+  NAME: API + USERS + "/name",
+  NICKNAME: API + USERS + "/nickname",
 };
 export const TEAM_USER_API = {
   LIST: API + TEAM_USER + TEAMS + "/list",
