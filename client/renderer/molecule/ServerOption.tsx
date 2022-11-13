@@ -115,6 +115,7 @@ export default function ServerOption() {
   const [roleChangeList, setRoleChangeList] = useState<
     Array<{ userId: number; role: string }>
   >([]);
+  const [removeList, setRemoveList] = useState<Array<number>>([])
 
   const fetchResultList = async () => {
     setSearchResultList([]);
@@ -158,7 +159,7 @@ export default function ServerOption() {
     }
   };
 
-  const tempChangeRole = (
+  const tempChangeUser = (
     event: React.MouseEvent,
     buttonText: string,
     userId: number,
@@ -168,10 +169,16 @@ export default function ServerOption() {
       setRoleChangeList((prev) => {
         return [...prev, { userId: userId, role: role }];
       });
-    } else {
+    } else if (buttonText === "취소") {
       setRoleChangeList((prev) =>
         prev.filter((user) => user.userId !== userId)
       );
+    }else if (buttonText === "삭제") {
+      setRemoveList((prev) => {
+        return [...prev, userId];
+      });
+    } else if (buttonText === "복구") {
+      setRemoveList((prev) => prev.filter((id) => id !== userId));
     }
   };
 
@@ -183,6 +190,19 @@ export default function ServerOption() {
       setRoleChangeList([]);
       fetchResultList();
     } catch {}
+  };
+
+  const submitRemoveMember = async () => {
+    try {
+      const { data } = await axios.delete(USERS_API.LIST, {
+        data: removeList,
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setRemoveList([]);
+      fetchResultList();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -244,16 +264,24 @@ export default function ServerOption() {
                 MenuItems={serverRoleMenues}
                 buttonText={textButtonText}
                 buttonColor={textButtonColor}
-                buttonFunction={tempChangeRole}
+                buttonFunction={tempChangeUser}
               ></SearchItemRole>
             ))
           )}
         </ResultContainer>
         <ButtonContainer>
-          <Button borderRadius="10px" onClick={submitRoleChange}>
-            저장
-          </Button>
-        </ButtonContainer>
+              <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
+                변경 저장
+              </Button>
+              <Button
+                width="45%"
+                borderRadius="10px"
+                background="#C74E4E"
+                onClick={submitRemoveMember}
+              >
+                삭제 저장
+              </Button>
+            </ButtonContainer>
       </AddRoleContainer>
     </>
   );

@@ -53,6 +53,8 @@ export default function SearchItemRole(props: ItemProps) {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
+  const selectedTeamId = useAppSelector((state)=> state.myTeamsState).selectTeamState.teamId
+  const teamRole = useAppSelector((state)=> (state.myTeamsState)).myTeamsState[selectedTeamId].teamUserRole
   const [itemRole, setItemRole] = useState<string>(props.member.role);
   const [buttonText, setButtonText] = useState<string>(props.buttonText);
   const [buttonColor, setButtonColor] = useState<string>(props.buttonColor);
@@ -77,12 +79,14 @@ export default function SearchItemRole(props: ItemProps) {
 
   const [delButtonText, setDelButtonText] = useState<string>("삭제");
   const [delButtonColor, setDelButtonColor] = useState<string>("#C74E4E");
+  const cantDelOwner = props.member.role === "OWNER";
+  const cantDelLeader = props.member.role === "LEADER" && userProfile.role !== "OWNER"
+  const cantDelSame = props.MenuItems.hasOwnProperty("LEADER") ?
+    props.member.role === teamRole : props.member.role === userProfile.role 
+  const cantDel = cantDelOwner || cantDelLeader || cantDelSame
   const delButtonUIChange = () => {
-    const cantDelOwner = props.member.role === "OWNER";
-    const cantDelSame =
-      props.member.role === "LEADER" && userProfile.role !== "OWNER";
-    if (cantDelOwner && cantDelSame) {
-      alert("권한을 변경할 수 없습니다.");
+    if (cantDel) {
+      alert("권한이 없습니다.");
       return;
     }
     if (delButtonText === "삭제") {
@@ -117,17 +121,17 @@ export default function SearchItemRole(props: ItemProps) {
         >
           {buttonText}
         </TextButtonContainer>
-        {props.MenuItems.hasOwnProperty("LEADER") && (
           <TextButtonContainer
             onClick={(e) => {
-              props.buttonFunction(e, "삭제", id, itemRole);
+              if (!cantDel){
+                props.buttonFunction(e, delButtonText, id, itemRole);
+              }
               delButtonUIChange();
             }}
             style={{ color: delButtonColor, marginLeft: "5px" }}
           >
             {delButtonText}
           </TextButtonContainer>
-        )}
       </ItemChangeContainer>
     </SearchItemContainer>
   );

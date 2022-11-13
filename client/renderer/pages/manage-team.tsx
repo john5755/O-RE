@@ -197,6 +197,16 @@ export default function ManageTeam() {
     }
   };
 
+  const submitTeamRoleChange = async () => {
+    try {
+      const { data } = await axios.patch(`${TEAM_USER_API.INVITE}/${teamId}`, roleChangeList, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setRoleChangeList([]);
+      fetchTeamResultList();
+    } catch {}
+  };
+
   const submitRemoveTeamMember = async () => {
     try {
       const body = { teamId: teamId, teamUserIdList: memberRemoveList };
@@ -205,7 +215,7 @@ export default function ManageTeam() {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
       setMemberRemoveList([]);
-      fetchTeamResultList([]);
+      fetchTeamResultList();
     } catch (error) {
       console.log(error);
     }
@@ -232,7 +242,7 @@ export default function ManageTeam() {
     setSearchAllUserResultList([]);
     if (searchAllUserInput === "") {
       try {
-        const { data } = await axios.get(USERS_API.LIST, {
+        const { data } = await axios.get(`${USERS_API.LIST}/${teamId}`, {
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
         setSearchAllUserResultList(data.data.content);
@@ -298,6 +308,8 @@ export default function ManageTeam() {
     }
   };
 
+
+
   // 팀 삭제
   const deleteTeam = async () => {
     try {
@@ -360,7 +372,7 @@ export default function ManageTeam() {
               </ResultContainer>
             )}
             <ButtonContainer>
-              <Button width="45%" borderRadius="10px">
+              <Button width="45%" borderRadius="10px" onClick={submitTeamRoleChange}>
                 변경 저장
               </Button>
               <Button
