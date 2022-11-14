@@ -1,7 +1,7 @@
 package io.ssafy.p.k7a504.ore.chat;
 
-import com.amazonaws.services.kms.model.MessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.ssafy.p.k7a504.ore.chat.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -20,18 +20,26 @@ public class RedisSubscriber implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        try {
-            String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
+        try{
+            String publicshMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
+            ChatMessageDto chatDTO = objectMapper.readValue(publicshMessage,ChatDTO.class);
 
-            ChatMessageRequest roomMessage = objectMapper.readValue(publishMessage, ChatMessageRequest.class);
-
-            if (roomMessage.getType().equals(MessageType.TALK)) {
-                GetChatMessageResponse chatMessageResponse = new GetChatMessageResponse(roomMessage);
-                messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), chatMessageResponse);
+            switch(chatDTO.getMsgType()){
+                case "chat":
+                    messagingTemplate.convertAndSend("/sub/chat/room/"+chatDTO.getRoomId(),chatDTO);
+                    break;
+                case "createRoom":
+                    messagingTemplate.convertAndSend("/sub/room/create",chatDTO);
+                    break;
+                case "messageAll":
+                    messagingTemplate.convertAndSend("/sub/chat/all",chatDTO);
+                    break;
             }
 
-        } catch (Exception e) {
-            throw new ChatMessageNotFoundException();
+
+        }catch(Exception e){
+            log.error(e.getMessage());
         }
     }
+
 }
