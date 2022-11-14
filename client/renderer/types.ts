@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { SetStateAction, Dispatch } from "react";
 
 export interface TeamUserType {
@@ -52,6 +52,8 @@ interface TagPropsType {
   count?: 2;
   row?: number;
   column?: number;
+  title?: string[];
+  data?: string[];
   href?: string;
   name?: string;
   style?: React.CSSProperties;
@@ -70,3 +72,9 @@ export interface SelectTeamType {
   idx: number;
   teamId: number;
 }
+
+export type CustomType = {
+  obj: TagType[];
+  setObj: Dispatch<SetStateAction<TagType[]>>;
+  objIdx: number;
+};

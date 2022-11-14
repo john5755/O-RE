@@ -21,6 +21,9 @@ public interface UserService {
     Slice<UserSearchResponseDto> searchUserByName(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchUserByNickname(String keyword, Pageable pageable);
     Slice<UserSearchResponseDto> searchAllUser(Pageable pageable);
+    Slice<UserSearchResponseDto> searchUserNotInTeam(Long teamId, Pageable pageable);
+    Slice<UserSearchResponseDto> searchUserByNameNotInTeam(Long teamId, String name, Pageable pageable);
+    Slice<UserSearchResponseDto> searchUserByNicknameNotInTeam(Long teamId, String nickname, Pageable pageable);
     UserInfoResponseDto findUserInfo();
     Long modifyUserInfo(MultipartFile profileImage, UserModifyReqeustDto profileInfo);
     Long modifyUserPassword(UserPasswordRequestDto userPasswordRequestDto);

@@ -10,6 +10,7 @@ import axios from "../utils/axios";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { delTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
+import { useClickTeam } from "../hooks/resetPageHook";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -148,6 +149,7 @@ export default function ManageTeam() {
     .idx;
 
   const dispatch = useAppDispatch();
+  const clickTeam = useClickTeam();
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
@@ -203,6 +205,7 @@ export default function ManageTeam() {
         },
       });
       dispatch(delTeamState(teamList[teamIdx]));
+      clickTeam();
     } catch (e) {}
   };
 

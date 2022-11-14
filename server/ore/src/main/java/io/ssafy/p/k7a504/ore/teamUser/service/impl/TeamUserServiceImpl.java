@@ -3,6 +3,8 @@ package io.ssafy.p.k7a504.ore.teamUser.service.impl;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.common.security.SecurityUtil;
+import io.ssafy.p.k7a504.ore.page.domain.Page;
+import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
 import io.ssafy.p.k7a504.ore.team.domain.Team;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
@@ -29,6 +31,7 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final PageRepository pageRepository;
     private final TeamUserRepository teamUserRepository;
 
     @Override
@@ -84,10 +87,9 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     public Slice<UserInfoResponseDto> findUsersInTeam(Long teamId, Pageable pageable) {
+        Team team = teamRepository.findById(teamId)
+        .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
         Slice<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId, SecurityUtil.getCurrentUserId(), pageable);
-        if (teamUsers.getNumberOfElements() == 0) {
-            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
-        }
         return teamUsers.map(UserInfoResponseDto::new);
     }
 
@@ -154,13 +156,35 @@ public class TeamUserServiceImpl implements TeamUserService {
 
     @Override
     public Slice<UserInfoResponseDto> findUserByName(String name, Long teamId, Pageable pageable) {
-        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNameAndTeamId(name, teamId, SecurityUtil.getCurrentUserId(), pageable);
-        return teamUsers.map(UserInfoResponseDto::new);
+        return teamUserRepository.findTeamUserByUserNameAndTeamId(name, teamId, SecurityUtil.getCurrentUserId(), pageable)
+                .map(UserInfoResponseDto::new);
     }
 
     @Override
     public Slice<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId, Pageable pageable) {
-        Slice<TeamUser> teamUsers = teamUserRepository.findTeamUserByUserNicknameAndTeamId(nickName, teamId, SecurityUtil.getCurrentUserId(),pageable);
-        return teamUsers.map(UserInfoResponseDto::new);
+        return teamUserRepository.findTeamUserByUserNicknameAndTeamId(nickName, teamId, SecurityUtil.getCurrentUserId(),pageable)
+                .map(UserInfoResponseDto::new);
     }
+
+    @Override
+    public Slice<UserInfoResponseDto> findTeamUserNotInPage(Long pageId, Pageable pageable) {
+        Page page = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
+        return teamUserRepository.findByTeamUserNotInPage(SecurityUtil.getCurrentUserId(), page.getTeam().getId(),  pageId, pageable)
+                .map(UserInfoResponseDto::new);
+    }
+
+    @Override
+    public Slice<UserInfoResponseDto> findTeamUserByNameNotInPage( Long pageId, String name,Pageable pageable) {
+        Page page = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
+        return teamUserRepository.findTeamUserByUserNameNotInPage(SecurityUtil.getCurrentUserId(), page.getTeam().getId(), pageId, name, pageable)
+                .map(UserInfoResponseDto::new);
+    }
+
+    @Override
+    public Slice<UserInfoResponseDto> findTeamUserByNickNameNotInPage(Long pageId, String nickName, Pageable pageable) {
+        Page page = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
+        return teamUserRepository.findTeamUserByUserNicknameNotInPage(SecurityUtil.getCurrentUserId(),page.getTeam().getId(), pageId, nickName, pageable)
+                .map(UserInfoResponseDto::new);
+    }
+
 }
