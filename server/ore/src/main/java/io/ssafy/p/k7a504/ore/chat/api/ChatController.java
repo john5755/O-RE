@@ -1,35 +1,34 @@
 package io.ssafy.p.k7a504.ore.chat.api;
 
-import io.ssafy.p.k7a504.ore.chat.RedisSubscriber;
 import io.ssafy.p.k7a504.ore.chat.dto.ChatMessageDto;
-import io.ssafy.p.k7a504.ore.user.domain.User;
-import io.ssafy.p.k7a504.ore.user.repository.UserRepository;
+import io.ssafy.p.k7a504.ore.chat.dto.ChatRequestDto;
+import io.ssafy.p.k7a504.ore.chat.redis.RedisPublisher;
+import io.ssafy.p.k7a504.ore.chat.redis.RedisSubscriber;
+import io.ssafy.p.k7a504.ore.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+
 
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final EnterRoomService enterRoomService;
+    private final SimpMessageSendingOperations messagingTemplate;
     private final RedisMessageListenerContainer redisMessageListener;
     private final RedisSubscriber redisSubscriber;
+    private final ChatRoomService service;
+    private final RedisPublisher redisPublisher;
 
-    @ResponseBody
-    @PostMapping("/api/room/enter")
-    public ResponseEntity<?> enterRoom(@RequestBody ChatRoomDTO chatRoomDTO){
-        EnterRoom enterRoom = enterRoomService.enterRoom(chatRoomDTO);
-
-        ChannelTopic topic = new ChannelTopic(enterRoom.getRoom().getRoomId());
-        redisMessageListener.addMessageListener(redisSubscriber,topic);
-        return ResponseEntity.ok().body(enterRoom);
+    @MessageMapping("/chat/messages")
+    public void message(ChatRequestDto requestDto) {
+        String roomId = requestDto.getRoomId();
+        ChatMessageDto message = service.message(requestDto);
+        ChannelTopic topic = ChannelTopic.of(roomId);
+        redisPublisher.publish(topic, message);
     }
 }

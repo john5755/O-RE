@@ -1,4 +1,4 @@
-package io.ssafy.p.k7a504.ore.chat;
+package io.ssafy.p.k7a504.ore.chat.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.ssafy.p.k7a504.ore.chat.dto.ChatMessageDto;
@@ -22,21 +22,9 @@ public class RedisSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try{
             String publicshMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
-            ChatMessageDto chatDTO = objectMapper.readValue(publicshMessage,ChatDTO.class);
-
-            switch(chatDTO.getMsgType()){
-                case "chat":
-                    messagingTemplate.convertAndSend("/sub/chat/room/"+chatDTO.getRoomId(),chatDTO);
-                    break;
-                case "createRoom":
-                    messagingTemplate.convertAndSend("/sub/room/create",chatDTO);
-                    break;
-                case "messageAll":
-                    messagingTemplate.convertAndSend("/sub/chat/all",chatDTO);
-                    break;
-            }
-
-
+            ChatMessageDto chatDTO = objectMapper.readValue(publicshMessage,ChatMessageDto.class);
+            String roomId = chatDTO.getRoomId();
+            messagingTemplate.convertAndSend("/sub/chat/" + roomId, chatDTO);
         }catch(Exception e){
             log.error(e.getMessage());
         }

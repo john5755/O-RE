@@ -1,4 +1,4 @@
-package io.ssafy.p.k7a504.ore.chat;
+package io.ssafy.p.k7a504.ore.chat.redis;
 
 import io.ssafy.p.k7a504.ore.chat.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
