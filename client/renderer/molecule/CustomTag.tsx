@@ -10,7 +10,6 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: auto 50px;
   width: 100%;
-  height: 100%;
   padding: 20px 0;
   margin: 0 auto;
   text-align: center;
@@ -24,19 +23,51 @@ type CustomType = {
 };
 
 const CustomContainer = styled.div`
-  height: 100%;
+  min-height: 100%;
+  width: 80%;
   display: flex;
+  padding: 10px;
   flex-direction: column;
   margin: 0 auto;
   overflow: auto;
+  border-radius: 4px;
+  background-color: #c1d4d7;
+`;
+
+const OptionButon = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background-color: var(--light-main-color);
+  color: white;
 `;
 
 const Label = styled.div`
-  font-weight: 500;
   text-align: start;
   padding: 5px 0;
+  margin-bottom: 5px;
+  font-size: 13px;
 `;
-
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  &:focus-within {
+    ${Label} {
+      font-weight: 600;
+    }
+    input {
+      outline: none;
+      border: 1px solid var(--main-color);
+    }
+  }
+`;
 const Input = styled.input`
   border: 1px solid var(--light-gray-color);
   height: 30px;
@@ -48,32 +79,34 @@ const Input = styled.input`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
 `;
+
 const CustomText = ({ obj, setObj, objIdx }: CustomType) => {
   return (
     <CustomContainer>
-      <Label>텍스트 내용</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>텍스트 내용</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
     </CustomContainer>
   );
 };
@@ -81,26 +114,28 @@ const CustomText = ({ obj, setObj, objIdx }: CustomType) => {
 const CustomInput = ({ obj, setObj, objIdx }: CustomType) => {
   return (
     <CustomContainer>
-      <Label>라벨</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>라벨</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
     </CustomContainer>
   );
 };
@@ -108,26 +143,28 @@ const CustomInput = ({ obj, setObj, objIdx }: CustomType) => {
 const CustomDatePicker = ({ obj, setObj, objIdx }: CustomType) => {
   return (
     <CustomContainer>
-      <Label>라벨</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>라벨</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
     </CustomContainer>
   );
 };
@@ -136,44 +173,37 @@ const CustomCheckBox = ({ obj, setObj, objIdx }: CustomType) => {
   const [labelCnt, setLabelCnt] = useState<number>(
     obj[objIdx].tagProps.label?.length as number
   );
+
   return (
     <CustomContainer>
-      <Label>라벨</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>라벨</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
       <ButtonContainer>
         <Label>옵션</Label>
-        <Button
-          width="40px"
-          height="20px"
-          fontSize="10px"
-          borderRadius="5px"
-          onClick={() => setLabelCnt((pre) => (pre = pre + 1))}
-        >
-          추가
-        </Button>
-        <Button
-          width="40px"
-          height="20px"
-          fontSize="10px"
-          borderRadius="5px"
+        <OptionButon onClick={() => setLabelCnt((pre) => (pre = pre + 1))}>
+          +
+        </OptionButon>
+        <OptionButon
           onClick={() => {
             setObj((pre: TagType[]) => {
               return [
@@ -193,13 +223,13 @@ const CustomCheckBox = ({ obj, setObj, objIdx }: CustomType) => {
             setLabelCnt((pre) => (pre = pre - 1));
           }}
         >
-          삭제
-        </Button>
+          -
+        </OptionButon>
       </ButtonContainer>
       {labelCnt > 0 &&
         [...Array(labelCnt)].map((_, idx) => {
           return (
-            <React.Fragment key={idx}>
+            <InputWrapper key={idx}>
               <Label>option {idx}</Label>
               <Input
                 type="text"
@@ -224,7 +254,7 @@ const CustomCheckBox = ({ obj, setObj, objIdx }: CustomType) => {
                   })
                 }
               ></Input>
-            </React.Fragment>
+            </InputWrapper>
           );
         })}
     </CustomContainer>
@@ -237,39 +267,41 @@ const CustomRadioButton = ({ obj, setObj, objIdx }: CustomType) => {
   );
   return (
     <CustomContainer>
-      <Label>라벨</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>라벨</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
       <ButtonContainer>
         <Label>옵션</Label>
         <Button
-          width="40px"
+          width="2  0px"
           height="20px"
           fontSize="10px"
           borderRadius="5px"
           onClick={() => setLabelCnt((pre) => (pre = pre + 1))}
         >
-          추가
+          +
         </Button>
         <Button
-          width="40px"
+          width="20px"
           height="20px"
           fontSize="10px"
           borderRadius="5px"
@@ -292,13 +324,13 @@ const CustomRadioButton = ({ obj, setObj, objIdx }: CustomType) => {
             setLabelCnt((pre) => (pre = pre - 1));
           }}
         >
-          삭제
+          -
         </Button>
       </ButtonContainer>
       {labelCnt > 0 &&
         [...Array(labelCnt)].map((_, idx) => {
           return (
-            <React.Fragment key={idx}>
+            <InputWrapper key={idx}>
               <Label>option {idx}</Label>
               <Input
                 type="text"
@@ -323,7 +355,7 @@ const CustomRadioButton = ({ obj, setObj, objIdx }: CustomType) => {
                   })
                 }
               ></Input>
-            </React.Fragment>
+            </InputWrapper>
           );
         })}
     </CustomContainer>
@@ -373,11 +405,7 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
   };
 
   const PageListContainer = styled.div`
-    margin: 20px;
-    :hover {
-      background-color: red;
-      cursor: pointer;
-    }
+    min-height: 100%;
   `;
 
   const InputContainer = styled.div`
@@ -392,6 +420,7 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
     border-radius: 0.35rem;
     width: 15px;
     height: 15px;
+    background-color: white;
     &:checked {
       border-color: transparent;
       background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
@@ -415,7 +444,21 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
     cursor: pointer;
   `;
 
-  const PageContainer = styled.div``;
+  const PageContainer = styled.div`
+    width: 100%;
+    height: 30px;
+    display: flex;
+    margin: 5px auto;
+    align-items: center;
+    padding-left: 3px;
+    font-size: 14px;
+    :hover {
+      background-color: var(--light-main-color);
+      cursor: pointer;
+      color: white;
+      border-radius: 2px;
+    }
+  `;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -458,28 +501,31 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
 
   return (
     <CustomContainer>
-      <Label>라벨</Label>
-      <Input
-        type="text"
-        value={obj[objIdx].tagProps.header}
-        onChange={(e) =>
-          setObj((pre: TagType[]) => {
-            return [
-              ...pre.slice(0, objIdx),
-              {
-                ...pre[objIdx],
-                tagProps: {
-                  ...pre[objIdx].tagProps,
-                  header: e.target.value,
+      <InputWrapper>
+        <Label>라벨</Label>
+        <Input
+          type="text"
+          value={obj[objIdx].tagProps.header}
+          onChange={(e) =>
+            setObj((pre: TagType[]) => {
+              return [
+                ...pre.slice(0, objIdx),
+                {
+                  ...pre[objIdx],
+                  tagProps: {
+                    ...pre[objIdx].tagProps,
+                    header: e.target.value,
+                  },
                 },
-              },
-              ...pre.slice(objIdx + 1),
-            ];
-          })
-        }
-      />
+                ...pre.slice(objIdx + 1),
+              ];
+            })
+          }
+        />
+      </InputWrapper>
       {isList ? (
         <PageListContainer>
+          <Label>페이지 리스트</Label>
           {pageList !== undefined &&
             pageList.map((v) => (
               <PageContainer
@@ -495,6 +541,7 @@ const CustomTable = ({ obj, setObj, objIdx }: CustomType) => {
         </PageListContainer>
       ) : (
         <>
+          <Label>Column 선택</Label>
           {tableRow.map((rowName, idx) => (
             <InputContainer key={rowName}>
               <LabelBox id={`${rowName}-${idx}`}>
@@ -543,7 +590,6 @@ export default function CustomTag(props: CustomTagProps) {
   }, [props.pageTagList, props.isCustom]);
   if (props.pageTagList[props.isCustom] === undefined) return null;
   const CustomComponent = Component[props.pageTagList[props.isCustom].type];
-  console.log(tmpPageTagList[props.isCustom]);
   return (
     <Container>
       {props.isCustom !== -1 && (
