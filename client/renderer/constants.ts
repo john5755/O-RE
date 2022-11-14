@@ -38,6 +38,7 @@ const TEAM = "/team";
 const TEAMS = "/teams";
 const PAGE_USER = "/page-user";
 const PAGE = "/pages";
+const USER_INPUT = "/user-input";
 
 export const USERS_API = {
   DOMAIN: API + USERS + "/domain",
@@ -64,6 +65,12 @@ export const PAGE_USER_API = {
 export const PAGE_API = {
   ADD: API + PAGE,
   DETAIL: API + PAGE + "/detail/",
+  ALL: API + PAGE + "/status/",
+};
+
+export const USER_INPUT_API = {
+  ALL: API + USER_INPUT,
+  GET: API + USER_INPUT + "/list",
 };
 
 export const TEAM_ROLE = {
@@ -130,19 +137,19 @@ export const TAG_LIST: TagType[] = [
   //     },
   //   },
   // },
-  // {
-  //   type: "table",
-  //   tagProps: {
-  //     header: "테이블 제목",
-  //     row: 3,
-  //     column: 3,
-  //     style: {
-  //       width: "100px",
-  //       height: "100px",
-  //       borderCollapse: "collapse",
-  //     },
-  //   },
-  // },
+  {
+    type: "table",
+    tagProps: {
+      header: "테이블 제목",
+      title: [],
+      data: [],
+      style: {
+        width: "100px",
+        height: "100px",
+        borderCollapse: "collapse",
+      },
+    },
+  },
   {
     type: "check box",
     tagProps: {
