@@ -22,20 +22,43 @@ const DotButton = styled.button`
   margin: 0 auto;
   align-items: center;
   justify-content: center;
-  height: 25px;
-  width: 90%;
+  height: 30px;
+  width: 80%;
   border: solid 1px var(--main-color);
   border-style: dashed;
   border-radius: 4px;
   background-color: transparent;
   color: var(--main-color);
   cursor: pointer;
+
+  :hover {
+    background-color: var(--light-main-color);
+    color: white;
+    border-style: none;
+  }
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   width: 80%;
+  height: 30px;
   margin: 0 auto;
+  margin: 3px auto;
+`;
+
+const PageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  font-size: var(--font-size-200);
+  :hover {
+    background-color: var(--light-main-color);
+    cursor: pointer;
+    color: white;
+  }
 `;
 
 export default function PageSideBar() {
@@ -89,19 +112,23 @@ export default function PageSideBar() {
         pageList.map((v, idx) => (
           <ButtonContainer key={v.pageId}>
             <Link href={PATH.VIEW_PAGE}>
-              <Button
+              <PageContainer
                 onClick={() => handleClickPage(idx, v.pageId, v.name)}
-                width="100%"
-                borderRadius="5px"
-                height="30px"
               >
                 {v.name}
-              </Button>
+              </PageContainer>
             </Link>
           </ButtonContainer>
         ))}
       <Link href={PATH.CREATE_PAGE}>
-        <DotButton onClick={clickOther}>+</DotButton>
+        <DotButton
+          onClick={() => {
+            clickOther();
+            dispatch(setNavName("페이지 생성"));
+          }}
+        >
+          +
+        </DotButton>
       </Link>
     </Container>
   );

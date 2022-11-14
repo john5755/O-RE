@@ -8,7 +8,6 @@ import CustomPage from "../molecule/CustomPage";
 import { TagType } from "../types";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import axios from "../utils/axios";
-import { addPageState } from "../slices/pageSlice";
 import Router from "next/router";
 import { useClickTeam } from "../hooks/resetPageHook";
 
@@ -51,6 +50,13 @@ const PageNameInput = styled.input`
   font-size: 20px;
   padding-left: 10px;
   outline: none;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 90%;
+  display: flex;
+  justify-content: end;
+  margin: 10px auto;
 `;
 
 export default function CreatePage() {
@@ -201,25 +207,10 @@ export default function CreatePage() {
       </SideContainer>
       <MainContainer>
         <MainHeaderContainer>
-          <TitleContainer>
-            <H4>제목 : </H4>
-            <PageNameInput
-              placeholder="페이지 제목을 입력하세요."
-              onChange={(e) => handleChange(e)}
-            />
-          </TitleContainer>
-          <Button
-            width="50px"
-            height="40px"
-            borderRadius="5px"
-            fontSize="13px"
-            onClick={() => {
-              handleSave();
-              clickTeam();
-            }}
-          >
-            생성
-          </Button>
+          <PageNameInput
+            placeholder="페이지 제목을 입력하세요."
+            onChange={(e) => handleChange(e)}
+          />
         </MainHeaderContainer>
         <CustomPage
           dragStarted={dragStarted}
@@ -233,6 +224,21 @@ export default function CreatePage() {
           isCustom={isCustom}
           setIsCustom={setIsCustom}
         />
+        <ButtonWrapper>
+          <Button
+            width="50px"
+            height="40px"
+            borderRadius="5px"
+            fontSize="13px"
+            background="var(--light-main-color)"
+            onClick={() => {
+              handleSave();
+              clickTeam();
+            }}
+          >
+            생성
+          </Button>
+        </ButtonWrapper>
       </MainContainer>
     </Wrapper>
   );

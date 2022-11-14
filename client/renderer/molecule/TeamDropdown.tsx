@@ -6,29 +6,34 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { TeamUserType } from "../types";
-
-interface SearchMenues {
-  name: string;
-  nickName: string;
-}
-
-interface RoleMenues {
-  LEADER: string;
-  MANAGER: string;
-  USER: string;
-}
+import {
+  TeamUserType,
+  SearchMenues,
+  ServerRoleMenues,
+  TeamRoleMenues,
+} from "../types";
+import { useAppSelector } from "../hooks/reduxHook";
 
 interface SearchDropDownProps {
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
-  MenuItems: SearchMenues | RoleMenues;
+  MenuItems: SearchMenues | ServerRoleMenues | TeamRoleMenues;
   member?: TeamUserType;
   teamMembers?: Array<TeamUserType>;
 }
 
 export default function TeamDropDown(props: SearchDropDownProps) {
+  const userProfile = useAppSelector(
+    (state) => state.userProfileState
+  ).userProfileState;
   const categoryChange = (event: SelectChangeEvent, userId?: number) => {
+    const cantChangeOwner: boolean =
+      props.category === "OWNER" || event.target.value === "OWNER";
+    const cantChangeSameRole: boolean = userProfile.role === props.category;
+    if (cantChangeOwner || cantChangeSameRole) {
+      alert("권한을 변경할 수 없습니다.");
+      return;
+    }
     props.setCategory(event.target.value as string);
     if (props.teamMembers !== undefined && userId !== undefined) {
       props.teamMembers[userId].role = event.target.value as string;

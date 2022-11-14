@@ -3,11 +3,12 @@ import { SetStateAction, Dispatch } from "react";
 
 export interface TeamUserType {
   userId: number;
+  teamUserId?: number;
   name: string;
   email: string;
-  nickName: string;
+  nickname: string;
   role: string;
-  profileImg?: string;
+  profileImage?: string;
 }
 
 export interface TeamOptions {
@@ -78,3 +79,21 @@ export type CustomType = {
   setObj: Dispatch<SetStateAction<TagType[]>>;
   objIdx: number;
 };
+
+export interface SearchMenues {
+  name: string;
+  nickName: string;
+}
+
+export interface ServerRoleMenues {
+  OWNER: string;
+  ADMIN: string;
+  USER: string;
+}
+
+export interface TeamRoleMenues {
+  OWNER: string;
+  LEADER: string;
+  MANAGER: string;
+  MEMBER: string;
+}
