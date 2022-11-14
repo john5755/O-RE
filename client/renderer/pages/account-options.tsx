@@ -62,7 +62,6 @@ export default function AccountOptions() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;

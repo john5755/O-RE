@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import axios from "../utils/axios";
 import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
-import { useAppSelector } from "../hooks/reduxHook";
+import SearchBarTab from "./SearchBarTab";
+import SearchItemRole from "./SerachItemRole";
+import SearchServerRole from "./SearchServerRole";
+import { TeamUserType } from "../types";
 
 const TextContainer = styled.div`
   width: 100%;
@@ -56,9 +59,22 @@ const ButtonContainer = styled.div`
   margin: 20px auto;
 `;
 
+const ResultContainer = styled.div`
+  height: 220px;
+  padding: 5px;
+  overflow-y: auto;
+`;
+
 const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
+// serach dropdown
+const searchMenues = { name: "이름", nickName: "닉네임" };
+const serverRoleMenues = {
+  OWNER: "오너",
+  ADMIN: "관리자",
+  USER: "사용자",
+};
 export default function ServerOption() {
   const [userExcel, setUserExcel] = useState<File | null>(null);
   const excelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +98,209 @@ export default function ServerOption() {
         },
       });
     } catch {}
+  };
+
+  // 권한변경
+
+  const [nameCategory, setNameCategory] = useState<string>("name");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (searchPage !== -1) {
+      setIsSearchLast(false);
+      setSearchPage(-1);
+    }
+    setSearchInput(event.target.value);
+  };
+  const [searchResultList, setSearchResultList] = useState<Array<TeamUserType>>(
+    []
+  );
+  const [searchPage, setSearchPage] = useState<number>(-1);
+  const [io, setIo] = useState<IntersectionObserver | null>(null);
+  const [isSearchLoaded, setIsSearchLoaded] = useState<boolean>(true);
+  const [roleChangeList, setRoleChangeList] = useState<
+    Array<{ userId: number; role: string }>
+  >([]);
+  const [removeList, setRemoveList] = useState<Array<number>>([]);
+  const [isSearchLast, setIsSearchLast] = useState<boolean>(false);
+
+  // 무한스크롤
+  const registerObservingEl = (el: Element) => {
+    if (io !== null) {
+      io.observe(el);
+    }
+  };
+
+  function setScrollTarget() {
+    const currentTargetClass = `${searchPage}페이지`;
+    const target = document.getElementsByClassName(currentTargetClass)[0];
+    if (target) {
+      registerObservingEl(target);
+    }
+  }
+  useEffect(() => {
+    if (searchResultList.length > 0) {
+      setIsSearchLoaded(true);
+    }
+  }, [searchResultList.length]);
+
+  useEffect(() => {
+    if (isSearchLoaded) {
+      setScrollTarget();
+    }
+  }, [isSearchLoaded]);
+
+  useEffect(() => {
+    const targetObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setIsSearchLoaded(false);
+          setSearchPage(searchPage + 1);
+          if (io !== null) {
+            io.disconnect();
+          }
+        }
+      });
+    });
+    setIo(targetObserver);
+    if (searchPage !== -1) {
+      fetchResultList();
+    }
+  }, [searchPage]);
+
+  const fetchResultList = async () => {
+    if (isSearchLast === true || searchPage === 0) {
+      return;
+    }
+    if (searchInput === "") {
+      const page = searchPage === -1 ? 0 : searchPage;
+      try {
+        const params = {
+          page: page,
+          size: 20,
+        };
+        const { data } = await axios.get(USERS_API.LIST, {
+          params,
+          headers: { Authorization: localStorage.getItem("accessToken") },
+        });
+        if (searchPage === -1) {
+          setSearchResultList(data.data.content);
+        } else {
+          setSearchResultList((prev) => {
+            return [...prev, ...data.data.content];
+          });
+        }
+        setIsSearchLast(data.data.last);
+        if (searchPage === -1) {
+          setSearchPage(0);
+          setIsSearchLoaded(false);
+        }
+      } catch (e) {}
+    } else if (nameCategory === "name") {
+      const page = searchPage === -1 ? 0 : searchPage;
+      try {
+        const params = {
+          keyword: searchInput,
+          page: page,
+          size: 20,
+        };
+        const { data } = await axios.get(USERS_API.NAME, {
+          params,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        if (searchPage === -1) {
+          setSearchResultList(data.data.content);
+        } else {
+          setSearchResultList((prev) => {
+            return [...prev, ...data.data.content];
+          });
+        }
+        console.log(data);
+        setIsSearchLast(data.data.last);
+        if (searchPage === -1) {
+          setSearchPage(0);
+          setIsSearchLoaded(false);
+        }
+      } catch {}
+    } else if (nameCategory === "nickName") {
+      const page = searchPage === -1 ? 0 : searchPage;
+      try {
+        const params = {
+          keyword: searchInput,
+          page: page,
+          size: 20,
+        };
+        const { data } = await axios.get(USERS_API.NICKNAME, {
+          params,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        if (searchPage === -1) {
+          setSearchResultList(data.data.content);
+        } else {
+          setSearchResultList((prev) => {
+            return [...prev, ...data.data.content];
+          });
+        }
+        setIsSearchLast(data.data.last);
+        if (searchPage === -1) {
+          setSearchPage(0);
+          setIsSearchLoaded(false);
+        }
+      } catch {}
+    }
+  };
+
+  const tempChangeUser = (
+    event: React.MouseEvent,
+    buttonText: string,
+    userId: number,
+    role: string
+  ) => {
+    if (buttonText === "변경") {
+      setRoleChangeList((prev) => {
+        return [...prev, { userId: userId, role: role }];
+      });
+    } else if (buttonText === "취소") {
+      setRoleChangeList((prev) =>
+        prev.filter((user) => user.userId !== userId)
+      );
+    } else if (buttonText === "삭제") {
+      setRemoveList((prev) => {
+        return [...prev, userId];
+      });
+    } else if (buttonText === "복구") {
+      setRemoveList((prev) => prev.filter((id) => id !== userId));
+    }
+  };
+
+  const submitRoleChange = async () => {
+    try {
+      const { data } = await axios.put(USERS_API.AUTH, roleChangeList, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setRoleChangeList([]);
+      setSearchResultList([]);
+      setSearchPage(-1);
+      setIsSearchLast(false);
+    } catch {}
+  };
+
+  const submitRemoveMember = async () => {
+    try {
+      const { data } = await axios.delete(USERS_API.LIST, {
+        data: removeList,
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setRemoveList([]);
+      setSearchResultList([]);
+      setSearchPage(-1);
+      setIsSearchLast(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -125,6 +344,43 @@ export default function ServerOption() {
         <TextContainer>
           <H3 style={{ fontWeight: "bold" }}>권한 변경</H3>
         </TextContainer>
+        <SearchBarTab
+          category={nameCategory}
+          setCategory={setNameCategory}
+          MenuItems={searchMenues}
+          handleSearchInput={handleSearchInput}
+          fetchResultList={fetchResultList}
+        ></SearchBarTab>
+        <ResultContainer>
+          {searchResultList.length !== 0 &&
+            searchResultList.map((member, idx) => (
+              <SearchServerRole
+                key={idx}
+                member={member}
+                MenuItems={serverRoleMenues}
+                buttonFunction={tempChangeUser}
+              ></SearchServerRole>
+            ))}
+          {searchResultList.length !== 0 && isSearchLoaded && (
+            <div className={`${searchPage}페이지`}>
+              검색 결과가 더 없습니다.
+            </div>
+          )}
+        </ResultContainer>
+        <ButtonContainer>
+          <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
+            변경 저장
+          </Button>
+          <Button
+            width="45%"
+            borderRadius="10px"
+            background="#C74E4E"
+            onClick={submitRemoveMember}
+            style={{ marginLeft: "10px" }}
+          >
+            삭제 저장
+          </Button>
+        </ButtonContainer>
       </AddRoleContainer>
     </>
   );
