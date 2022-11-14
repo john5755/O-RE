@@ -10,19 +10,35 @@ import BasicTable from "../atom/BasicTable";
 import Text from "../atom/Text";
 import { INPUT_LIST, PAGE_API, PATH, USER_INPUT_API } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { Button } from "../styles";
 import { TagType } from "../types";
 import { useClickTeam, useResetPage } from "../hooks/resetPageHook";
 import { setSelectTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
 const TagContainer = styled.div`
   padding: 10px;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+
+const Button = styled.button`
+  height: 30px;
+  width: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
+  color: white;
+  border: none;
+  background-color: var(--light-main-color);
 `;
 
 const Component: {
@@ -118,14 +134,9 @@ export default function ViewPage() {
         <div>Welcome O:RE</div>
       )}
       {isInput && (
-        <Button
-          width="100px"
-          height="50px"
-          onClick={handleClick}
-          borderRadius="10px"
-        >
-          저장
-        </Button>
+        <ButtonWrapper>
+          <Button onClick={handleClick}>저장</Button>
+        </ButtonWrapper>
       )}
     </Container>
   );

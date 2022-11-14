@@ -9,6 +9,7 @@ import { TagType } from "../types";
 import RadioButton from "../atom/RadioButton";
 import DatePicker from "../atom/DatePicker";
 import CheckBox from "../atom/CheckBox";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const PageContainer = styled.div`
   width: 90%;
@@ -16,7 +17,7 @@ const PageContainer = styled.div`
   margin: 0 auto;
   padding: 20px;
   overflow: auto;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 type ComponentBoxProps = {
@@ -26,10 +27,12 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  margin: 5px auto;
   :hover {
-    border: 2px solid var(--light-main-color);
+    background-color: var(--super-light-main-color);
   }
-  border: ${(props) => props.highlighted && `2px solid var(--main-color)`};
+  background-color: ${(props) =>
+    props.highlighted && `var(--super-light-main-color)`};
 `;
 
 // type TextAreaProps = {
@@ -154,19 +157,15 @@ export default function CustomPage(props: CustomPageProps) {
                 >
                   <TagComponent {...v.tagProps} />
                   {props.isCustom !== -1 && props.isCustom === index && (
-                    <Button
-                      width="50px"
-                      height="20px"
-                      fontSize="11px"
-                      borderRadius="4px"
+                    <DeleteOutlineIcon
+                      color="disabled"
+                      style={{ cursor: "pointer" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         props.setIsCustom(-1);
                         props.handleDeleteTag(index);
                       }}
-                    >
-                      삭제
-                    </Button>
+                    />
                   )}
                 </ComponentBox>
                 {props.dividerIdx !== undefined &&
