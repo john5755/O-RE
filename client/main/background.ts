@@ -1,6 +1,32 @@
-import { app, ipcMain } from "electron";
+import { app, ipcMain, Tray, Menu, ipcRenderer, BrowserWindow } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
+
+let tray;
+//트레이 아이콘
+let mainWindow: BrowserWindow;
+function initTrayIconMenu() {
+  tray = new Tray("public/icons/AppIcon.ico");
+  const myMenu = Menu.buildFromTemplate([
+    { label: "O:RE", type: "normal" },
+    {
+      label: "open",
+      type: "normal",
+      click: () => {
+        mainWindow.show();
+      },
+    },
+    {
+      label: "close",
+      type: "normal",
+      click: () => {
+        mainWindow.close();
+      },
+    },
+  ]);
+  tray.setToolTip("O:RE");
+  tray.setContextMenu(myMenu);
+}
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -13,10 +39,11 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow("main", {
+  mainWindow = createWindow("main", {
     width: 1000,
     height: 600,
   });
+  initTrayIconMenu();
 
   if (isProd) {
     await mainWindow.loadURL("app://./home.html");
@@ -26,7 +53,7 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
   }
   ipcMain.on("closeApp", () => {
-    mainWindow.close();
+    mainWindow.hide();
   });
   ipcMain.on("window-toggle-maximize", () => {
     if (mainWindow.isMaximized()) {
@@ -39,7 +66,3 @@ if (isProd) {
     mainWindow.minimize();
   });
 })();
-
-app.on("window-all-closed", () => {
-  app.quit();
-});

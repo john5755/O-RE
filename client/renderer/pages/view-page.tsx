@@ -19,7 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const TagContainer = styled.div`
@@ -39,6 +39,7 @@ const Button = styled.button`
   color: white;
   border: none;
   background-color: var(--light-main-color);
+  cursor: pointer;
 `;
 
 const Component: {
@@ -67,6 +68,11 @@ export default function ViewPage() {
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
+  const isTable =
+    pageTagList !== undefined &&
+    pageTagList.findIndex((v) => v.type === "table") === -1
+      ? false
+      : true;
   const dispatch = useAppDispatch();
   const clickTeam = useClickTeam();
   const resetPage = useResetPage();
@@ -92,6 +98,21 @@ export default function ViewPage() {
       headers: { Authorization: localStorage.getItem("accessToken") },
     });
     setPageTagList(data.data.contents);
+  };
+
+  const getExcel = async () => {
+    try {
+      const { data } = await axios.post(
+        `/api/excel/download/1`,
+        {},
+        {
+          headers: { Authorization: localStorage.getItem("accessToken") },
+        }
+      );
+      console.log("getExcel : ", data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -136,6 +157,11 @@ export default function ViewPage() {
       {isInput && (
         <ButtonWrapper>
           <Button onClick={handleClick}>저장</Button>
+        </ButtonWrapper>
+      )}
+      {isTable && (
+        <ButtonWrapper>
+          <Button onClick={getExcel}>Excel</Button>
         </ButtonWrapper>
       )}
     </Container>
