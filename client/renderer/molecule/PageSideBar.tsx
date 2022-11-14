@@ -42,6 +42,7 @@ export default function PageSideBar() {
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
   ).selectTeamState;
+  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
   const dispatch = useAppDispatch();
   const clickPage = useClickPage();
@@ -62,6 +63,8 @@ export default function PageSideBar() {
           },
         }
       );
+      console.log(selectTeam);
+      console.log(data);
       dispatch(setPageState(data.data.content));
       dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e) {
@@ -72,7 +75,7 @@ export default function PageSideBar() {
   useEffect(() => {
     if (selectTeam.idx === -1) return;
     getPageList();
-  }, [selectTeam.idx]);
+  }, [selectTeam.idx, teamList]);
 
   const handleClickPage = (idx: number, pageId: number, pageName: string) => {
     dispatch(setSelectPageState({ idx, pageId }));
