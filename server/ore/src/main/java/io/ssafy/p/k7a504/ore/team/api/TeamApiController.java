@@ -35,14 +35,12 @@ public class TeamApiController {
     }
 
     @PostMapping("/edit")
-    @PreAuthorize("hasAnyAuthority('OWNER','ADMIN')")
     public ResponseEntity<CommonResponse<TeamResponseDto>> modifyTeam(@RequestPart(value="info") TeamEditRequestDto TeamEditReqDTO, @RequestPart(value = "image", required = false) MultipartFile file ){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamService.modifyTeam(TeamEditReqDTO , file)));
     }
 
     @DeleteMapping("/{teamId}")
-    @PreAuthorize("hasAnyAuthority('OWNER','ADMIN')")
     public ResponseEntity<CommonResponse<Long>> deleteTeam(@PathVariable Long teamId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(teamService.removeTeam(teamId)));
