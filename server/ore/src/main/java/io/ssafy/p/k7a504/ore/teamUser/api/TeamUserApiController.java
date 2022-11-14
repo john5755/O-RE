@@ -72,4 +72,19 @@ public class TeamUserApiController {
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findUserByNickName(nickName, teamId, pageable)));
     }
 
+    @GetMapping("/page/list")
+    public ResponseEntity<? extends BasicResponse> findTeamUsersNotInPage(@RequestParam Long pageId, Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findTeamUserNotInPage(pageId,pageable)));
+    }
+
+    @GetMapping("/page/name/list")
+    public ResponseEntity<? extends BasicResponse> findUsersByNameNotInPage(@RequestParam Long pageId, String name, Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findTeamUserByNameNotInPage(pageId,name, pageable)));
+    }
+
+    @GetMapping("/page/nickname/list")
+    public ResponseEntity<? extends BasicResponse> findUsersByNickNameNotInPage(@RequestParam Long pageId, String nickName, Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(teamUserService.findTeamUserByNickNameNotInPage(pageId, nickName, pageable)));
+    }
+
 }

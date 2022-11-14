@@ -190,6 +190,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<UserSearchResponseDto> searchUserByNameNotInTeam(Long teamId, String name, Pageable pageable) {
+        teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        return userRepository.findUserByUserNameNotInTeam(SecurityUtil.getCurrentUserId(), teamId, name, pageable)
+                .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
+    public Page<UserSearchResponseDto> searchUserByNicknameNotInTeam(Long teamId, String nickname, Pageable pageable) {
+        teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        return userRepository.findUserByUserNicknameNotInTeam(SecurityUtil.getCurrentUserId(), teamId, nickname, pageable)
+                .map(UserSearchResponseDto::toResponseDto);
+    }
+
+    @Override
     public UserInfoResponseDto findUserInfo() {
         User user = userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));

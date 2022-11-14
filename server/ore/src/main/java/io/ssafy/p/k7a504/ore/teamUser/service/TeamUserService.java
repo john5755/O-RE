@@ -1,6 +1,7 @@
 package io.ssafy.p.k7a504.ore.teamUser.service;
 
 import io.ssafy.p.k7a504.ore.teamUser.dto.*;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -17,5 +18,9 @@ public interface TeamUserService {
 
     Slice<UserInfoResponseDto> findUserByName(String name, Long teamId, Pageable pageable);
     Slice<UserInfoResponseDto> findUserByNickName(String nickName, Long teamId, Pageable pageable);
+    Slice<UserInfoResponseDto> findTeamUserNotInPage(Long pageId,  Pageable pageable);
 
+    Slice<UserInfoResponseDto> findTeamUserByNameNotInPage( Long pageId, String name, Pageable pageable);
+
+    Slice<UserInfoResponseDto> findTeamUserByNickNameNotInPage(Long pageId, String nickName, Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package io.ssafy.p.k7a504.ore.teamUser.repository;
 
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,49 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
 
     @Query(value = "SELECT count(*) FROM team_user WHERE id In :list", nativeQuery = true)
     int countById(@Param("list")List<Long> userIdList);
+
+    @Query(value = "SELECT * FROM team_user tu " +
+            "WHERE tu.user_id not in (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId)"+
+            "AND tu.role != 'OWNER'"+
+            "AND tu.team_id = :teamId "+
+            "AND tu.user_id != :userId ",
+            countQuery = "SELECT count(*) FROM team_user tu "+
+                    "WHERE tu.user_id not in (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId) "+
+                    "AND tu.role != 'OWNER'"+
+                    "AND tu.team_id = :teamId "+
+                    "AND tu.user_id != :userId ",
+            nativeQuery = true)
+    Page<TeamUser> findByTeamUserNotInPage(@Param("userId") Long userId,@Param("teamId") Long teamId,@Param("pageId") Long pageId, Pageable pageable);
+
+
+    @Query(value = "SELECT * FROM team_user tu " +
+            "WHERE tu.user_id NOT IN (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId) "+
+            "AND tu.user_id IN (SELECT u.id FROM user u WHERE u.name LIKE %:name%) "+
+            "AND tu.role != 'OWNER' "+
+            "AND tu.team_id = :teamId "+
+            "AND tu.user_id != :userId ",
+            countQuery = "SELECT count(*) FROM team_user tu "+
+                    "WHERE tu.user_id NOT IN (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId) "+
+                    "AND tu.user_id IN (SELECT u.id FROM user u WHERE u.name LIKE %:name%) "+
+                    "AND tu.role != 'OWNER' "+
+                    "AND tu.team_id = :teamId "+
+                    "AND tu.user_id != :userId ",
+            nativeQuery = true)
+    Page<TeamUser> findTeamUserByUserNameNotInPage(@Param("userId") Long userId, @Param("teamId") Long teamId, @Param("pageId") Long pageId, @Param("name") String name, Pageable pageable);
+
+    @Query(value = "SELECT * FROM team_user tu " +
+            "WHERE tu.user_id NOT IN (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId) "+
+            "AND tu.user_id IN (SELECT u.id FROM user u WHERE u.nickname LIKE %:nickname%) "+
+            "AND tu.role != 'OWNER'"+
+            "AND tu.team_id = :teamId "+
+            "AND tu.user_id != :userId ",
+            countQuery = "SELECT count(*) FROM team_user tu "+
+                    "WHERE tu.user_id NOT IN (SELECT pu.user_id FROM page_user pu WHERE pu.page_id = :pageId) "+
+                    "AND tu.user_id IN (SELECT u.id FROM user u WHERE u.nickname LIKE %:nickname%) "+
+                    "AND tu.role != 'OWNER'"+
+                    "AND tu.team_id = :teamId "+
+                    "AND tu.user_id != :userId ",
+            nativeQuery = true)
+    Page<TeamUser> findTeamUserByUserNicknameNotInPage(@Param("userId") Long userId,@Param("teamId") Long teamId,@Param("pageId") Long pageId, @Param("nickname") String nicknname, Pageable pageable);
+
 }

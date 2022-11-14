@@ -101,6 +101,18 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.searchUserNotInTeam(teamId, pageable)));
     }
 
+    @GetMapping("/name/list")
+    public ResponseEntity<? extends BasicResponse> searchUserByNameNotInTeam(@RequestParam Long teamId, String name, Pageable pageable) {
+        return ResponseEntity.ok()
+                .body(new CommonResponse<>(userService.searchUserByNameNotInTeam(teamId, name, pageable)));
+    }
+
+    @GetMapping("/nickname/list")
+    public ResponseEntity<? extends BasicResponse> searchUserByNicknameNotInTeam(@RequestParam Long teamId, String nickname, Pageable pageable) {
+        return ResponseEntity.ok()
+                .body(new CommonResponse<>(userService.searchUserByNicknameNotInTeam(teamId,nickname, pageable)));
+    }
+
     @GetMapping("/mypage")
     public ResponseEntity<? extends BasicResponse> findUserInfo() {
         return ResponseEntity.status(HttpStatus.OK)
