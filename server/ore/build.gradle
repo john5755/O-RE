@@ -52,6 +52,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
 	// AWS S3
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+	//socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 }
 
 tasks.named('test') {
