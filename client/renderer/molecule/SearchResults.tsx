@@ -1,6 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  useState,
+} from "react";
 import styled from "@emotion/styled";
-import { TeamUserType } from "../types";
+import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
 import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
 
@@ -42,15 +47,11 @@ interface SearchResultProps {
   textButtonColor: string;
   textButtonText: string;
   needDropdown: boolean;
+  menuItems: ServerRoleMenues | TeamRoleMenues;
   category?: string;
   setCategory?: Dispatch<SetStateAction<string>>;
+  handleButtonEvent?: () => void;
 }
-
-const RoleMenues = {
-  LEADER: "리더",
-  MANAGER: "관리자",
-  USER: "사용자",
-};
 
 export default function SearchResults(props: SearchResultProps) {
   const [tempCategory, setTempCategory] = useState("");
@@ -59,9 +60,9 @@ export default function SearchResults(props: SearchResultProps) {
       {props.ResultList.map((member, idx) => (
         <ResultItemContainer key={idx}>
           <ItemNameConatiner>
-            <CurrentProfile src={member.profileImg}></CurrentProfile>
+            <CurrentProfile src={member.profileImage}></CurrentProfile>
             <H4 style={{ paddingTop: "4px", marginLeft: "10px" }}>
-              {member.name}({member.nickName})
+              {member.name}({member.nickname})
             </H4>
           </ItemNameConatiner>
           <div style={{ display: "flex" }}>
@@ -75,14 +76,17 @@ export default function SearchResults(props: SearchResultProps) {
                     ? props.setCategory
                     : setTempCategory
                 }
-                MenuItems={RoleMenues}
+                MenuItems={props.menuItems}
                 member={member}
                 teamMembers={props.ResultList}
               ></TeamDropDown>
             ) : (
               <></>
             )}
-            <TextButtonContainer style={{ color: props.textButtonColor }}>
+            <TextButtonContainer
+              style={{ color: props.textButtonColor }}
+              onClick={props.handleButtonEvent}
+            >
               {props.textButtonText}
             </TextButtonContainer>
           </div>

@@ -142,11 +142,12 @@ export default function TeamSideBar() {
                 <NoProfileContainer
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
+                    Router.push("/view-page");
+
                     dispatch(setSelectTeamState({ idx, teamId: team.teamId }));
                     dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
                     dispatch(setNavName(team.name));
                     clickTeam();
-                    Router.push("/view-page");
                   }}
                 >
                   {team.name}
