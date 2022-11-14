@@ -2,31 +2,8 @@ import { app, ipcMain, Tray, Menu, ipcRenderer, BrowserWindow } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 
-let tray;
 //트레이 아이콘
-let mainWindow: BrowserWindow;
-function initTrayIconMenu() {
-  tray = new Tray("public/icons/AppIcon.ico");
-  const myMenu = Menu.buildFromTemplate([
-    { label: "O:RE", type: "normal" },
-    {
-      label: "open",
-      type: "normal",
-      click: () => {
-        mainWindow.show();
-      },
-    },
-    {
-      label: "close",
-      type: "normal",
-      click: () => {
-        mainWindow.close();
-      },
-    },
-  ]);
-  tray.setToolTip("O:RE");
-  tray.setContextMenu(myMenu);
-}
+//let mainWindow: BrowserWindow;
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -39,11 +16,34 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  mainWindow = createWindow("main", {
+  const mainWindow = createWindow("main", {
     width: 1000,
     height: 600,
   });
-  initTrayIconMenu();
+  const initTrayIconMenu = (mainWindow: BrowserWindow) => {
+    //if (!mainWindow) return;
+    const tray = new Tray("public/icons/AppIcon.ico");
+    const myMenu = Menu.buildFromTemplate([
+      { label: "O:RE", type: "normal" },
+      {
+        label: "open",
+        type: "normal",
+        click: () => {
+          mainWindow.show();
+        },
+      },
+      {
+        label: "close",
+        type: "normal",
+        click: () => {
+          mainWindow.close();
+        },
+      },
+    ]);
+    tray.setToolTip("O:RE");
+    tray.setContextMenu(myMenu);
+  };
+  initTrayIconMenu(mainWindow);
 
   if (isProd) {
     await mainWindow.loadURL("app://./home.html");
