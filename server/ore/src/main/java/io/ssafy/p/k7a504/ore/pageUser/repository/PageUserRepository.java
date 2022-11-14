@@ -24,7 +24,7 @@ public interface PageUserRepository extends JpaRepository<PageUser, Long> {
     @Query("select count(p.id) from PageUser p where p.id in ?1 and p.pageUserRole in ?2")
     int countByIdAndPageUserRole(List<Long> userIdList, List<PageUserRole> pageUserRole);
 
-    @Query("select count(p.id) from PageUser p where p.page.id =?1 and p.id in ?2")
+    @Query("select count(p.id) from PageUser p where p.page.id =?1 and p.user.id in ?2")
     int countByPageIdAndUserId(Long pageId, List<Long> userIdList);
 
     @Query("select p from PageUser p where p.page.id=?1 and p.user.name like %?2% and p.user.role<>'OWNER' and p.user.id<>?3")
