@@ -27,8 +27,11 @@ layoutInfo.withOnlyNavBar.add(PATH.MANAGE_TEAM);
 
 export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
 
-export const BASIC_PHOTO_URL: string =
-  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/TeamDefaultImg.png";
+export const BASIC_PHOTO_TEAM: string =
+  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/team/TeamDefaultImg.png";
+
+export const BASIC_PHOTO_USER: string =
+  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/user/UserDefault.png";
 
 // API
 const API = "/api";
@@ -64,6 +67,7 @@ export const TEAM_USER_API = {
 export const TEAM_API = {
   CREATE: API + TEAM,
   DELETE: API + TEAM,
+  MODIFY: API + TEAM + "/edit",
 };
 
 export const PAGE_USER_API = {

@@ -216,7 +216,6 @@ export default function ServerOption() {
             return [...prev, ...data.data.content];
           });
         }
-        console.log(data);
         setIsSearchLast(data.data.last);
         if (searchPage === -1) {
           setSearchPage(0);
@@ -298,9 +297,7 @@ export default function ServerOption() {
       setSearchResultList([]);
       setSearchPage(-1);
       setIsSearchLast(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -351,9 +348,9 @@ export default function ServerOption() {
           handleSearchInput={handleSearchInput}
           fetchResultList={fetchResultList}
         ></SearchBarTab>
-        <ResultContainer>
-          {searchResultList.length !== 0 &&
-            searchResultList.map((member, idx) => (
+        {searchResultList.length !== 0 && (
+          <ResultContainer>
+            {searchResultList.map((member, idx) => (
               <SearchServerRole
                 key={idx}
                 member={member}
@@ -361,12 +358,13 @@ export default function ServerOption() {
                 buttonFunction={tempChangeUser}
               ></SearchServerRole>
             ))}
-          {searchResultList.length !== 0 && isSearchLoaded && (
-            <div className={`${searchPage}페이지`}>
-              검색 결과가 더 없습니다.
-            </div>
-          )}
-        </ResultContainer>
+            {searchResultList.length !== 0 && isSearchLoaded && (
+              <div className={`${searchPage}페이지`}>
+                검색 결과가 더 없습니다.
+              </div>
+            )}
+          </ResultContainer>
+        )}
         <ButtonContainer>
           <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
             변경 저장

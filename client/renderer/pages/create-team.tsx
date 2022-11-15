@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { H2, Input, Button, Label } from "../styles";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { addTeamState, setSelectTeamState } from "../slices/myTeamsStateSlice";
-import { BASIC_PHOTO_URL, TEAM_API } from "../constants";
+import { BASIC_PHOTO_TEAM, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "../utils/axios";
 import { setIsCreate } from "../slices/pageSlice";
@@ -54,7 +54,7 @@ export default function CreateTeam() {
   // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
-    BASIC_PHOTO_URL
+    BASIC_PHOTO_TEAM
   );
 
   // teamName 변경
@@ -104,9 +104,10 @@ export default function CreateTeam() {
           setPhoto={setPhoto}
           photoUrl={photoUrl}
           setPhotoUrl={setPhotoUrl}
+          teamName={teamName}
         ></ProfilePhotos>
         <NameContainer>
-          <Label htmlFor="teamNameInput">그룹명</Label>
+          <Label htmlFor="teamNameInput">팀 이름</Label>
           <Input
             id="teamNameInput"
             name="teamName"

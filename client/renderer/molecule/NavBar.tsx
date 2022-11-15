@@ -41,6 +41,8 @@ const TitleContainer = styled.div`
 const UserProfileImg = styled.img`
   width: 40px;
   height: 40px;
+  border-radius: 50px;
+  margin-right: 5px;
   cursor: pointer;
 `;
 
