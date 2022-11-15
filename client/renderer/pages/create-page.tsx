@@ -226,8 +226,8 @@ export default function CreatePage() {
         />
         <ButtonWrapper>
           <Button
-            width="50px"
-            height="40px"
+            width="40px"
+            height="30px"
             borderRadius="5px"
             fontSize="13px"
             background="var(--light-main-color)"

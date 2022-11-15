@@ -2,18 +2,18 @@ import styled from "@emotion/styled";
 import axios from "../utils/axios";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { PAGE_USER_API, PATH } from "../constants";
+import { PAGE_ROLE, PAGE_USER_API, PATH, TEAM_ROLE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setPageState, setSelectPageState } from "../slices/pageSlice";
-import { Button } from "../styles";
-import { setNavName } from "../slices/navNameSlice";
-import { useClickOther, useClickPage } from "../hooks/resetPageHook";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Router from "next/router";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+  padding: 10px 0;
   background: var(--super-light-main-color);
 `;
 
@@ -38,27 +38,58 @@ const DotButton = styled.button`
   }
 `;
 
-const ButtonContainer = styled.div`
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+`;
+
+type ButtonContainerProps = {
+  highlighted: boolean;
+};
+const ButtonContainer = styled.div<ButtonContainerProps>`
   display: flex;
   width: 80%;
   height: 30px;
   margin: 0 auto;
   margin: 3px auto;
-`;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  padding-right: 3px;
+  ${IconContainer} {
+    visibility: ${(props) => (props.highlighted ? "visible" : "hidden")};
+  }
 
-const PageContainer = styled.div`
+  :hover {
+    ${IconContainer} {
+      visibility: visible;
+    }
+    background-color: var(--light-main-color);
+    cursor: pointer;
+    color: white;
+  }
+  background-color: ${(props) =>
+    props.highlighted && `var(--light-main-color)`};
+  color: ${(props) => props.highlighted && "white"};
+`;
+const PageContainer = styled.div<ButtonContainerProps>`
   display: flex;
   align-items: center;
   padding-left: 5px;
   width: 100%;
   height: 100%;
   border-radius: 4px;
+
   font-size: var(--font-size-200);
   :hover {
-    background-color: var(--light-main-color);
     cursor: pointer;
     color: white;
   }
+  background-color: ${(props) =>
+    props.highlighted && `var(--light-main-color)`};
+  color: ${(props) => props.highlighted && "white"};
 `;
 
 export default function PageSideBar() {
@@ -67,10 +98,8 @@ export default function PageSideBar() {
   ).selectTeamState;
   const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const pageList = useAppSelector((state) => state.pageState).pageState;
+  const selectPage = useAppSelector((state) => state.pageState).selectPageState;
   const dispatch = useAppDispatch();
-  const clickPage = useClickPage();
-  const clickOther = useClickOther();
-
   const getPageList = async () => {
     try {
       const params = {
@@ -86,8 +115,6 @@ export default function PageSideBar() {
           },
         }
       );
-      console.log(selectTeam);
-      console.log(data);
       dispatch(setPageState(data.data.content));
       dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e) {
@@ -102,34 +129,37 @@ export default function PageSideBar() {
 
   const handleClickPage = (idx: number, pageId: number, pageName: string) => {
     dispatch(setSelectPageState({ idx, pageId }));
-    dispatch(setNavName(pageName));
-    clickPage();
   };
 
   return (
     <Container>
       {pageList.length > 0 &&
         pageList.map((v, idx) => (
-          <ButtonContainer key={v.pageId}>
+          <ButtonContainer key={v.pageId} highlighted={idx === selectPage.idx}>
             <Link href={PATH.VIEW_PAGE}>
               <PageContainer
                 onClick={() => handleClickPage(idx, v.pageId, v.name)}
+                highlighted={idx === selectPage.idx}
               >
                 {v.name}
               </PageContainer>
             </Link>
+            {PAGE_ROLE.EDITOR.includes(v.role) && (
+              <IconContainer>
+                <SettingsIcon
+                  fontSize="small"
+                  onClick={() => Router.push("/")}
+                  style={{ fill: "white" }}
+                />
+              </IconContainer>
+            )}
           </ButtonContainer>
         ))}
-      <Link href={PATH.CREATE_PAGE}>
-        <DotButton
-          onClick={() => {
-            clickOther();
-            dispatch(setNavName("페이지 생성"));
-          }}
-        >
-          +
-        </DotButton>
-      </Link>
+      {TEAM_ROLE.MANAGER.includes(teamList[selectTeam.idx]?.teamUserRole) && (
+        <Link href={PATH.CREATE_PAGE}>
+          <DotButton>+</DotButton>
+        </Link>
+      )}
     </Container>
   );
 }

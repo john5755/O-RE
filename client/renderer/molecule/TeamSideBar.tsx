@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { BASIC_PHOTO_URL, TEAM_USER_API } from "../constants";
+import { BASIC_PHOTO_URL, SERVER_ROLE, TEAM_USER_API } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
 import { BarProps, TeamOptions } from "../types";
@@ -88,6 +88,8 @@ export default function TeamSideBar() {
   ).selectTeamState;
   const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const isCreate = useAppSelector((state) => state.pageState).isCreate;
+  const myRole = useAppSelector((state) => state.userProfileState)
+    .userProfileState.role;
   const dispatch = useAppDispatch();
   const resetPage = useResetPage();
   const clickTeam = useClickTeam();
@@ -131,7 +133,7 @@ export default function TeamSideBar() {
   useEffect(() => {
     setMyTeams();
   }, [teamList.length]);
-
+  console.log(myRole);
   return (
     <Container>
       <TeamContainer>
@@ -171,16 +173,18 @@ export default function TeamSideBar() {
               )}
             </div>
           ))}
-        <PlusButtonContainer
-          onClick={() => {
-            Router.push(PATH.CREATE_TEAM);
-            resetPage();
-            clickOther();
-            dispatch(setNavName("팀 생성"));
-          }}
-        >
-          +
-        </PlusButtonContainer>
+        {SERVER_ROLE.ADMIN.includes(myRole) && (
+          <PlusButtonContainer
+            onClick={() => {
+              Router.push(PATH.CREATE_TEAM);
+              resetPage();
+              clickOther();
+              dispatch(setNavName("팀 생성"));
+            }}
+          >
+            +
+          </PlusButtonContainer>
+        )}
       </TeamContainer>
     </Container>
   );

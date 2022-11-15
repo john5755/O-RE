@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
-import List from "../atom/List";
-import BasicTable from "../atom/BasicTable";
-import Text from "../atom/Text";
-import Input from "../atom/Input";
+import List from "./TagComponent/List";
+import BasicTable from "./TagComponent/BasicTable";
+import Text from "../atom/TagComponent/Text";
+import Input from "./TagComponent/Input";
 import { Button } from "../styles";
 import { TagType } from "../types";
-import RadioButton from "../atom/RadioButton";
-import DatePicker from "../atom/DatePicker";
-import CheckBox from "../atom/CheckBox";
+import RadioButton from "./TagComponent/RadioButton";
+import DatePicker from "./TagComponent/DatePicker";
+import CheckBox from "./TagComponent/CheckBox";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const PageContainer = styled.div`

@@ -21,7 +21,7 @@ export interface TeamOptions {
 export interface PageOption {
   pageId: number;
   name: string;
-  pageUserRole: string;
+  role: string;
 }
 
 export interface SelectPageType {

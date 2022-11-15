@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
-import { InputType } from "../types";
+import React, { Dispatch, SetStateAction } from "react";
+import { InputType } from "../../types";
 
 const Container = styled.div`
   display: flex;
@@ -19,27 +19,25 @@ const InputConainer = styled.input`
   outline: none;
   font-weight: 500;
   font-size: 13px;
-  padding-left: 5px;
+  padding: 0 5px;
   :focus {
     border-color: var(--main-color);
   }
 `;
 
-type InputProps = PropsWithChildren<{
+type DatePickerProps = {
   style?: React.CSSProperties;
   header?: string;
-  children?: string;
   userInput?: InputType;
   setUserInput?: Dispatch<SetStateAction<InputType>>;
-}>;
+};
 
-const Input = ({
-  children,
+const DatePicker = ({
   header,
   userInput,
   setUserInput,
   ...props
-}: InputProps) => {
+}: DatePickerProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!userInput![header!]) {
       setUserInput!((pre: any) => {
@@ -50,16 +48,12 @@ const Input = ({
       return { ...pre, [header!]: e.target.value };
     });
   };
-
   return (
     <Container>
       {header !== "" && <HeaderContainer>{header}</HeaderContainer>}
-      <InputConainer
-        {...props}
-        onChange={(e) => handleChange(e)}
-      ></InputConainer>
+      <InputConainer onChange={(e) => handleChange(e)} {...props} />
     </Container>
   );
 };
 
-export default Input;
+export default DatePicker;
