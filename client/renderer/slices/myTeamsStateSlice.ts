@@ -40,13 +40,26 @@ export const myTeamsStateSlice = createSlice({
         (prev) => prev.teamId !== action.payload.teamId
       );
     },
+    editTeamState: (
+      state,
+      action: PayloadAction<{ name: string; imageUrl: string }>
+    ) => {
+      state.myTeamsState[state.selectTeamState.idx].name = action.payload.name;
+      state.myTeamsState[state.selectTeamState.idx].imageUrl =
+        action.payload.imageUrl;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
   },
 });
 
-export const { addTeamState, delTeamState, setTeamState, setSelectTeamState } =
-  myTeamsStateSlice.actions;
+export const {
+  addTeamState,
+  delTeamState,
+  setTeamState,
+  editTeamState,
+  setSelectTeamState,
+} = myTeamsStateSlice.actions;
 
 export default myTeamsStateSlice.reducer;

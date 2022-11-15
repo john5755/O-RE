@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { BASIC_PHOTO_URL, SERVER_ROLE, TEAM_USER_API } from "../constants";
+import { BASIC_PHOTO_TEAM, SERVER_ROLE, TEAM_USER_API } from "../constants";
 import { PATH } from "../constants";
 import Router from "next/router";
 import { BarProps, TeamOptions } from "../types";
@@ -41,8 +41,7 @@ const TeamProfileImg = styled.img`
 
 const NoProfileContainer = styled.div`
   border-radius: 50%;
-  background-color: var(--light-main-color);
-  color: white;
+  background-color: white;
   font-weight: 500;
   display: flex;
   justify-content: center;
@@ -76,9 +75,10 @@ const unClickedCss = {
   fontSize: "12px",
 };
 const clickedCss = {
-  width: "68px",
-  height: "68px",
+  width: "60px",
+  height: "60px",
   fontSize: "16px",
+  border: "4px solid #C4E1E3",
 };
 
 export default function TeamSideBar() {
@@ -140,7 +140,7 @@ export default function TeamSideBar() {
         {myTeams.length > 0 &&
           myTeams.map((team, idx) => (
             <div key={idx}>
-              {team.imageUrl === BASIC_PHOTO_URL ? (
+              {team.imageUrl === BASIC_PHOTO_TEAM ? (
                 <NoProfileContainer
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {
@@ -159,7 +159,7 @@ export default function TeamSideBar() {
                   src={
                     typeof team.imageUrl === "string"
                       ? team.imageUrl
-                      : BASIC_PHOTO_URL
+                      : BASIC_PHOTO_TEAM
                   }
                   style={idx === selectTeam.idx ? clickedCss : unClickedCss}
                   onClick={() => {

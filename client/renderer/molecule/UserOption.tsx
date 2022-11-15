@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { H2, H3, Button, Label, Input } from "../styles";
 import ProfilePhotos from "./ProfilePhotos";
-import { useAppSelector } from "../hooks/reduxHook";
+import { useAppSelector, useAppDispatch } from "../hooks/reduxHook";
+import { setUserProfileState } from "../slices/userProfileSlices";
 import axios from "../utils/axios";
 import { USERS_API } from "../constants";
 import { persistor } from "../store";
@@ -32,6 +33,7 @@ const roles = {
 };
 
 export default function UserOption() {
+  const dispatch = useAppDispatch();
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
@@ -46,6 +48,37 @@ export default function UserOption() {
   function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setNickName(event.target.value);
   }
+  // profile 변경
+  const submitEditProfile = async () => {
+    const profileInfoJson = {
+      nickname: nickname,
+      imageUrl: photoUrl,
+    };
+    const profileInfo = JSON.stringify(profileInfoJson);
+    const formData = new FormData();
+    if (photo !== null) {
+      formData.append("profileImage", photo);
+    }
+    formData.append(
+      "profileInfo",
+      new Blob([profileInfo], { type: "application/json" })
+    );
+    try {
+      await axios.put(USERS_API.MYPAGE, formData, {
+        headers: {
+          ContentType: "multipart/formdata",
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+      const { data } = await axios.get(USERS_API.MYPAGE, {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
+      dispatch(setUserProfileState(data.data));
+    } catch (e) {}
+  };
+
   // logout
   const submitLogout = async () => {
     try {
@@ -112,7 +145,9 @@ export default function UserOption() {
         </Button>
       </ButtonContainer>
       <ButtonContainer>
-        <Button height="50px">저장</Button>
+        <Button height="50px" onClick={submitEditProfile}>
+          저장
+        </Button>
       </ButtonContainer>
     </>
   );
