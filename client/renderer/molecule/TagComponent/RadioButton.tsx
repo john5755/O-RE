@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React, { Dispatch, SetStateAction } from "react";
-import { InputType } from "../types";
+import { InputType } from "../../types";
 
 const Container = styled.div`
   display: flex;
@@ -82,6 +82,7 @@ const RadioButton = ({
               id={`${v}-${idx}`}
               {...props}
               onChange={(e) => handleChange(e)}
+              name="garner"
             ></InputBox>
             <TextBox>{v}</TextBox>
           </LabelBox>

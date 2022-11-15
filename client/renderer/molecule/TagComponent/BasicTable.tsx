@@ -27,7 +27,7 @@ const BasicTable = ({ header, title, data }: TableProps) => {
     <Container>
       {header !== "" && <div>{header}</div>}
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               {title.map((v, i) => (

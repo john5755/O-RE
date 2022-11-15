@@ -81,10 +81,21 @@ export const USER_INPUT_API = {
   GET: API + USER_INPUT + "/list",
 };
 
+export const SERVER_ROLE = {
+  OWNER: ["OWNER"],
+  ADMIN: ["OWNER", "ADMIN"],
+};
+
 export const TEAM_ROLE = {
   OWNER: ["OWNER"],
   LEADER: ["OWNER", "LEADER"],
   MANAGER: ["OWNER", "LEADER", "MANAGER"],
+};
+
+export const PAGE_ROLE = {
+  OWNER: ["OWNER"],
+  MAINTAINER: ["OWNER", "MAINTAINER"],
+  EDITOR: ["OWNER", "MAINTAINER", "EDITOR"],
 };
 
 export const TAG_LIST: TagType[] = [
@@ -100,15 +111,6 @@ export const TAG_LIST: TagType[] = [
       },
     },
   },
-  // {
-  //   type: "list",
-  //   tagProps: {
-  //     header: "리스트 제목",
-  //     count: 2,
-  //     children: ["내용", "입력"],
-  //     style: { width: "100px", height: "" },
-  //   },
-  // },
   {
     type: "date picker",
     tagProps: {
@@ -134,17 +136,6 @@ export const TAG_LIST: TagType[] = [
       },
     },
   },
-  // {
-  //   type: "file upload",
-  //   tagProps: {
-  //     header: "파일 업로드 제목",
-  //     type: "file",
-  //     style: {
-  //       width: "",
-  //       height: "",
-  //     },
-  //   },
-  // },
   {
     type: "table",
     tagProps: {
@@ -177,41 +168,4 @@ export const TAG_LIST: TagType[] = [
       style: { width: "", height: "" },
     },
   },
-  // {
-  //   type: "drop down",
-  //   tagProps: {
-  //     header: "드롭다운 제목",
-  //     option: ["one", "two", "three"],
-  //     style: { width: "", height: "" },
-  //   },
-  // },
-  // {
-  //   type: "text area",
-  //   tagProps: {
-  //     header: "텍스트 제목",
-  //     style: { width: "300px", height: "100px" },
-  //   },
-  // },
-  // {
-  //   type: "hyperlink",
-  //   tagProps: {
-  //     href: "https://www.ssafy.com",
-  //     children: "SSAFY",
-  //     target: "_blank",
-  //     header: "링크 제목",
-  //     style: { width: "", height: "" },
-  //   },
-  // },
-  // {
-  //   type: "button",
-  //   tagProps: {
-  //     header: "버튼 제목",
-  //     children: "버튼",
-  //     style: {
-  //       width: "100px",
-  //       height: "40px",
-  //       textAlign: "center",
-  //     },
-  //   },
-  // },
 ];

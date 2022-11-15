@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import axios from "../utils/axios";
 import React, { useEffect, useState } from "react";
-import CheckBox from "../atom/CheckBox";
-import DatePicker from "../atom/DatePicker";
-import Input from "../atom/Input";
-import List from "../atom/List";
-import RadioButton from "../atom/RadioButton";
-import BasicTable from "../atom/BasicTable";
-import Text from "../atom/Text";
+import CheckBox from "../molecule/TagComponent/CheckBox";
+import DatePicker from "../molecule/TagComponent/DatePicker";
+import Input from "../molecule/TagComponent/Input";
+import List from "../molecule/TagComponent/List";
+import RadioButton from "../molecule/TagComponent/RadioButton";
+import BasicTable from "../molecule/TagComponent/BasicTable";
+import Text from "../atom/TagComponent/Text";
 import { INPUT_LIST, PAGE_API, PATH, USER_INPUT_API } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { TagType } from "../types";
@@ -19,7 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  //  height: 100%;
 `;
 
 const TagContainer = styled.div`

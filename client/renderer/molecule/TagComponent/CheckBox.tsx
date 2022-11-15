@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React, { Dispatch, SetStateAction } from "react";
-import { InputType } from "../types";
+import { InputType } from "../../types";
 
 const Container = styled.div`
   display: flex;
