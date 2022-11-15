@@ -56,7 +56,9 @@ public enum ErrorCode {
     NOT_EXCEL_FILE(HttpStatus.BAD_REQUEST, 40082, "Excel 파일이 아닙니다."),
     CANT_CONVERT_TO_JSON(HttpStatus.BAD_REQUEST, 40083, "Json형식으로 바꿀 수 없습니다."),
     CANT_CONVERT_TO_STRING(HttpStatus.BAD_REQUEST, 40084, "String형식으로 바꿀 수 없습니다."),
-    CANT_CONVERT_TO_EXCEL(HttpStatus.BAD_REQUEST, 40085, "EXCEL file로 변환할 수 없습니다.");
+    CANT_CONVERT_TO_EXCEL(HttpStatus.BAD_REQUEST, 40085, "EXCEL file로 변환할 수 없습니다."),
+    DONT_HAVE_TABLE(HttpStatus.BAD_REQUEST, 40086, "해당 페이지는 Table형식을 갖고있지 않습니다.");
+
 
     private final HttpStatus status;
     private final int code;

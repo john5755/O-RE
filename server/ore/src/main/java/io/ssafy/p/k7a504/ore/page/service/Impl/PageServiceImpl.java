@@ -65,8 +65,13 @@ public class PageServiceImpl implements PageService {
         List<Content> contents = new ArrayList<>();
         try {
             for(Map<String, Object> map : pageAddRequestDto.getContent()){
+                boolean isTable = false;
+
+                if(map.get("type").equals("table")) {
+                    isTable = true;
+                }
                 String contentValue = new ObjectMapper().writeValueAsString(map);
-                Content content = Content.createContent(page,contentValue);
+                Content content = Content.createContent(page,contentValue,isTable);
                 contents.add(content);
             }
         }
