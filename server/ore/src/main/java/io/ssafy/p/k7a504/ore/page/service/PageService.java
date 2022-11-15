@@ -11,6 +11,7 @@ public interface PageService {
     PageAddResponseDto addPage(PageAddRequestDto pageAddRequestDto);
     PageDetailResponseDto detailPage(Long pageId);
     Long removePage(Long pageId);
+
     Slice<PageContainInputResponseDto> pageContainInput(Long teamId, Pageable pageable);
 
 }

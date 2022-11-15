@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.ssafy.p.k7a504.ore.common.exception.CustomException;
 import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import io.ssafy.p.k7a504.ore.excel.service.ExcelService;
-import io.ssafy.p.k7a504.ore.page.domain.Page;
+import io.ssafy.p.k7a504.ore.page.domain.Content;
+import io.ssafy.p.k7a504.ore.page.repository.ContentRepository;
 import io.ssafy.p.k7a504.ore.page.repository.PageRepository;
-import io.ssafy.p.k7a504.ore.userInput.domain.UserInput;
-import io.ssafy.p.k7a504.ore.userInput.dto.UserInputOfPageResponseDto;
 import io.ssafy.p.k7a504.ore.userInput.repository.UserInputRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -17,8 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,34 +26,36 @@ import java.util.stream.Collectors;
 public class ExcelServiceImpl implements ExcelService {
     private final PageRepository pageRepository;
     private final UserInputRepository userInputRepository;
+    private final ContentRepository contentRepository;
+
     @Override
     public Long writeExcel(Long pageId, HttpServletResponse response) {
-        Page page = pageRepository.findById(pageId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
-        List<UserInput> userInputList = userInputRepository.findAllByPageId(pageId);
-        List<String> userInputs = userInputList.stream().map(UserInput::getInputValue).collect(Collectors.toList());
-        List<HashMap<String,Object>> userInputMaps = new ArrayList<>();
+        Content content = contentRepository.findByPageIdAndIsTable(pageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DONT_HAVE_TABLE));
+        HashMap<String, Object> map = new HashMap<>();
         try {
-            for(String userInput : userInputs){
-                HashMap<String, Object> map = new ObjectMapper().readValue(userInput, HashMap.class);
-                userInputMaps.add(map);
-            }
+            map = new ObjectMapper().readValue(content.getContentValue(), HashMap.class);
         }
         catch (Exception ex) {
             throw new CustomException(ErrorCode.CANT_CONVERT_TO_JSON);
         }
-        UserInputOfPageResponseDto userInputOfPageResponseDto = new UserInputOfPageResponseDto(page, userInputMaps);
+
+        LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) map.get("tagProps");
+        String tableName = (String) linkedHashMap.get("header");
+        List<String> titleList = (List<String>) linkedHashMap.get("title");
+        List<Object> dataList = (List<Object>) linkedHashMap.get("data");
+
         try{
-            makeExcel(userInputOfPageResponseDto, response);
+            makeExcel(tableName, titleList, dataList, response);
         }catch(Exception e){
             throw new CustomException(ErrorCode.CANT_CONVERT_TO_EXCEL);
         }
         return pageId;
     }
-    private void makeExcel(UserInputOfPageResponseDto userInputOfPageResponseDto, HttpServletResponse response) throws IOException{
+    private void makeExcel(String tableName, List<String> titleList, List<Object> dataList, HttpServletResponse response) throws IOException{
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(userInputOfPageResponseDto.getPageName());
+        Sheet sheet = workbook.createSheet(tableName);
 
         CellStyle headStyle = workbook.createCellStyle();
         headStyle.setBorderTop(BorderStyle.THIN);
@@ -71,9 +73,8 @@ public class ExcelServiceImpl implements ExcelService {
         Row header = sheet.createRow(0);
         Cell headerCell;
         int headerCellNo=0;
-        HashMap<String, Object> headerMap = userInputOfPageResponseDto.getInputs().get(0);
-        Set<String> keySet = headerMap.keySet();
-        for (String key : keySet) {
+
+        for (String key : titleList) {
             headerCell = header.createCell(headerCellNo++);
             headerCell.setCellValue(key);
             headerCell.setCellStyle(headStyle);
@@ -82,12 +83,11 @@ public class ExcelServiceImpl implements ExcelService {
         Row row;
         Cell cell;
         int rowNo=1;
-        for(HashMap<String, Object> map : userInputOfPageResponseDto.getInputs()) {
-
+        for(int i=0; i<dataList.size(); i++) {
+            List<Object> data = (List<Object>) dataList.get(i);
             row = sheet.createRow(rowNo++);
             int cellNo=0;
-            Collection<Object> valueSet = map.values();
-            for(Object object: valueSet){
+            for(Object object: data){
                 cell = row.createCell(cellNo++);
                 cell.setCellStyle(bodyStyle);
                 cell.setCellValue(object.toString());
@@ -97,6 +97,6 @@ public class ExcelServiceImpl implements ExcelService {
         response.setHeader("Content-Disposition", "attachment;filename=ore.xlsx");
         workbook.write(response.getOutputStream());
         workbook.close();
-
     }
 }
+

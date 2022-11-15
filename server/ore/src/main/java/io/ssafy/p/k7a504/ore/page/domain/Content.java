@@ -25,12 +25,15 @@ public class Content {
     @Column(columnDefinition = "LONGTEXT")
     private String contentValue;
 
-    private Content(Page page, String contentValue) {
+    private boolean isTable;
+
+    private Content(Page page, String contentValue, boolean isTable) {
         this.page = page;
         this.contentValue = contentValue;
+        this.isTable = isTable;
     }
 
-    public static Content createContent(Page page, String contentValue){
-        return new Content(page, contentValue);
+    public static Content createContent(Page page, String contentValue, boolean isTable){
+        return new Content(page, contentValue, isTable);
     }
 }
