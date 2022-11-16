@@ -10,6 +10,7 @@ import io.ssafy.p.k7a504.ore.pageUser.domain.PageUserRole;
 import io.ssafy.p.k7a504.ore.pageUser.dto.*;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.pageUser.service.PageUserService;
+import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import io.ssafy.p.k7a504.ore.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class PageUserServiceImpl implements PageUserService {
 
     final private PageUserRepository pageUserRepository;
     final private TeamUserRepository teamUserRepository;
+    final private TeamRepository teamRepository;
     final private PageRepository pageRepository;
 
     @Override
@@ -145,7 +147,7 @@ public class PageUserServiceImpl implements PageUserService {
 
     @Override
     public Slice<PageOfTeamResponseDto> pageOfTeam(Long teamId, Pageable pageable) {
-        if(!teamUserRepository.existsById(teamId)){
+        if(!teamRepository.existsById(teamId)){
             throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
         }
         Long userId = SecurityUtil.getCurrentUserId();
