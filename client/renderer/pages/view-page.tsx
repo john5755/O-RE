@@ -66,6 +66,11 @@ export default function ViewPage() {
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
+  const isTable =
+    pageTagList !== undefined &&
+    pageTagList.findIndex((v) => v.type === "table") === -1
+      ? false
+      : true;
   const dispatch = useAppDispatch();
   const clickTeam = useClickTeam();
   const resetPage = useResetPage();
@@ -82,6 +87,7 @@ export default function ViewPage() {
         setSelectTeamState({ idx: teamInfo.idx, teamId: teamInfo.teamId })
       );
       clickTeam();
+      setUserInput({});
       Router.push(PATH.VIEW_PAGE);
     } catch (e) {}
   };
@@ -92,7 +98,6 @@ export default function ViewPage() {
     });
     setPageTagList(data.data.contents);
   };
-
   useEffect(() => {
     if (pageList.length === 0 || pageInfo.idx === -1) {
       setPageTagList([]);
@@ -135,6 +140,11 @@ export default function ViewPage() {
       {isInput && (
         <ButtonWrapper>
           <Button onClick={handleClick}>저장</Button>
+        </ButtonWrapper>
+      )}
+      {isTable && (
+        <ButtonWrapper>
+          <Button>Excel</Button>
         </ButtonWrapper>
       )}
     </Container>

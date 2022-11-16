@@ -36,9 +36,17 @@ const BasicTable = ({ header, title, data }: TableProps) => {
           <TableBody>
             {data.map((row, i) => (
               <TableRow key={`${row}-${i}`}>
-                {row.map((col, idx) => (
-                  <TableCell key={`${col}-${idx}`}>{col}</TableCell>
-                ))}
+                {row.map((col, idx) => {
+                  if (Array.isArray(col))
+                    return (
+                      <TableCell key={`${col}-${idx}`}>
+                        {col.join(", ")}
+                      </TableCell>
+                    );
+                  else {
+                    return <TableCell key={`${col}-${idx}`}>{col}</TableCell>;
+                  }
+                })}
               </TableRow>
             ))}
           </TableBody>
