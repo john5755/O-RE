@@ -118,9 +118,7 @@ export default function CustomTable({ obj, setObj, objIdx }: CustomType) {
       });
       setTableInfo(data.data.inputs);
       setTableRow(Object.keys(data.data.inputs[0]));
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleChange = (

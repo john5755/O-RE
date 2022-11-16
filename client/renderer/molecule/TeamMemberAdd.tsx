@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Label, Button, Input } from "../styles";
-import { PATH, TEAM_API, TEAM_USER_API, USERS_API } from "../constants";
-import ProfilePhotos from "./ProfilePhotos";
+import { Label, Button } from "../styles";
+import { TEAM_USER_API, USERS_API } from "../constants";
 import { TeamUserType } from "../types";
 import SearchBarTab from "./SearchBarTab";
 import axios from "../utils/axios";
@@ -34,14 +33,11 @@ const ButtonContainer = styled.div`
   margin: 20px auto;
 `;
 
-// serach dropdown
 const searchMenues = { name: "이름", nickName: "닉네임" };
 
 export default function TeamMemberAdd() {
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
-
-  // member 추가
   const [nameCategoryAll, setNameCategoryAll] = useState<string>("name");
   const [searchAllUserInput, setSearchAllUserInput] = useState<string>("");
   const handleAllSearchUserInput = (

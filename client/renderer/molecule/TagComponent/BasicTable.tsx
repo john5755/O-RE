@@ -7,7 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import styled from "@emotion/styled";
-import TablePagination from "@mui/material/TablePagination";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +21,6 @@ type TableProps = {
 };
 
 const BasicTable = ({ header, title, data }: TableProps) => {
-  console.log("data : ", data);
   return (
     <Container>
       {header !== "" && <div>{header}</div>}

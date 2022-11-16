@@ -37,18 +37,15 @@ export default function UserOption() {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
-  // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
     userProfile.profileImage
   );
-  // nickname 변경
   const [nickname, setNickName] = useState<string>(userProfile.nickname);
 
   function handleNicknameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setNickName(event.target.value);
   }
-  // profile 변경
   const submitEditProfile = async () => {
     const profileInfoJson = {
       nickname: nickname,
@@ -79,10 +76,9 @@ export default function UserOption() {
     } catch (e) {}
   };
 
-  // logout
   const submitLogout = async () => {
     try {
-      await axios.put(
+      await axios.post(
         USERS_API.LOGOUT,
         {},
         {

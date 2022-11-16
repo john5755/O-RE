@@ -119,13 +119,23 @@ export default function TeamSideBar() {
         dispatch(setNavName(myTeams[myTeams.length - 1].name));
         dispatch(setIsCreate(false));
       } else {
-        dispatch(
-          setSelectTeamState({
-            idx: 0,
-            teamId: myTeams[0].teamId,
-          })
-        );
-        dispatch(setNavName(myTeams[0].name));
+        if (teamList.length === 0) {
+          dispatch(
+            setSelectTeamState({
+              idx: -1,
+              teamId: -1,
+            })
+          );
+          dispatch(setNavName("Welcome O:RE"));
+        } else {
+          dispatch(
+            setSelectTeamState({
+              idx: 0,
+              teamId: myTeams[0].teamId,
+            })
+          );
+          dispatch(setNavName(myTeams[0].name));
+        }
       }
     } catch {}
   }, [teamList.length]);
@@ -133,7 +143,6 @@ export default function TeamSideBar() {
   useEffect(() => {
     setMyTeams();
   }, [teamList.length]);
-  console.log(myRole);
   return (
     <Container>
       <TeamContainer>

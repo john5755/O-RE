@@ -30,9 +30,9 @@ export const myPageStateSlice = createSlice({
     addPageState: (state, action: PayloadAction<PageOption>) => {
       state.pageState = [...state.pageState, action.payload];
     },
-    delPageState: (state, action: PayloadAction<PageOption>) => {
+    delPageState: (state, action: PayloadAction<number>) => {
       state.pageState = state.pageState.filter(
-        (prev) => prev !== action.payload
+        (prev) => prev.pageId !== action.payload
       );
     },
     setIsCreate: (state, action: PayloadAction<boolean>) => {

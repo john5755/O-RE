@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
 import { TeamUserType } from "../types";
-import { useAppSelector } from "../hooks/reduxHook";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);

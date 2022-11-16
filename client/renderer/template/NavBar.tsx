@@ -4,8 +4,8 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import Router from "next/router";
 import { useClickOther, useResetPage } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { PATH, TEAM_ROLE } from "../constants";
+import { PATH } from "../constants";
+import TeamOptionDropDown from "../molecule/TeamOptionDropDown";
 
 const Container = styled.div`
   width: 100%;
@@ -61,21 +61,7 @@ export default function NavBar() {
     <Container>
       <LeftContainer>
         <TitleContainer>{navInfo.navName}</TitleContainer>
-        {navInfo.isTeam &&
-          teamIdx !== -1 &&
-          teamIdx < teamList.length &&
-          teamList[teamIdx].teamUserRole !== undefined &&
-          TEAM_ROLE.MANAGER.includes(teamList[teamIdx].teamUserRole) && (
-            <SettingsIcon
-              fontSize="small"
-              onClick={() => {
-                dispatch(setNavName(`${navInfo.navName}팀 관리`));
-                Router.push(PATH.MANAGE_TEAM);
-                clickOther();
-              }}
-              sx={{ cursor: "pointer" }}
-            ></SettingsIcon>
-          )}
+        {navInfo.isTeam && teamIdx !== -1 && <TeamOptionDropDown />}
       </LeftContainer>
       <RightContainer>
         <UserProfileImg

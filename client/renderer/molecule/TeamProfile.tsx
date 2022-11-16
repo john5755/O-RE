@@ -1,13 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Label, Button, Input } from "../styles";
-import {
-  BASIC_PHOTO_TEAM,
-  PATH,
-  TEAM_API,
-  TEAM_USER_API,
-  USERS_API,
-} from "../constants";
+import { Label, Button, Input } from "../styles";
+import { BASIC_PHOTO_TEAM, TEAM_API } from "../constants";
 import ProfilePhotos from "../molecule/ProfilePhotos";
 import axios from "../utils/axios";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
@@ -40,18 +34,15 @@ export default function TeamProfile() {
   }, [teamIdx]);
   const dispatch = useAppDispatch();
   const clickTeam = useClickTeam();
-  // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
     teamList[teamIdx]?.imageUrl
   );
-  // nickname 변경
   const [teamName, setTeamName] = useState<string>(teamList[teamIdx]?.name);
   function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setTeamName(event.target.value);
   }
 
-  // 변경사항 저장
   const submitModifyTeam = async () => {
     const imageUrl =
       photoUrl === BASIC_PHOTO_TEAM ? "" : teamList[teamIdx].imageUrl;
@@ -74,7 +65,6 @@ export default function TeamProfile() {
     } catch (error) {}
   };
 
-  // 팀 삭제
   const deleteTeam = async () => {
     try {
       await axios.delete(`${TEAM_API.DELETE}/${teamId}`, {
@@ -83,6 +73,7 @@ export default function TeamProfile() {
         },
       });
       dispatch(delTeamState(teamList[teamIdx]));
+      if (teamList.length === 0) Router.push("/");
       clickTeam();
     } catch (e) {}
   };

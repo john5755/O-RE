@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { CustomType, TagType } from "../../types";
-import InputWithLabel from "./InputWithLabel";
 
 const ButtonContainer = styled.div`
   display: flex;

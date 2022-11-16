@@ -25,6 +25,10 @@ axios.interceptors.request.use(async function (config) {
         accessToken: localStorage.getItem("accessToken")?.substring(7),
         refreshToken: localStorage.getItem("refreshToken"),
       });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("accessExpiredAt");
+      localStorage.removeItem("refreshExpiredAt");
       localStorage.setItem(
         "accessToken",
         `Bearer ` + response.data.data.accessToken

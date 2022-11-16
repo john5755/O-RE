@@ -51,13 +51,11 @@ const ButtonContainer = styled.div`
 export default function CreateTeam() {
   const dispatch = useAppDispatch();
   const myTeams = useAppSelector((state) => state.myTeamsState).myTeamsState;
-  // profile 사진 설정
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | ArrayBuffer | null>(
     BASIC_PHOTO_TEAM
   );
 
-  // teamName 변경
   const [teamName, setTeamName] = useState<string>("");
   function handleTeamNameInput(event: React.ChangeEvent<HTMLInputElement>) {
     setTeamName(event.target.value);
