@@ -59,7 +59,8 @@ axios.interceptors.response.use(
     if (error.response?.status === 401) {
       if (
         !window.location.href.includes("login") ||
-        !window.location.href.includes("signup")
+        !window.location.href.includes("signup") ||
+        !window.location.href.includes("password")
       ) {
         localStorage.clear();
         window.location.replace("/");
