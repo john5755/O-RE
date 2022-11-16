@@ -41,7 +41,7 @@ const TeamProfileImg = styled.img`
 
 const NoProfileContainer = styled.div`
   border-radius: 50%;
-  background-color: white;
+  background-color: rgb(239, 239, 239);
   font-weight: 500;
   display: flex;
   justify-content: center;

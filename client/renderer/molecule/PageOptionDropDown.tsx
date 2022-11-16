@@ -77,12 +77,13 @@ export default function PageOptionDropDown({
               Router.push(PATH.MANAGE_TEAM);
               clickOther();
             }}
+            style={{ fontSize: "12px" }}
           >
             페이지 설정
           </MenuItem>
         )}
         <MenuItem
-          style={{ color: "red" }}
+          style={{ color: "red", fontSize: "12px" }}
           onClick={() => {
             handleClose();
             handlePageLeave(pageId);

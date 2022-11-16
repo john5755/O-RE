@@ -135,7 +135,6 @@ export const TAG_LIST: TagType[] = [
   },
   {
     type: "input",
-
     tagProps: {
       header: "인풋 제목",
       placeholder: "내용을 입력하세요",

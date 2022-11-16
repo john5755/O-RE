@@ -22,9 +22,12 @@ import { setSelectTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
 
 const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  padding: 0 150px;
+  overflow: auto;
 `;
 
 const TagContainer = styled.div`
