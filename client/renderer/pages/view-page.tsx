@@ -8,7 +8,13 @@ import List from "../molecule/TagComponent/List";
 import RadioButton from "../molecule/TagComponent/RadioButton";
 import BasicTable from "../molecule/TagComponent/BasicTable";
 import Text from "../atom/TagComponent/Text";
-import { INPUT_LIST, PAGE_API, PATH, USER_INPUT_API } from "../constants";
+import {
+  EXCEL_API,
+  INPUT_LIST,
+  PAGE_API,
+  PATH,
+  USER_INPUT_API,
+} from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { TagType } from "../types";
 import { useClickTeam, useResetPage } from "../hooks/resetPageHook";
@@ -93,10 +99,12 @@ export default function ViewPage() {
   };
 
   const getPageList = async () => {
-    const { data } = await axios.get(`${PAGE_API.DETAIL}${pageInfo.pageId}`, {
-      headers: { Authorization: localStorage.getItem("accessToken") },
-    });
-    setPageTagList(data.data.contents);
+    try {
+      const { data } = await axios.get(`${PAGE_API.DETAIL}${pageInfo.pageId}`, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setPageTagList(data.data.contents);
+    } catch (e) {}
   };
   useEffect(() => {
     if (pageList.length === 0 || pageInfo.idx === -1) {
@@ -105,6 +113,34 @@ export default function ViewPage() {
     }
     getPageList();
   }, [pageInfo.pageId, pageList]);
+
+  const getExcel = async () => {
+    try {
+      const res = await axios.get(
+        `${EXCEL_API.DOWNLOAD}/${pageInfo.pageId}`,
+
+        {
+          responseType: "blob",
+          headers: { Authorization: localStorage.getItem("accessToken") },
+        }
+      );
+
+      const blob = res.data;
+      const fileObjectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = fileObjectUrl;
+      link.style.display = "none";
+
+      link.download = `${pageList[pageInfo.idx].name}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(fileObjectUrl);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Container>
@@ -144,7 +180,7 @@ export default function ViewPage() {
       )}
       {isTable && (
         <ButtonWrapper>
-          <Button>Excel</Button>
+          <Button onClick={getExcel}>Excel</Button>
         </ButtonWrapper>
       )}
     </Container>

@@ -86,6 +86,10 @@ export const USER_INPUT_API = {
   GET: API + USER_INPUT + "/list",
 };
 
+export const EXCEL_API = {
+  DOWNLOAD: API + "/excel" + "/download",
+};
+
 export const SERVER_ROLE = {
   OWNER: ["OWNER"],
   ADMIN: ["OWNER", "ADMIN"],
