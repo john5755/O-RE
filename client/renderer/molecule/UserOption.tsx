@@ -67,7 +67,7 @@ export default function UserOption() {
       await axios.put(USERS_API.MYPAGE, formData, {
         headers: {
           ContentType: "multipart/formdata",
-          Authorization: localStorage.getItem("accessToken"),
+          Authorization: localStorage.getItem("accesfsToken"),
         },
       });
       const { data } = await axios.get(USERS_API.MYPAGE, {
@@ -76,21 +76,19 @@ export default function UserOption() {
         },
       });
       dispatch(setUserProfileState(data.data));
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // logout
   const submitLogout = async () => {
     try {
-      await axios.post(
-        USERS_API.LOGOUT,
-        {},
-        {
-          headers: {
-            Authorization: localStorage.getItem("accessToken"),
-          },
-        }
-      );
+      await axios.get(USERS_API.LOGOUT, {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      });
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accessExpiredAt");

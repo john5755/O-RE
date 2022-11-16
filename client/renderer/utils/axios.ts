@@ -56,12 +56,8 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.response?.status === 401) {
-      if (
-        !window.location.href.includes("login") ||
-        !window.location.href.includes("signup") ||
-        !window.location.href.includes("password")
-      ) {
+    if (isAxiosError<{ code: number }>(error)) {
+      if (error.response?.data.code === 40104) {
         localStorage.clear();
         window.location.replace("/");
       }
