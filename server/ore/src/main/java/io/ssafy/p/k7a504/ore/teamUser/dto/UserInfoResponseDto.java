@@ -12,7 +12,7 @@ public class UserInfoResponseDto {
     private Long userId;
     private Long teamUserId;
     private String name;
-    private String nickName;
+    private String nickname;
     private String email;
     private String profileImage;
     private TeamUserRole role;
@@ -22,7 +22,7 @@ public class UserInfoResponseDto {
         this.userId = teamUser.getUser().getId();
         this.teamUserId = teamUser.getId();
         this.name = teamUser.getUser().getName();
-        this.nickName = teamUser.getUser().getNickname();
+        this.nickname = teamUser.getUser().getNickname();
         this.email = teamUser.getUser().getEmail();
         this.profileImage = teamUser.getUser().getProfileImage();
         this.role = teamUser.getRole();
