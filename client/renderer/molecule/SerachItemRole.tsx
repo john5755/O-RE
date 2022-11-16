@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
@@ -56,9 +56,13 @@ export default function SearchItemRole(props: ItemProps) {
   const teamRole = useAppSelector((state) => state.myTeamsState).myTeamsState[
     selectedTeamIdx
   ].teamUserRole;
+  const originalRole = useMemo(() => {
+    return props.member.role;
+  }, []);
   const [itemRole, setItemRole] = useState<string>(props.member.role);
   const [buttonText, setButtonText] = useState<string>("변경");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
+  const [dropDownDisabled, setDropDownDisabled] = useState<boolean>(false);
   const id =
     props.member.teamUserId !== undefined
       ? props.member.teamUserId
@@ -71,10 +75,12 @@ export default function SearchItemRole(props: ItemProps) {
     if (buttonColor === "#4F68A6") {
       setButtonColor("#C74E4E");
       setButtonText("취소");
+      setDropDownDisabled(true);
     } else {
       setButtonColor("#4F68A6");
       setButtonText("변경");
       setItemRole(props.member.role);
+      setDropDownDisabled(false);
     }
   };
 
@@ -82,8 +88,8 @@ export default function SearchItemRole(props: ItemProps) {
   const [delButtonColor, setDelButtonColor] = useState<string>("#C74E4E");
   const cantDelOwner = props.member.role === "OWNER";
   const cantDelLeader =
-    props.member.role === "LEADER" && userProfile.role !== "OWNER";
-  const cantDelSame = props.member.role === teamRole;
+    originalRole === "LEADER" && userProfile.role !== "OWNER";
+  const cantDelSame = originalRole === teamRole;
   const cantDel = cantDelOwner || cantDelLeader || cantDelSame;
   const delButtonUIChange = () => {
     if (cantDel) {
@@ -120,6 +126,7 @@ export default function SearchItemRole(props: ItemProps) {
           category={itemRole}
           setCategory={setItemRole}
           MenuItems={props.MenuItems}
+          disabled={dropDownDisabled}
         ></TeamDropDown>
         <TextButtonContainer
           style={{ color: buttonColor }}

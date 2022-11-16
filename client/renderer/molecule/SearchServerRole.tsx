@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
@@ -52,8 +52,12 @@ export default function SearchServerRole(props: ItemProps) {
     (state) => state.userProfileState
   ).userProfileState;
   const [itemRole, setItemRole] = useState<string>(props.member.role);
+  const originalRole = useMemo(() => {
+    return props.member.role;
+  }, []);
   const [buttonText, setButtonText] = useState<string>("변경");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
+  const [dropDownDiabled, setDropDownDisabled] = useState<boolean>(false);
   const id = props.member.userId;
 
   useEffect(() => {
@@ -69,10 +73,12 @@ export default function SearchServerRole(props: ItemProps) {
     if (buttonColor === "#4F68A6") {
       setButtonColor("#C74E4E");
       setButtonText("취소");
+      setDropDownDisabled(true);
     } else {
       setButtonColor("#4F68A6");
       setButtonText("변경");
       setItemRole(props.member.role);
+      setDropDownDisabled(false);
     }
   };
 
@@ -80,8 +86,8 @@ export default function SearchServerRole(props: ItemProps) {
   const [delButtonColor, setDelButtonColor] = useState<string>("#C74E4E");
   const cantDelOwner = props.member.role === "OWNER";
   const cantDelLeader =
-    props.member.role === "LEADER" && userProfile.role !== "OWNER";
-  const cantDelSame = props.member.role === userProfile.role;
+    originalRole === "LEADER" && userProfile.role !== "OWNER";
+  const cantDelSame = originalRole === userProfile.role;
   const cantDel = cantDelOwner || cantDelLeader || cantDelSame;
   const delButtonUIChange = () => {
     if (cantDel) {
@@ -110,6 +116,7 @@ export default function SearchServerRole(props: ItemProps) {
           category={itemRole}
           setCategory={setItemRole}
           MenuItems={props.MenuItems}
+          disabled={dropDownDiabled}
         ></TeamDropDown>
         <TextButtonContainer
           style={{ color: buttonColor }}
