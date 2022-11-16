@@ -5,7 +5,6 @@ import { H3, H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
 import SearchBarTab from "./SearchBarTab";
-import SearchItemRole from "./SerachItemRole";
 import SearchServerRole from "./SearchServerRole";
 import { TeamUserType } from "../types";
 
@@ -68,7 +67,6 @@ const ResultContainer = styled.div`
 const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
-// serach dropdown
 const searchMenues = { name: "이름", nickName: "닉네임" };
 const serverRoleMenues = {
   OWNER: "오너",
@@ -100,8 +98,6 @@ export default function ServerOption() {
     } catch {}
   };
 
-  // 권한변경
-
   const [nameCategory, setNameCategory] = useState<string>("name");
   const [searchInput, setSearchInput] = useState<string>("");
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +119,6 @@ export default function ServerOption() {
   const [removeList, setRemoveList] = useState<Array<number>>([]);
   const [isSearchLast, setIsSearchLast] = useState<boolean>(false);
 
-  // 무한스크롤
   const registerObservingEl = (el: Element) => {
     if (io !== null) {
       io.observe(el);

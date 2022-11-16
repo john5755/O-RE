@@ -2,11 +2,10 @@ import styled from "@emotion/styled";
 import axios from "../utils/axios";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { PAGE_ROLE, PAGE_USER_API, PATH, TEAM_ROLE } from "../constants";
+import { PAGE_USER_API, PATH, TEAM_ROLE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setPageState, setSelectPageState } from "../slices/pageSlice";
-import SettingsIcon from "@mui/icons-material/Settings";
-import Router from "next/router";
+import PageOptionDropDown from "../molecule/PageOptionDropDown";
 
 const Container = styled.div`
   display: flex;
@@ -48,6 +47,24 @@ const IconContainer = styled.div`
 type ButtonContainerProps = {
   highlighted: boolean;
 };
+
+const PageContainer = styled.div<ButtonContainerProps>`
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+
+  font-size: var(--font-size-200);
+  :hover {
+    cursor: pointer;
+    color: white;
+  }
+  background-color: ${(props) =>
+    props.highlighted && `var(--light-main-color)`};
+  color: ${(props) => props.highlighted && "white"};
+`;
 const ButtonContainer = styled.div<ButtonContainerProps>`
   display: flex;
   width: 80%;
@@ -69,29 +86,14 @@ const ButtonContainer = styled.div<ButtonContainerProps>`
     background-color: var(--light-main-color);
     cursor: pointer;
     color: white;
+    ${PageContainer} {
+      color: white;
+    }
   }
   background-color: ${(props) =>
     props.highlighted && `var(--light-main-color)`};
   color: ${(props) => props.highlighted && "white"};
 `;
-const PageContainer = styled.div<ButtonContainerProps>`
-  display: flex;
-  align-items: center;
-  padding-left: 5px;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-
-  font-size: var(--font-size-200);
-  :hover {
-    cursor: pointer;
-    color: white;
-  }
-  background-color: ${(props) =>
-    props.highlighted && `var(--light-main-color)`};
-  color: ${(props) => props.highlighted && "white"};
-`;
-
 export default function PageSideBar() {
   const selectTeam = useAppSelector(
     (state) => state.myTeamsState
@@ -144,15 +146,11 @@ export default function PageSideBar() {
                 {v.name}
               </PageContainer>
             </Link>
-            {PAGE_ROLE.EDITOR.includes(v.role) && (
-              <IconContainer>
-                <SettingsIcon
-                  fontSize="small"
-                  onClick={() => Router.push("/")}
-                  style={{ fill: "white" }}
-                />
-              </IconContainer>
-            )}
+            <IconContainer
+              onClick={() => handleClickPage(idx, v.pageId, v.name)}
+            >
+              <PageOptionDropDown role={v.role} pageId={v.pageId} />
+            </IconContainer>
           </ButtonContainer>
         ))}
       {TEAM_ROLE.MANAGER.includes(teamList[selectTeam.idx]?.teamUserRole) && (

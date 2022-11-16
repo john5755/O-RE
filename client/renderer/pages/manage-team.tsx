@@ -1,17 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Label, Button, Input } from "../styles";
-import { PATH, TEAM_API, TEAM_USER_API, USERS_API } from "../constants";
-import ProfilePhotos from "../molecule/ProfilePhotos";
-import { TeamUserType } from "../types";
-import SearchBarTab from "../molecule/SearchBarTab";
-import axios from "../utils/axios";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { delTeamState } from "../slices/myTeamsStateSlice";
-import Router from "next/router";
 import { useClickTeam } from "../hooks/resetPageHook";
-import SearchItemRole from "../molecule/SerachItemRole";
-import SearchTeamAdd from "../molecule/SearchTeamAdd";
 import { Tab, Tabs, Box } from "@mui/material";
 import TeamMemberAdd from "../molecule/TeamMemberAdd";
 import TeamMemberSet from "../molecule/TeamMemberSet";
@@ -45,44 +35,6 @@ const Container = styled.div`
   max-width: 560px;
 `;
 
-const TeamProfileContainer = styled.div`
-  width: 100%;
-`;
-
-const TeamMemberManageContainer = styled.div`
-  width: 100%;
-`;
-
-const NameContainer = styled.div`
-  width: 100%;
-  margin-bottom: 15px;
-`;
-
-const MemberListContainer = styled.div`
-  width: 100%;
-`;
-
-const MemberLabelContainer = styled.div`
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-`;
-
-const ResultContainer = styled.div`
-  height: 220px;
-  padding: 5px;
-  overflow-y: auto;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 40%;
-  height: 40px;
-  margin: 20px auto;
-`;
-
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -106,28 +58,13 @@ function a11yProps(index: number) {
   };
 }
 
-// serach dropdown
-const searchMenues = { name: "이름", nickName: "닉네임" };
-// result dropdown
-const teamRoleMenues = {
-  OWNER: "오너",
-  LEADER: "리더",
-  MANAGER: "관리자",
-  MEMBER: "사용자",
-};
-
 export default function ManageTeam() {
   const [tabValue, setTabValue] = useState<number>(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-  const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
-  const teamIdx = useAppSelector((state) => state.myTeamsState).selectTeamState
-    .idx;
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
-  const dispatch = useAppDispatch();
-  const clickTeam = useClickTeam();
 
   return teamId !== -1 ? (
     <LayoutContainer>

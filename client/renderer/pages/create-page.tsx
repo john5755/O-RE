@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
-import React, { ReactEventHandler, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import TagList from "../molecule/TagList";
 import { INPUT_LIST, PAGE_API, TAG_LIST } from "../constants";
 import CustomTag from "../molecule/CustomTag";
-import { H4, Button } from "../styles";
+import { Button } from "../styles";
 import CustomPage from "../molecule/CustomPage";
 import { TagType } from "../types";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
@@ -180,9 +180,7 @@ export default function CreatePage() {
         },
       });
       Router.push("/view-page");
-    } catch (e) {
-      //      console.log(e.response.data.message);
-    }
+    } catch (e) {}
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

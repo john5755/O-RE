@@ -59,7 +59,6 @@ export default function Home() {
   const dispatch = useAppDispatch();
   const isLogin = useAppSelector((state) => state.login).isLogin;
   const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
-  // Domain 상태 및 조건 확인
   const [domainInput, setDomainInput] = useState<string>("http://");
   const conditionDomain: boolean =
     /^((http(s?))\:\/\/)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/.test(
@@ -98,7 +97,11 @@ export default function Home() {
       const myTeams: Array<TeamOptions> = data.data.content;
       dispatch(setTeamState(myTeams));
       dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
-      dispatch(setNavName(myTeams[0].name));
+      dispatch(
+        setNavName(
+          data.data.content.length === 0 ? "Welcome O:RE" : myTeams[0].name
+        )
+      );
     } catch {}
   }, []);
 
@@ -160,10 +163,3 @@ export default function Home() {
     </LayoutContainer>
   );
 }
-
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   (store) => async () => {
-//     store.getState();
-//     return { props: {} };
-//   }
-// );

@@ -59,7 +59,6 @@ interface PhotoProps {
 }
 
 export default function ProfilePhotos(props: PhotoProps) {
-  // teamName 변경시
   const [teamName, setTeamName] = useState<string | undefined>(undefined);
   const [url, setUrl] = useState<string | ArrayBuffer | null>(props.photoUrl);
   useEffect(() => {
@@ -69,16 +68,13 @@ export default function ProfilePhotos(props: PhotoProps) {
     setUrl(props.photoUrl);
   }, [props.photoUrl]);
 
-  // profile 사진 설정
   const photoInput = useRef<HTMLInputElement>(null);
   const photoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null && event.target.files.length !== 0) {
       props.setPhoto(event.target.files[0]);
     } else {
-      // 업로드 취소시
       return;
     }
-    // 화면에 프로필 사진 표시
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
@@ -87,7 +83,6 @@ export default function ProfilePhotos(props: PhotoProps) {
     };
     reader.readAsDataURL(event.target.files[0]);
   };
-  // 기본 프로필로 변경
   const basicPhotoChange = () => {
     if (teamName === undefined) {
       props.setPhotoUrl(BASIC_PHOTO_USER);

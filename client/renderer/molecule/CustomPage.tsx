@@ -1,10 +1,8 @@
 import styled from "@emotion/styled";
-import React, { Dispatch, PropsWithChildren, SetStateAction } from "react";
-import List from "./TagComponent/List";
+import React, { Dispatch, SetStateAction } from "react";
 import BasicTable from "./TagComponent/BasicTable";
 import Text from "../atom/TagComponent/Text";
 import Input from "./TagComponent/Input";
-import { Button } from "../styles";
 import { TagType } from "../types";
 import RadioButton from "./TagComponent/RadioButton";
 import DatePicker from "./TagComponent/DatePicker";
@@ -34,70 +32,6 @@ const ComponentBox = styled.div<ComponentBoxProps>`
   background-color: ${(props) =>
     props.highlighted && `var(--super-light-main-color)`};
 `;
-
-// type TextAreaProps = {
-//   style?: React.CSSProperties;
-//   header?: string;
-// };
-
-// const TextArea = ({ header, ...props }: TextAreaProps) => {
-//   return (
-//     <div style={{ display: "grid" }}>
-//       {header !== "" && <div>{header}</div>}
-//       <textarea {...props}></textarea>
-//     </div>
-//   );
-// };
-
-// type FileUploadProps = {
-//   style?: React.CSSProperties;
-//   header?: string;
-// };
-
-// const FileUpload = ({ header, ...props }: FileUploadProps) => {
-//   return (
-//     <div style={{ display: "grid" }}>
-//       {header !== "" && <div>{header}</div>}
-//       <input {...props}></input>
-//     </div>
-//   );
-// };
-
-// type HyperLinkProps = {
-//   style?: React.CSSProperties;
-//   header?: string;
-//   children?: string;
-// };
-
-// const HyperLink = ({ header, children, ...props }: HyperLinkProps) => {
-//   return (
-//     <div style={{ display: "grid" }}>
-//       {header !== "" && <div>{header}</div>}
-//       <a {...props}>{children}</a>
-//     </div>
-//   );
-// };
-
-// type DropDownProps = {
-//   style?: React.CSSProperties;
-//   header?: string;
-//   option?: string[];
-// };
-
-// const DropDown = ({ header, option, ...props }: DropDownProps) => {
-//   return (
-//     <div style={{ display: "grid" }}>
-//       {header !== "" && <div>{header}</div>}
-//       <select {...props}>
-//         {option?.map((v) => (
-//           <option key={v} value={v}>
-//             {v}
-//           </option>
-//         ))}
-//       </select>
-//     </div>
-//   );
-// };
 
 const Component: {
   [key: string]: React.FunctionComponent<any>;

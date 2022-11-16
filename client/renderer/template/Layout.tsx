@@ -5,10 +5,10 @@ import React, {
   useState,
 } from "react";
 import styled from "@emotion/styled";
-import TopBar from "../molecule/TopBar";
-import TeamSideBar from "../molecule/TeamSideBar";
-import PageSideBar from "../molecule/PageSideBar";
-import NavBar from "../molecule/NavBar";
+import TopBar from "./TopBar";
+import TeamSideBar from "./TeamSideBar";
+import PageSideBar from "./PageSideBar";
+import NavBar from "./NavBar";
 import Router, { useRouter } from "next/router";
 import axios from "../utils/axios";
 import { layoutInfo, TEAM_USER_API } from "../constants";

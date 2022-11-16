@@ -72,6 +72,7 @@ export const TEAM_API = {
 
 export const PAGE_USER_API = {
   ALL: API + PAGE_USER + "/list/p",
+  LEAVE: API + PAGE_USER + "/leave",
 };
 
 export const PAGE_API = {

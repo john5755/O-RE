@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { H2, H3, Label, Button, Input } from "../styles";
-import { PATH, TEAM_API, TEAM_USER_API, USERS_API } from "../constants";
+import { Label, Button } from "../styles";
+import { TEAM_USER_API } from "../constants";
 import { TeamUserType } from "../types";
 import SearchBarTab from "../molecule/SearchBarTab";
 import axios from "../utils/axios";
@@ -37,9 +37,7 @@ const ButtonContainer = styled.div`
   margin: 20px auto;
 `;
 
-// serach dropdown
 const searchMenues = { name: "이름", nickName: "닉네임" };
-// result dropdown
 const teamRoleMenues = {
   OWNER: "오너",
   LEADER: "리더",
@@ -53,7 +51,6 @@ export default function TeamMemberSet() {
     .idx;
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
-  // //team member
   const [nameCategoryMember, setNameCategoryMember] = useState<string>("name");
   const [searchTeamInput, setSearchTeamInput] = useState<string>("");
   const [teamMemberPage, setTeamMemberPage] = useState<number>(-1);

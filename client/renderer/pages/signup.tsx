@@ -64,7 +64,6 @@ const ButtonContainer = styled.div`
   align-items: center;
 `;
 
-// Label Text
 const nameLabelText = [
   { text: "이름", color: "black" },
   { text: "한글 2자 이상 10자 이하 입력해주세요.", color: "red" },
@@ -82,7 +81,6 @@ const confirmLabelText = [
   { text: "비밀번호가 일치하지 않습니다.", color: "red" },
 ];
 
-// ModalText
 const emailModalText = [
   {
     title: "인증메일이 발송되었습니다.",
@@ -126,15 +124,11 @@ const LinkOptions = [
 ];
 
 export default function Signup() {
-  // name 상태 및 조건 확인
   const [nameInput, setNameInput] = useState<string>("");
   const conditionName: boolean = /^[가-힣]{2,10}$/.test(nameInput);
-
-  // Email 상태 및 조건 확인
   const [emailInput, setEmailInput] = useState<string>("");
   const conditionEmail: boolean = /^[\w+_]\w+@\w+\.\w+/.test(emailInput);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
-  // Email 중복 확인 후 코드 전송
   const sendEmailCode = async () => {
     type DuplicateResponseType = {
       code: number;
@@ -159,12 +153,10 @@ export default function Signup() {
     }
   };
 
-  // Email 인증 여부
   const [verificationCode, setverificationCode] = useState<string>("");
   const conditionCode: boolean = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$/.test(
     verificationCode
   );
-  // 인증 코드 전송
   const veriEmail = async () => {
     try {
       const codeCredentials = {
@@ -182,16 +174,13 @@ export default function Signup() {
     } catch {}
   };
 
-  // Password 상태 및 조건 확인
   const [pwInput, setPwInput] = useState<string>("");
   const conditionPassword: boolean =
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,20}$/.test(pwInput);
 
-  // Password 일치 확인
   const [pwConfirm, setPwConfirm] = useState<string>("");
   const isPwConfirmed: boolean = !!(pwInput === pwConfirm);
 
-  // input state 변경
   function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
     if (name === "email") {
@@ -207,7 +196,6 @@ export default function Signup() {
     }
   }
 
-  // 회원가입
   const handleSubmit = async () => {
     try {
       const credentials = {
@@ -222,22 +210,17 @@ export default function Signup() {
     } catch {}
   };
 
-  // modal
-  // email 인증 보내기 모달
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean>(true);
 
-  // 인증 번호 일치 확인 모달
   const [openCodeModal, setOpenCodeModal] = useState<boolean>(false);
   const [isEmailVerificated, setIsEmailVerificated] = useState<boolean>(false);
 
-  // 회원가입 완료 Modal
   const [openSignupModal, setOpenSignupModal] = useState<boolean>(false);
   const setLoginPage = (pathname: string) => {
     Router.push(pathname);
   };
 
-  // 모든 조건 만족
   const conditionFinish =
     conditionName &&
     conditionEmail &&
