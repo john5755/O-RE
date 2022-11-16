@@ -58,7 +58,7 @@ public class UserApiController {
                 .body(new CommonResponse<>(userService.reissue(tokenRequestDto)));
     }
 
-    @PutMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<? extends BasicResponse> logout() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.logout()));

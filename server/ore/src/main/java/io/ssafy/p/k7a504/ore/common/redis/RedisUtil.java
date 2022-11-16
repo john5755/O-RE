@@ -1,7 +1,7 @@
 package io.ssafy.p.k7a504.ore.common.redis;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.time.Duration;
 @Service
 public class RedisUtil {
 
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public String getData(String key) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();

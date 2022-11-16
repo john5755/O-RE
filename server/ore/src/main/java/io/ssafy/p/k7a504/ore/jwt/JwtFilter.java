@@ -1,7 +1,5 @@
 package io.ssafy.p.k7a504.ore.jwt;
 
-import io.ssafy.p.k7a504.ore.common.exception.CustomException;
-import io.ssafy.p.k7a504.ore.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
