@@ -56,12 +56,11 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log("a");
     if (error.response?.status === 401) {
-      const domain = localStorage.getItem("domain");
-      localStorage.clear();
-      if (domain !== null) localStorage.setItem("domain", domain);
-      window.location.replace("/login");
+      if (!window.location.href.includes("login")) {
+        localStorage.clear();
+        window.location.replace("/");
+      }
     }
     return Promise.reject(error);
   }

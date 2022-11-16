@@ -82,7 +82,7 @@ export default function UserOption() {
   // logout
   const submitLogout = async () => {
     try {
-      await axios.put(
+      await axios.post(
         USERS_API.LOGOUT,
         {},
         {
