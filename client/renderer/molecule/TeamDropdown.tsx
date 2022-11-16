@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Box,
   MenuItem,
@@ -20,17 +26,43 @@ interface SearchDropDownProps {
   MenuItems: SearchMenues | ServerRoleMenues | TeamRoleMenues;
   member?: TeamUserType;
   teamMembers?: Array<TeamUserType>;
+  disabled?: boolean;
 }
 
 export default function TeamDropDown(props: SearchDropDownProps) {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
+  const currentTeamIdx = useAppSelector(
+    (state) => state.myTeamsState.selectTeamState
+  ).idx;
+  const currentTeamRole =
+    currentTeamIdx === -1
+      ? undefined
+      : useAppSelector((state) => state.myTeamsState.myTeamsState)[
+          currentTeamIdx
+        ].teamUserRole;
+  const originalRole = useMemo(() => {
+    return props.category;
+  }, []);
+  const [disabled, SetDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (props.disabled !== undefined) {
+      SetDisabled(props.disabled);
+    }
+  }, [props.disabled]);
+
   const categoryChange = (event: SelectChangeEvent, userId?: number) => {
     const cantChangeOwner: boolean =
-      props.category === "OWNER" || event.target.value === "OWNER";
-    const cantChangeSameRole: boolean = userProfile.role === props.category;
-    if (cantChangeOwner || cantChangeSameRole) {
+      originalRole === "OWNER" || event.target.value === "OWNER";
+    const cantChangeSameRole: boolean =
+      currentTeamRole === undefined
+        ? userProfile.role === originalRole
+        : currentTeamRole === originalRole;
+    const cantChangeLeader: boolean =
+      originalRole === "LEADER" && userProfile.role !== "OWNER";
+    if (cantChangeOwner || cantChangeSameRole || cantChangeLeader) {
       alert("권한을 변경할 수 없습니다.");
       return;
     }
@@ -51,6 +83,7 @@ export default function TeamDropDown(props: SearchDropDownProps) {
           onChange={(event) => {
             categoryChange(event, props.member?.userId);
           }}
+          disabled={disabled}
         >
           {Object.entries(props.MenuItems).map((item, idx) => (
             <MenuItem value={item[0]} key={idx}>
