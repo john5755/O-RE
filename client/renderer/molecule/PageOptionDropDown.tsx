@@ -74,7 +74,10 @@ export default function PageOptionDropDown({
           <MenuItem
             onClick={() => {
               handleClose();
-              Router.push(PATH.MANAGE_TEAM);
+              Router.push({
+                pathname: PATH.MANAGE_PAGE,
+                query: { role: role, pageId: pageId },
+              });
               clickOther();
             }}
           >
