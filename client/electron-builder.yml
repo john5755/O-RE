@@ -12,4 +12,4 @@ files:
 publish: null
 win:
   target: NSIS
-  icon: public/icons/AppIcon.ico
+  icon: resources/icon.ico

@@ -1,6 +1,7 @@
-import { app, ipcMain, Tray, Menu, ipcRenderer, BrowserWindow } from "electron";
+import { app, ipcMain, ipcRenderer, BrowserWindow } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
+import tray from './helpers/tray';
 
 //트레이 아이콘
 //let mainWindow: BrowserWindow;
@@ -20,30 +21,9 @@ if (isProd) {
     width: 1000,
     height: 600,
   });
-  const initTrayIconMenu = (mainWindow: BrowserWindow) => {
-    //if (!mainWindow) return;
-    const tray = new Tray("public/icons/AppIcon.ico");
-    const myMenu = Menu.buildFromTemplate([
-      { label: "O:RE", type: "normal" },
-      {
-        label: "open",
-        type: "normal",
-        click: () => {
-          mainWindow.show();
-        },
-      },
-      {
-        label: "close",
-        type: "normal",
-        click: () => {
-          mainWindow.close();
-        },
-      },
-    ]);
-    tray.setToolTip("O:RE");
-    tray.setContextMenu(myMenu);
-  };
-  initTrayIconMenu(mainWindow);
+
+  // tray 설정
+  tray.init(mainWindow);
 
   if (isProd) {
     await mainWindow.loadURL("app://./home.html");
