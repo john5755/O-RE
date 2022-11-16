@@ -58,71 +58,71 @@ export default function PageMemberRole() {
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
   const [nameCategory, setNameCategory] = useState<string>("name");
-  const [searchTeamInput, setSearchTeamInput] = useState<string>("");
-  const [teamMemberPage, setTeamMemberPage] = useState<number>(-1);
-  const [teamIo, setTeamIo] = useState<IntersectionObserver | null>(null);
-  const [isLoadedTeam, setIsLoadedTeam] = useState<boolean>(true);
-  const [isSearchLastTeam, setIsSearchLastTeam] = useState<boolean>(false);
-  const handleTeamSearchInput = (
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [userPage, setUserPage] = useState<number>(-1);
+  const [io, setio] = useState<IntersectionObserver | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
+  const [isSearchLast, setIsSearchLast] = useState<boolean>(false);
+  const handleSearchInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (teamMemberPage !== -1) {
-      setIsSearchLastTeam(false);
-      setTeamMemberPage(-1);
+    if (userPage !== -1) {
+      setIsSearchLast(false);
+      setUserPage(-1);
     }
-    setSearchTeamInput(event.target.value);
+    setSearchInput(event.target.value);
   };
-  const [searchTeamResultList, setSearchTeamResultList] = useState<
+  const [searchResultList, setSearchResultList] = useState<
     Array<TeamUserType>
   >([]);
-  const registerObservingElTeam = (el: Element) => {
-    if (teamIo !== null) {
-      teamIo.observe(el);
+  const registerObservingEl = (el: Element) => {
+    if (io !== null) {
+      io.observe(el);
     }
   };
 
   function setScrollTargetMember() {
-    const currentTargetClassMember = `${teamMemberPage}페이지`;
+    const currentTargetClassMember = `${userPage}페이지`;
     const target = document.getElementsByClassName(currentTargetClassMember)[0];
     if (target) {
-      registerObservingElTeam(target);
+      registerObservingEl(target);
     }
   }
 
   useEffect(() => {
-    if (searchTeamResultList.length > 0) {
-      setIsLoadedTeam(true);
+    if (searchResultList.length > 0) {
+      setIsLoaded(true);
     }
-  }, [searchTeamResultList.length]);
+  }, [searchResultList.length]);
 
   useEffect(() => {
-    if (isLoadedTeam) {
+    if (isLoaded) {
       setScrollTargetMember();
     }
-  }, [isLoadedTeam]);
+  }, [isLoaded]);
 
   useEffect(() => {
     const targetObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setIsLoadedTeam(false);
-          setTeamMemberPage(teamMemberPage + 1);
-          if (teamIo !== null) {
-            teamIo.disconnect();
+          setIsLoaded(false);
+          setUserPage(userPage + 1);
+          if (io !== null) {
+            io.disconnect();
           }
         }
       });
     });
-    setTeamIo(targetObserver);
-    fetchTeamResultList();
-  }, [teamMemberPage]);
+    setio(targetObserver);
+    fetchResultList();
+  }, [userPage]);
 
-  const fetchTeamResultList = async () => {
-    if (isSearchLastTeam === true || teamMemberPage === 0) {
+  const fetchResultList = async () => {
+    if (isSearchLast === true || userPage === 0) {
       return;
     }
-    if (searchTeamInput === "") {
-      const page = teamMemberPage === -1 ? 0 : teamMemberPage;
+    if (searchInput === "") {
+      const page = userPage === -1 ? 0 : userPage;
       try {
         const params = {
           teamId: teamId,
@@ -133,25 +133,25 @@ export default function PageMemberRole() {
           params,
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
-        if (teamMemberPage === -1) {
-          setSearchTeamResultList(data.data.content);
+        if (userPage === -1) {
+          setSearchResultList(data.data.content);
         } else {
-          setSearchTeamResultList((prev) => {
+          setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
         }
-        setIsSearchLastTeam(data.data.last);
-        if (teamMemberPage === -1) {
-          setTeamMemberPage(0);
-          setIsLoadedTeam(false);
+        setIsSearchLast(data.data.last);
+        if (userPage === -1) {
+          setUserPage(0);
+          setIsLoaded(false);
         }
       } catch (error) {}
     } else if (nameCategory === "name") {
-      const page = teamMemberPage === -1 ? 0 : teamMemberPage;
+      const page = userPage === -1 ? 0 : userPage;
       try {
         const params = {
           teamId: teamId,
-          name: searchTeamInput,
+          name: searchInput,
           page: page,
           size: 20,
         };
@@ -161,25 +161,25 @@ export default function PageMemberRole() {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
-        if (teamMemberPage === -1) {
-          setSearchTeamResultList(data.data.content);
+        if (userPage === -1) {
+          setSearchResultList(data.data.content);
         } else {
-          setSearchTeamResultList((prev) => {
+          setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
         }
-        setIsSearchLastTeam(data.data.last);
-        if (teamMemberPage === -1) {
-          setTeamMemberPage(0);
-          setIsLoadedTeam(false);
+        setIsSearchLast(data.data.last);
+        if (userPage === -1) {
+          setUserPage(0);
+          setIsLoaded(false);
         }
       } catch {}
     } else if (nameCategory === "nickName") {
-      const page = teamMemberPage === -1 ? 0 : teamMemberPage;
+      const page = userPage === -1 ? 0 : userPage;
       try {
         const params = {
           teamId: teamId,
-          nickName: searchTeamInput,
+          nickName: searchInput,
           page: page,
           size: 20,
         };
@@ -189,17 +189,17 @@ export default function PageMemberRole() {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
-        if (teamMemberPage === -1) {
-          setSearchTeamResultList(data.data.content);
+        if (userPage === -1) {
+          setSearchResultList(data.data.content);
         } else {
-          setSearchTeamResultList((prev) => {
+          setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
         }
-        setIsSearchLastTeam(data.data.last);
-        if (teamMemberPage === -1) {
-          setTeamMemberPage(0);
-          setIsLoadedTeam(false);
+        setIsSearchLast(data.data.last);
+        if (userPage === -1) {
+          setUserPage(0);
+          setIsLoaded(false);
         }
       } catch {}
     }
@@ -242,9 +242,9 @@ export default function PageMemberRole() {
         }
       );
       setRoleChangeList([]);
-      setSearchTeamResultList([]);
-      setTeamMemberPage(-1);
-      setIsSearchLastTeam(false);
+      setSearchResultList([]);
+      setUserPage(-1);
+      setIsSearchLast(false);
     } catch {}
   };
 
@@ -256,9 +256,9 @@ export default function PageMemberRole() {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
       setMemberRemoveList([]);
-      setSearchTeamResultList([]);
-      setTeamMemberPage(-1);
-      setIsSearchLastTeam(false);
+      setSearchResultList([]);
+      setUserPage(-1);
+      setIsSearchLast(false);
     } catch (error) {}
   };
 
@@ -272,14 +272,14 @@ export default function PageMemberRole() {
           category={nameCategory}
           setCategory={setNameCategory}
           MenuItems={searchMenues}
-          handleSearchInput={handleTeamSearchInput}
-          fetchResultList={fetchTeamResultList}
+          handleSearchInput={handleSearchInput}
+          fetchResultList={fetchResultList}
         ></SearchBarTab>
-        {searchTeamResultList.length === 0 ? (
+        {searchResultList.length === 0 ? (
           <></>
         ) : (
           <ResultContainer>
-            {searchTeamResultList.map((member, idx) => (
+            {searchResultList.map((member, idx) => (
               <SearchItemRole
                 key={idx}
                 member={member}
@@ -287,8 +287,8 @@ export default function PageMemberRole() {
                 buttonFunction={tempChangeCurrentTeam}
               ></SearchItemRole>
             ))}
-            {searchTeamResultList.length !== 0 && isLoadedTeam && (
-              <div className={`${teamMemberPage}페이지`}>
+            {searchResultList.length !== 0 && isLoaded && (
+              <div className={`${userPage}페이지`}>
                 검색 결과가 더 없습니다.
               </div>
             )}
