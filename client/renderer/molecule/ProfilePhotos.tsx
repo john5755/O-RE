@@ -44,6 +44,8 @@ const NoProfileContainer = styled.span`
   align-items: center;
   text-align: center;
   margin: 8px 0;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const ButtonContainer = styled.div`
