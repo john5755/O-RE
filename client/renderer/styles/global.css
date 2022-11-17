@@ -1,0 +1,56 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  min-height: 0px;
+  color: #222222;
+}
+
+*::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--light-gray-color);
+  border-right: none;
+  border-left: none;
+}
+*::-webkit-scrollbar-track-piece::end {
+  background: transparent;
+  margin-bottom: 10px;
+}
+
+:root {
+  --main-color: #48a3a9;
+  --light-main-color: #87c3c7;
+  --super-light-main-color: #e0eaeb;
+  --light-gray-color: #c6c6c6;
+  --dark-gray-color: #3c3c3c;
+  --font-color: #1d1d1f;
+  --body-s: 12px;
+  --body-m: 14px;
+  --body-l: 16px;
+  --body-xl: 18px;
+  --font-size-15: 8px;
+  --font-size-25: 10px;
+  --font-size-50: 11px;
+  --font-size-75: 12px;
+  --font-size-100: 13px;
+  --font-size-200: 15px;
+  --font-size-300: 17px;
+  --font-size-400: 19px;
+  --font-size-500: 21px;
+  --font-size-600: 24px;
+  --font-size-700: 27px;
+  --font-size-800: 30px;
+  --font-size-900: 34px;
+  --font-size-1000: 38px;
+}
