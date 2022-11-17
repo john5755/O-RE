@@ -20,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -34,33 +31,32 @@ public class ExcelServiceImpl implements ExcelService {
     private final UserInputRepository userInputRepository;
     private final ContentRepository contentRepository;
 
+    private List<MakeExcelDto> writeExcel(Long pageId) {
+        List<Content> contentList =  contentRepository.findByPageIdAndIsTable(pageId);
+        List<MakeExcelDto> makeExcelDtoList = new ArrayList<>();
 
-    private MakeExcelDto writeExcel(Long pageId) {
-        Content content = contentRepository.findByPageIdAndIsTable(pageId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DONT_HAVE_TABLE));
-        HashMap<String, Object> map = new HashMap<>();
-        try {
-            map = new ObjectMapper().readValue(content.getContentValue(), HashMap.class);
+        for(Content content : contentList){
+            HashMap<String, Object> map = new HashMap<>();
+            try {
+                map = new ObjectMapper().readValue(content.getContentValue(), HashMap.class);
+            }
+            catch (Exception ex) {
+                throw new CustomException(ErrorCode.CANT_CONVERT_TO_JSON);
+            }
+            LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) map.get("tagProps");
+            String tableName = (String) linkedHashMap.get("header");
+            List<String> titleList = (List<String>) linkedHashMap.get("title");
+            List<Object> dataList = (List<Object>) linkedHashMap.get("data");
+            makeExcelDtoList.add(new MakeExcelDto(tableName, titleList, dataList));
         }
-        catch (Exception ex) {
-            throw new CustomException(ErrorCode.CANT_CONVERT_TO_JSON);
-        }
-
-        LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) map.get("tagProps");
-        String tableName = (String) linkedHashMap.get("header");
-        List<String> titleList = (List<String>) linkedHashMap.get("title");
-        List<Object> dataList = (List<Object>) linkedHashMap.get("data");
-
-        return new MakeExcelDto(tableName, titleList, dataList);
-
+        return makeExcelDtoList;
     }
     @Override
     public ResponseEntity<byte[]> makeExcel(Long pageId, HttpServletResponse response) {
 
-        MakeExcelDto makeExcelDto = writeExcel(pageId);
-
-        try {
-            Workbook workbook = new XSSFWorkbook();
+        List<MakeExcelDto> makeExcelDtoList = writeExcel(pageId);
+        Workbook workbook = new XSSFWorkbook();
+        for(MakeExcelDto makeExcelDto: makeExcelDtoList) {
             Sheet sheet = workbook.createSheet(makeExcelDto.getTableName());
 
             CellStyle headStyle = workbook.createCellStyle();
@@ -100,7 +96,8 @@ public class ExcelServiceImpl implements ExcelService {
                     cell.setCellValue(object.toString());
                 }
             }
-
+        }
+        try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             workbook.write(os);
             os.close();
@@ -110,10 +107,10 @@ public class ExcelServiceImpl implements ExcelService {
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ore.xlsx")
                     .body(os.toByteArray());
-        }catch (Exception e){
+
+        }catch(Exception e){
             throw new CustomException(ErrorCode.CANT_CONVERT_TO_EXCEL);
         }
-
     }
 }
 
