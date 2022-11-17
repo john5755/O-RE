@@ -1,6 +1,7 @@
 package io.ssafy.p.k7a504.ore.teamUser.repository;
 
 import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
+import io.ssafy.p.k7a504.ore.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -76,5 +77,8 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
                     "AND tu.user_id != :userId ",
             nativeQuery = true)
     Page<TeamUser> findTeamUserByUserNicknameNotInPage(@Param("userId") Long userId,@Param("teamId") Long teamId,@Param("pageId") Long pageId, @Param("nickname") String nicknname, Pageable pageable);
+    @Query("SELECT tu.user.id FROM TeamUser tu WHERE tu.id in ?1")
+    List<Long> findUserIdByIdIn(List<Long> teamUserIdList);
+
 
 }

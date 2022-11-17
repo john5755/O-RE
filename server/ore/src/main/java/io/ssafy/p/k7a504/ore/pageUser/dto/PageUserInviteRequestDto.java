@@ -15,5 +15,5 @@ public class PageUserInviteRequestDto {
     @NotNull
     private Long pageId;
 
-    private List<Long> userIdList;
+    private List<Long> teamUserIdList;
 }
