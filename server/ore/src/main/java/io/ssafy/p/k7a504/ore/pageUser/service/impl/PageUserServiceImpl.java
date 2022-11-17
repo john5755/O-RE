@@ -11,8 +11,10 @@ import io.ssafy.p.k7a504.ore.pageUser.dto.*;
 import io.ssafy.p.k7a504.ore.pageUser.repository.PageUserRepository;
 import io.ssafy.p.k7a504.ore.pageUser.service.PageUserService;
 import io.ssafy.p.k7a504.ore.team.repository.TeamRepository;
+import io.ssafy.p.k7a504.ore.teamUser.domain.TeamUser;
 import io.ssafy.p.k7a504.ore.teamUser.repository.TeamUserRepository;
 import io.ssafy.p.k7a504.ore.user.domain.User;
+import io.ssafy.p.k7a504.ore.userInput.domain.UserInput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -77,7 +80,7 @@ public class PageUserServiceImpl implements PageUserService {
     @Transactional
     public Long invitePageUser(PageUserInviteRequestDto pageUserInviteDto){
         Long pageId = pageUserInviteDto.getPageId();
-        List<Long> userIdList = pageUserInviteDto.getUserIdList();
+        List<Long> userIdList = teamUserRepository.findUserIdByIdIn(pageUserInviteDto.getTeamUserIdList());
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAGE_NOT_FOUND));
         Long fromUserId = SecurityUtil.getCurrentUserId();
