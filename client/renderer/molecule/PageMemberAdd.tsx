@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Label, Button } from "../styles";
-import { TEAM_USER_API, USERS_API } from "../constants";
+import { PAGE_USER_API, TEAM_USER_API, USERS_API } from "../constants";
 import { TeamUserType } from "../types";
 import SearchBarTab from "./SearchBarTab";
 import axios from "../utils/axios";
@@ -35,7 +35,11 @@ const ButtonContainer = styled.div`
 
 const searchMenues = { name: "이름", nickName: "닉네임" };
 
-export default function TeamMemberAdd() {
+type PageMemberAdd = {
+  pageId: string | string[];
+};
+
+export default function PageMemberAdd({ pageId }: PageMemberAdd) {
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
   const [nameCategoryAll, setNameCategoryAll] = useState<string>("name");
@@ -43,6 +47,10 @@ export default function TeamMemberAdd() {
   const handleAllSearchUserInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (allMemberPage !== -1) {
+      setIsSearchLastAll(false);
+      setAllMemberPage(-1);
+    }
     setSearchAllUserInput(event.target.value);
   };
   const [searchAllUserResultList, setSearchAllUserResultList] = useState<
@@ -96,15 +104,6 @@ export default function TeamMemberAdd() {
     fetchAllUserResultList();
   }, [allMemberPage]);
 
-  useEffect(() => {
-    if (searchAllUserInput !== "" || allMemberPage !== -1) {
-      setSearchAllUserResultList([]);
-      setAllMemberPage(-1);
-      setIsSearchLastAll(false);
-      fetchAllUserResultList();
-    }
-  }, [searchAllUserInput]);
-
   const fetchAllUserResultList = async () => {
     if (isSearchLastAll === true || allMemberPage === 0) {
       return;
@@ -113,10 +112,11 @@ export default function TeamMemberAdd() {
       const page = allMemberPage === -1 ? 0 : allMemberPage;
       try {
         const params = {
+          pageId: pageId,
           page: page,
           size: 20,
         };
-        const { data } = await axios.get(`${USERS_API.LIST}/${teamId}`, {
+        const { data } = await axios.get(TEAM_USER_API.PAGELIST, {
           params,
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
@@ -137,11 +137,12 @@ export default function TeamMemberAdd() {
       const page = allMemberPage === -1 ? 0 : allMemberPage;
       try {
         const params = {
-          keyword: searchAllUserInput,
+          pageId: pageId,
+          name: searchAllUserInput,
           page: page,
           size: 20,
         };
-        const { data } = await axios.get(USERS_API.NAME, {
+        const { data } = await axios.get(TEAM_USER_API.PAGENAME, {
           params,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
@@ -164,7 +165,8 @@ export default function TeamMemberAdd() {
       const page = allMemberPage === -1 ? 0 : allMemberPage;
       try {
         const params = {
-          keyword: searchAllUserInput,
+          pageId: pageId,
+          nickname: searchAllUserInput,
           page: page,
           size: 20,
         };
@@ -190,7 +192,7 @@ export default function TeamMemberAdd() {
     }
   };
 
-  const tempAddTeamMember = (
+  const tempAddPageMember = (
     e: React.MouseEvent,
     buttonText: string,
     id: number
@@ -204,23 +206,26 @@ export default function TeamMemberAdd() {
     }
   };
 
-  const submitTeamMember = async () => {
+  const submitPageMember = async () => {
     try {
-      const body = { teamId: teamId, userIdList: addMemberList };
-      const { data } = await axios.post(TEAM_USER_API.INVITE, body, {
+      const body = { pageId: pageId, teamUserIdList: addMemberList };
+      console.log(body);
+      const { data } = await axios.post(PAGE_USER_API.INVITE, body, {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
       setAddMemberList([]);
       setSearchAllUserResultList([]);
       setAllMemberPage(-1);
       setIsSearchLastAll(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return teamId !== -1 ? (
     <TeamMemberManageContainer>
       <MemberLabelContainer>
-        <Label>팀원 추가</Label>
+        <Label>멤버 추가</Label>
       </MemberLabelContainer>
       <SearchBarTab
         category={nameCategoryAll}
@@ -237,7 +242,7 @@ export default function TeamMemberAdd() {
             <SearchTeamAdd
               key={idx}
               member={member}
-              buttonFunction={tempAddTeamMember}
+              buttonFunction={tempAddPageMember}
             ></SearchTeamAdd>
           ))}
           {searchAllUserResultList.length !== 0 && isLoadedAll && (
@@ -248,7 +253,7 @@ export default function TeamMemberAdd() {
         </ResultContainer>
       )}
       <ButtonContainer>
-        <Button borderRadius="10px" onClick={submitTeamMember}>
+        <Button borderRadius="10px" onClick={submitPageMember}>
           저장
         </Button>
       </ButtonContainer>

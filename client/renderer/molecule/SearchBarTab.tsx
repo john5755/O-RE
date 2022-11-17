@@ -55,10 +55,7 @@ export default function SearchBarTab(props: searchBarProps) {
           setCategory={props.setCategory}
           MenuItems={searchMenues}
         ></TeamDropDown>
-        <SearchInput
-          onChange={props.handleSearchInput}
-          placeholder="아무것도 입력하지 않으면 전체 사용자가 반환됩니다."
-        ></SearchInput>
+        <SearchInput onChange={props.handleSearchInput}></SearchInput>
       </SearchBarContainer>
       <Button
         width="60px"

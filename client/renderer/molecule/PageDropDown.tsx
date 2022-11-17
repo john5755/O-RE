@@ -12,71 +12,48 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import {
-  TeamUserType,
-  SearchMenues,
-  ServerRoleMenues,
-  TeamRoleMenues,
-} from "../types";
+import { PageRoleMenues } from "../types";
 import { useAppSelector } from "../hooks/reduxHook";
 
-interface SearchDropDownProps {
+interface PageDropDownProps {
+  role: string;
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
-  MenuItems: SearchMenues | ServerRoleMenues | TeamRoleMenues;
-  member?: TeamUserType;
-  teamMembers?: Array<TeamUserType>;
-  disabled?: boolean;
+  MenuItems: PageRoleMenues;
+  disabled: boolean;
 }
 
-export default function TeamDropDown(props: SearchDropDownProps) {
+export default function PageDropDown(props: PageDropDownProps) {
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
-  const currentTeamIdx = useAppSelector(
-    (state) => state.myTeamsState.selectTeamState
-  ).idx;
-  const currentTeamRole =
-    currentTeamIdx === -1
-      ? undefined
-      : useAppSelector((state) => state.myTeamsState.myTeamsState)[
-          currentTeamIdx
-        ].teamUserRole;
+  const currentPageRole = props.role;
   const originalRole = useMemo(() => {
     return props.category;
   }, []);
   const [disabled, SetDisabled] = useState<boolean>(false);
-
   useEffect(() => {
-    if (props.disabled !== undefined) {
-      SetDisabled(props.disabled);
-    }
+    SetDisabled(props.disabled);
   }, [props.disabled]);
 
   const categoryChange = (event: SelectChangeEvent) => {
     const cantChangeOwner: boolean =
       originalRole === "OWNER" || event.target.value === "OWNER";
-    const cantChangeSameRole: boolean =
-      currentTeamRole === undefined
-        ? userProfile.role === originalRole
-        : currentTeamRole === originalRole;
-    const cantChangeLeader: boolean =
-      originalRole === "LEADER" && userProfile.role !== "OWNER";
-    if (cantChangeOwner || cantChangeSameRole || cantChangeLeader) {
+    const cantChangeSameRole: boolean = currentPageRole === originalRole;
+    const cantChangeMaintainer: boolean =
+      originalRole === "MAINTAINER" && userProfile.role !== "OWNER";
+    if (cantChangeOwner || cantChangeSameRole || cantChangeMaintainer) {
       alert("권한을 변경할 수 없습니다.");
       return;
     }
     props.setCategory(event.target.value as string);
   };
-
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl sx={{ width: 100, height: 38 }}>
         <Select
           id="demo-simple-select"
-          value={
-            props.member !== undefined ? props.member.role : props.category
-          }
+          value={props.category}
           onChange={(event) => {
             categoryChange(event);
           }}

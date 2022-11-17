@@ -101,10 +101,6 @@ export default function ServerOption() {
   const [nameCategory, setNameCategory] = useState<string>("name");
   const [searchInput, setSearchInput] = useState<string>("");
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (searchPage !== -1) {
-      setIsSearchLast(false);
-      setSearchPage(-1);
-    }
     setSearchInput(event.target.value);
   };
   const [searchResultList, setSearchResultList] = useState<Array<TeamUserType>>(
@@ -161,6 +157,15 @@ export default function ServerOption() {
       fetchResultList();
     }
   }, [searchPage]);
+
+  useEffect(() => {
+    if (searchInput !== "" || searchPage !== -1) {
+      setSearchResultList([]);
+      setSearchPage(-1);
+      setIsSearchLast(false);
+      fetchResultList();
+    }
+  }, [searchInput]);
 
   const fetchResultList = async () => {
     if (isSearchLast === true || searchPage === 0) {

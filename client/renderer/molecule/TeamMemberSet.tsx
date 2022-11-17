@@ -60,10 +60,6 @@ export default function TeamMemberSet() {
   const handleTeamSearchInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (teamMemberPage !== -1) {
-      setIsSearchLastTeam(false);
-      setTeamMemberPage(-1);
-    }
     setSearchTeamInput(event.target.value);
   };
   const [searchTeamResultList, setSearchTeamResultList] = useState<
@@ -110,6 +106,15 @@ export default function TeamMemberSet() {
     setTeamIo(targetObserver);
     fetchTeamResultList();
   }, [teamMemberPage]);
+
+  useEffect(() => {
+    if (searchTeamInput !== "" || teamMemberPage !== -1) {
+      setSearchTeamResultList([]);
+      setTeamMemberPage(-1);
+      setIsSearchLastTeam(false);
+      fetchTeamResultList();
+    }
+  }, [searchTeamInput]);
 
   const fetchTeamResultList = async () => {
     if (isSearchLastTeam === true || teamMemberPage === 0) {
@@ -260,7 +265,7 @@ export default function TeamMemberSet() {
     <TeamMemberManageContainer>
       <MemberListContainer>
         <MemberLabelContainer>
-          <Label style={{ marginRight: 10 }}>멤버 관리</Label>
+          <Label style={{ marginRight: 10 }}>팀원 관리</Label>
         </MemberLabelContainer>
         <SearchBarTab
           category={nameCategoryMember}
