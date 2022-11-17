@@ -12,7 +12,10 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 100%;
+  min-height: 100%;
   padding: 10px 0;
+  overflow: auto;
   background: var(--super-light-main-color);
 `;
 
@@ -22,6 +25,7 @@ const DotButton = styled.button`
   align-items: center;
   justify-content: center;
   height: 30px;
+  min-height: 30px;
   width: 80%;
   border: solid 1px var(--main-color);
   border-style: dashed;
@@ -42,6 +46,7 @@ const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  height: 100%;
 `;
 
 type ButtonContainerProps = {
@@ -69,6 +74,7 @@ const ButtonContainer = styled.div<ButtonContainerProps>`
   display: flex;
   width: 80%;
   height: 30px;
+  min-height: 30px;
   margin: 0 auto;
   margin: 3px auto;
   border-radius: 4px;

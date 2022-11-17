@@ -91,6 +91,7 @@ export default function PageOptionDropDown({
               });
               clickOther();
             }}
+            style={{ fontSize: "12px" }}
           >
             페이지 설정
           </MenuItem>

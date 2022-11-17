@@ -38,6 +38,9 @@ const WrapMainContainer = styled.div`
 const WrapPageContainer = styled.div`
   display: grid;
   grid-template-columns: 240px auto;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
 `;
 
 const PageContainer = styled.div`

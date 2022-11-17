@@ -41,7 +41,7 @@ const TeamProfileImg = styled.img`
 
 const NoProfileContainer = styled.div`
   border-radius: 50%;
-  background-color: white;
+  background-color: rgb(239, 239, 239);
   font-weight: 500;
   display: flex;
   justify-content: center;
@@ -67,6 +67,20 @@ const PlusButtonContainer = styled.div`
   padding-bottom: 6px;
   padding-left: 1.5px;
   cursor: pointer;
+`;
+
+type HomeImgaeContainerProps = {
+  highlighted: boolean;
+};
+const HomeImageContainer = styled.img<HomeImgaeContainerProps>`
+  border-radius: 50%;
+  display: block;
+  margin: 8px auto;
+  cursor: pointer;
+
+  width: ${(props) => (props.highlighted ? "60px" : "50px")};
+  height: ${(props) => (props.highlighted ? "60px" : "50px")};
+  border: 4px solid #c4e1e3;
 `;
 
 const unClickedCss = {
@@ -143,8 +157,18 @@ export default function TeamSideBar() {
   useEffect(() => {
     setMyTeams();
   }, [teamList.length]);
+  const path = Router.pathname;
   return (
     <Container>
+      <HomeImageContainer
+        src="/images/logo.png"
+        onClick={() => {
+          Router.push("/");
+          dispatch(setSelectTeamState({ idx: -1, teamId: -1 }));
+          dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
+        }}
+        highlighted={path === "/"}
+      ></HomeImageContainer>
       <TeamContainer>
         {myTeams.length > 0 &&
           myTeams.map((team, idx) => (

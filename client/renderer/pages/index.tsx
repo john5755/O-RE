@@ -32,6 +32,14 @@ const OREContainer = styled.div`
   margin: 10px 0 30px 0;
   text-align: center;
 `;
+const ImageContainer = styled.div`
+  min-width: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+`;
 
 const DomainInputContainer = styled.div`
   width: 100%;
@@ -96,12 +104,8 @@ export default function Home() {
       });
       const myTeams: Array<TeamOptions> = data.data.content;
       dispatch(setTeamState(myTeams));
-      dispatch(setSelectTeamState({ idx: 0, teamId: myTeams[0].teamId }));
-      dispatch(
-        setNavName(
-          data.data.content.length === 0 ? "Welcome O:RE" : myTeams[0].name
-        )
-      );
+      dispatch(setSelectTeamState({ idx: -1, teamId: -1 }));
+      dispatch(setNavName("Welcome O:RE"));
     } catch {}
   }, []);
 
@@ -124,7 +128,9 @@ export default function Home() {
   }, [isLogin]);
 
   return isLogin === true ? (
-    <div>HOME</div>
+    <ImageContainer>
+      <img src="/images/welcome.png" width={"600px"} height={"300px"} />
+    </ImageContainer>
   ) : (
     <LayoutContainer>
       <Container>
