@@ -44,7 +44,7 @@ interface ItemProps {
 }
 
 export default function SearchTeamAdd(props: ItemProps) {
-  const [buttonText, setButtonText] = useState<string>("추가");
+  const [buttonText, setButtonText] = useState<string>("초대");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
   const id =
     props.member.teamUserId !== undefined
@@ -57,12 +57,12 @@ export default function SearchTeamAdd(props: ItemProps) {
       setButtonText("취소");
     } else {
       setButtonColor("#4F68A6");
-      setButtonText("추가");
+      setButtonText("초대");
     }
   };
 
   useEffect(() => {
-    setButtonText("추가");
+    setButtonText("초대");
     setButtonColor("#4F68A6");
   }, [props.member]);
 

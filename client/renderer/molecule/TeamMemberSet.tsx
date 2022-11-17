@@ -300,7 +300,7 @@ export default function TeamMemberSet() {
             onClick={submitTeamRoleChange}
             style={{ marginLeft: "10px" }}
           >
-            변경 저장
+            권한 변경
           </Button>
           <Button
             width="45%"
@@ -308,7 +308,7 @@ export default function TeamMemberSet() {
             background="#C74E4E"
             onClick={submitRemoveTeamMember}
           >
-            삭제 저장
+            팀원 퇴출
           </Button>
         </ButtonContainer>
       </MemberListContainer>

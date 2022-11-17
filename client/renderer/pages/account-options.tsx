@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import UserOption from "../molecule/UserOption";
-import ServerOption from "../molecule/ServerOption";
+import ServerRole from "../molecule/ServerRole";
+import ServerInvite from "../molecule/ServerInvite";
 import { useAppSelector } from "../hooks/reduxHook";
 import { Tab, Tabs, Box } from "@mui/material";
 
@@ -98,8 +99,15 @@ export default function AccountOptions() {
               />
               {isRole && (
                 <Tab
-                  label="서버 관리"
+                  label="회원 관리"
                   {...a11yProps(1)}
+                  sx={{ fontWeight: "bold" }}
+                />
+              )}
+              {isRole && (
+                <Tab
+                  label="회원 초대"
+                  {...a11yProps(2)}
                   sx={{ fontWeight: "bold" }}
                 />
               )}
@@ -109,7 +117,10 @@ export default function AccountOptions() {
             <UserOption></UserOption>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            <ServerOption></ServerOption>
+            <ServerRole></ServerRole>
+          </TabPanel>
+          <TabPanel value={tabValue} index={2}>
+            <ServerInvite></ServerInvite>
           </TabPanel>
         </Box>
       </Container>

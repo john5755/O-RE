@@ -68,6 +68,7 @@ export default function TopBar() {
           >
             <HorizontalRuleIcon
               fontSize="inherit"
+              style={{ fill: " rgba(255, 255, 255, 0.8)" }}
               sx={{ height: "100%" }}
             ></HorizontalRuleIcon>
           </Button>
@@ -78,6 +79,7 @@ export default function TopBar() {
           >
             <CropSquareIcon
               fontSize="inherit"
+              style={{ fill: " rgba(255, 255, 255, 0.8)" }}
               sx={{ height: "100%" }}
             ></CropSquareIcon>
           </Button>
@@ -87,7 +89,11 @@ export default function TopBar() {
               ipcRenderer?.send("closeApp");
             }}
           >
-            <CloseIcon fontSize="inherit" sx={{ height: "100%" }}></CloseIcon>
+            <CloseIcon
+              fontSize="inherit"
+              style={{ fill: " rgba(255, 255, 255, 0.8)" }}
+              sx={{ height: "100%" }}
+            ></CloseIcon>
           </ButtonClose>
         </TopBarWrapper>
       ) : null}

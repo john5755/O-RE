@@ -36,12 +36,9 @@ export default function TeamDropDown(props: SearchDropDownProps) {
   const currentTeamIdx = useAppSelector(
     (state) => state.myTeamsState.selectTeamState
   ).idx;
+  const myTeam = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const currentTeamRole =
-    currentTeamIdx === -1
-      ? undefined
-      : useAppSelector((state) => state.myTeamsState.myTeamsState)[
-          currentTeamIdx
-        ].teamUserRole;
+    currentTeamIdx === -1 ? undefined : myTeam[currentTeamIdx].teamUserRole;
   const originalRole = useMemo(() => {
     return props.category;
   }, []);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import axios from "../utils/axios";
 import { H3, H4, Button } from "../styles";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
 import SearchBarTab from "./SearchBarTab";
 import SearchServerRole from "./SearchServerRole";
@@ -14,42 +13,10 @@ const TextContainer = styled.div`
   margin: 10px 0 20px 0;
 `;
 
-const AddUserContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
 const AddRoleContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-`;
-
-const DownLoadIconSpan = styled.span`
-  vertical-align: middle;
-  margin-left: 5px;
-`;
-
-const DownLoadLink = styled.a`
-  color: gray;
-`;
-
-const ExplainContainer = styled.ul`
-  list-style-type: decimal;
-  padding: 0px;
-  > li::before {
-    display: inline-block;
-    vertical-align: middle;
-  }
-`;
-
-const ExplainItem = styled.li`
-  padding: 10px 0px 5px 5px;
-  height: 30px;
-  margin-left: 20px;
-  margin-bottom: 5px;
-  font-size: 15px;
 `;
 
 const ButtonContainer = styled.div`
@@ -73,31 +40,7 @@ const serverRoleMenues = {
   ADMIN: "관리자",
   USER: "사용자",
 };
-export default function ServerOption() {
-  const [userExcel, setUserExcel] = useState<File | null>(null);
-  const excelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files !== null && event.target.files.length !== 0) {
-      setUserExcel(event.target.files[0]);
-    } else {
-      return;
-    }
-  };
-  const sendUserExcel = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    const formData = new FormData();
-    if (userExcel !== null) {
-      formData.append("file", userExcel);
-    }
-    try {
-      const res = await axios.post(USERS_API.LIST, formData, {
-        headers: {
-          ContentType: "multipart/formdata",
-          Authorization: accessToken,
-        },
-      });
-    } catch {}
-  };
-
+export default function ServerRole() {
   const [nameCategory, setNameCategory] = useState<string>("name");
   const [searchInput, setSearchInput] = useState<string>("");
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,9 +96,7 @@ export default function ServerOption() {
       });
     });
     setIo(targetObserver);
-    if (searchPage !== -1) {
-      fetchResultList();
-    }
+    fetchResultList();
   }, [searchPage]);
 
   useEffect(() => {
@@ -301,85 +242,45 @@ export default function ServerOption() {
   };
 
   return (
-    <>
-      <AddUserContainer>
-        <TextContainer>
-          <H3 style={{ fontWeight: "bold" }}>회원 추가</H3>
-        </TextContainer>
-        <H4>회원 추가 가이드</H4>
-        <ExplainContainer>
-          <ExplainItem>
-            엑셀을 다운로드 해주세요.
-            <DownLoadIconSpan>
-              <DownLoadLink href={excelUrl}>
-                <FileDownloadIcon />
-              </DownLoadLink>
-            </DownLoadIconSpan>
-          </ExplainItem>
-          <ExplainItem>
-            엑셀에 추가할 이메일을 입력하신 후 <strong>파일선택</strong>을 눌러
-            업로드 해주세요.
-          </ExplainItem>
-          <ExplainItem>
-            <strong>전송</strong>버튼을 누르시면 회원이 추가 됩니다.
-          </ExplainItem>
-          <ExplainItem>
-            첫 비밀번호는 <strong>이메일ID + 123!</strong> 입니다.
-          </ExplainItem>
-          <ExplainItem>
-            최초 사용자 추가 시 권한은 모두 <strong>사용자</strong>입니다.
-          </ExplainItem>
-        </ExplainContainer>
-        <input type="file" accept=".xlsx" onChange={excelChange}></input>
-        <ButtonContainer>
-          <Button borderRadius="10px" onClick={sendUserExcel}>
-            전송
-          </Button>
-        </ButtonContainer>
-      </AddUserContainer>
-      <AddRoleContainer>
-        <TextContainer>
-          <H3 style={{ fontWeight: "bold" }}>권한 변경</H3>
-        </TextContainer>
-        <SearchBarTab
-          category={nameCategory}
-          setCategory={setNameCategory}
-          MenuItems={searchMenues}
-          handleSearchInput={handleSearchInput}
-          fetchResultList={fetchResultList}
-        ></SearchBarTab>
-        {searchResultList.length !== 0 && (
-          <ResultContainer>
-            {searchResultList.map((member, idx) => (
-              <SearchServerRole
-                key={idx}
-                member={member}
-                MenuItems={serverRoleMenues}
-                buttonFunction={tempChangeUser}
-              ></SearchServerRole>
-            ))}
-            {searchResultList.length !== 0 && isSearchLoaded && (
-              <div className={`${searchPage}페이지`}>
-                검색 결과가 더 없습니다.
-              </div>
-            )}
-          </ResultContainer>
-        )}
-        <ButtonContainer>
-          <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
-            변경 저장
-          </Button>
-          <Button
-            width="45%"
-            borderRadius="10px"
-            background="#C74E4E"
-            onClick={submitRemoveMember}
-            style={{ marginLeft: "10px" }}
-          >
-            삭제 저장
-          </Button>
-        </ButtonContainer>
-      </AddRoleContainer>
-    </>
+    <AddRoleContainer>
+      <SearchBarTab
+        category={nameCategory}
+        setCategory={setNameCategory}
+        MenuItems={searchMenues}
+        handleSearchInput={handleSearchInput}
+        fetchResultList={fetchResultList}
+      ></SearchBarTab>
+      {searchResultList.length !== 0 && (
+        <ResultContainer>
+          {searchResultList.map((member, idx) => (
+            <SearchServerRole
+              key={idx}
+              member={member}
+              MenuItems={serverRoleMenues}
+              buttonFunction={tempChangeUser}
+            ></SearchServerRole>
+          ))}
+          {searchResultList.length !== 0 && isSearchLoaded && (
+            <div className={`${searchPage}페이지`}>
+              검색 결과가 더 없습니다.
+            </div>
+          )}
+        </ResultContainer>
+      )}
+      <ButtonContainer>
+        <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
+          권한 변경
+        </Button>
+        <Button
+          width="45%"
+          borderRadius="10px"
+          background="#C74E4E"
+          onClick={submitRemoveMember}
+          style={{ marginLeft: "10px" }}
+        >
+          회원 퇴출
+        </Button>
+      </ButtonContainer>
+    </AddRoleContainer>
   );
 }

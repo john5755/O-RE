@@ -100,7 +100,7 @@ export default function ManageTeam() {
                 sx={{ fontWeight: "bold" }}
               />{" "}
               <Tab
-                label="팀원 추가"
+                label="팀원 초대"
                 {...a11yProps(2)}
                 sx={{ fontWeight: "bold" }}
               />

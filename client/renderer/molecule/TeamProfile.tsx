@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { delTeamState, editTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
 import { useClickTeam } from "../hooks/resetPageHook";
+import { setNavName } from "../slices/navNameSlice";
 
 const TeamProfileContainer = styled.div`
   width: 100%;
@@ -62,6 +63,7 @@ export default function TeamProfile() {
       });
       const action = { name: data.data.name, imageUrl: data.data.imageUrl };
       dispatch(editTeamState(action));
+      dispatch(setNavName(`${teamName}팀 관리`));
     } catch (error) {}
   };
 
