@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "name": "my-nextron-app",
+  "description": "ore",
+  "version": "1.0.0",
+  "author": "마지막잎새 <oreofficialcontact@naver.com>",
+  "main": "app/background.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "nextron --port 3000",
+    "build": "nextron build",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@material-ui/styles": "^4.11.5",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.10",
+    "@reduxjs/toolkit": "^1.8.6",
+    "axios": "^1.1.3",
+    "electron-serve": "^1.1.0",
+    "electron-store": "^8.1.0",
+    "next-redux-wrapper": "^8.0.0",
+    "react-calendar": "^3.9.0",
+    "react-redux": "^8.0.5",
+    "redux-persist": "^6.0.0"
+  },
+  "devDependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@types/node": "^16.11.7",
+    "@types/react": "^18.0.8",
+    "electron": "^20.1.0",
+    "electron-builder": "^23.3.3",
+    "next": "^12.2.5",
+    "nextron": "^8.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.8.2"
+  }
+}

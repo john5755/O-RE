@@ -1,0 +1,15 @@
+appId: com.ore.nextron
+productName: O:RE
+copyright: Copyright © 2022 마지막잎새
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
+win:
+  target: NSIS
+  icon: public/icons/AppIcon.ico
