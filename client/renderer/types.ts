@@ -72,6 +72,7 @@ interface TagPropsType {
 
 export interface TagType {
   type: string;
+  name: string;
   tagProps: TagPropsType;
 }
 

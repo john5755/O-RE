@@ -82,6 +82,10 @@ const PageContainer = styled.div`
     border-radius: 2px;
   }
 `;
+
+const Line = styled.div`
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+`;
 export default function CustomTable({ obj, setObj, objIdx }: CustomType) {
   type InputPage = { pageId: number; name: string };
   const [pageList, setPageList] = useState<InputPage[]>();
@@ -189,6 +193,7 @@ export default function CustomTable({ obj, setObj, objIdx }: CustomType) {
         {isList ? (
           <PageListContainer>
             <Label>데이터 리스트</Label>
+            <Line />
             {pageList !== undefined &&
               pageList.map((v, idx) => (
                 <PageContainer
@@ -205,6 +210,7 @@ export default function CustomTable({ obj, setObj, objIdx }: CustomType) {
         ) : (
           <>
             <Label>Column 선택</Label>
+            <Line />
             {tableRow.map((rowName, idx) => (
               <InputContainer key={`${rowName}-${idx}`}>
                 <LabelBox id={`${rowName}-${idx}`} key={`${rowName}+${idx}`}>

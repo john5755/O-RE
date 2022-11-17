@@ -11,7 +11,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const PageContainer = styled.div`
   width: 90%;
-  height: 85%;
+  height: 100%;
   margin: 0 auto;
   padding: 20px;
   overflow: auto;

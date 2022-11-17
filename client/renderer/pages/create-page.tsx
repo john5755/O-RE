@@ -19,6 +19,8 @@ const Wrapper = styled.div`
 `;
 
 const SideContainer = styled.div`
+  min-width: 100%;
+  min-height: 100%;
   width: 100%;
   height: 100%;
   background: var(--super-light-main-color);
@@ -26,6 +28,10 @@ const SideContainer = styled.div`
 `;
 
 const MainContainer = styled.div`
+  display: grid;
+  grid-template-rows: 60px auto 50px;
+  min-width: 100%;
+  min-height: 100%;
   width: 100%;
   height: 100%;
 `;
@@ -37,11 +43,6 @@ const MainHeaderContainer = styled.div`
   margin: 0 auto;
   align-items: center;
   justify-content: space-between;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const PageNameInput = styled.input`

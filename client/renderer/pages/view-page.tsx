@@ -8,36 +8,58 @@ import List from "../molecule/TagComponent/List";
 import RadioButton from "../molecule/TagComponent/RadioButton";
 import BasicTable from "../molecule/TagComponent/BasicTable";
 import Text from "../atom/TagComponent/Text";
-import { INPUT_LIST, PAGE_API, PATH, USER_INPUT_API } from "../constants";
+import {
+  EXCEL_API,
+  INPUT_LIST,
+  PAGE_API,
+  PATH,
+  USER_INPUT_API,
+} from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { TagType } from "../types";
 import { useClickTeam, useResetPage } from "../hooks/resetPageHook";
 import { setSelectTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
+import Image from "next/image";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  padding: 0 150px;
+  min-height: 100%;
+  overflow: auto;
 `;
 
 const TagContainer = styled.div`
+  width: 100%;
   padding: 10px;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: end;
+  margin-top: 20px;
 `;
 
 const Button = styled.button`
   height: 30px;
-  width: 40px;
+  width: 70px;
   border-radius: 4px;
-  margin-right: 20px;
+  margin-left: 10px;
   color: white;
   border: none;
+  cursor: pointer;
   background-color: var(--light-main-color);
+`;
+
+const ButtonGroupWrapper = styled.div`
+  display: flex;
+  margin: 10px 0;
+  justify-content: end;
+`;
+
+const ImageContainer = styled.div`
+  min-width: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 const Component: {
@@ -66,6 +88,11 @@ export default function ViewPage() {
     pageTagList.findIndex((v) => INPUT_LIST.includes(v.type)) === -1
       ? false
       : true;
+  const isTable =
+    pageTagList !== undefined &&
+    pageTagList.findIndex((v) => v.type === "table") === -1
+      ? false
+      : true;
   const dispatch = useAppDispatch();
   const clickTeam = useClickTeam();
   const resetPage = useResetPage();
@@ -82,17 +109,19 @@ export default function ViewPage() {
         setSelectTeamState({ idx: teamInfo.idx, teamId: teamInfo.teamId })
       );
       clickTeam();
+      setUserInput({});
       Router.push(PATH.VIEW_PAGE);
     } catch (e) {}
   };
 
   const getPageList = async () => {
-    const { data } = await axios.get(`${PAGE_API.DETAIL}${pageInfo.pageId}`, {
-      headers: { Authorization: localStorage.getItem("accessToken") },
-    });
-    setPageTagList(data.data.contents);
+    try {
+      const { data } = await axios.get(`${PAGE_API.DETAIL}${pageInfo.pageId}`, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      setPageTagList(data.data.contents);
+    } catch (e) {}
   };
-
   useEffect(() => {
     if (pageList.length === 0 || pageInfo.idx === -1) {
       setPageTagList([]);
@@ -100,6 +129,34 @@ export default function ViewPage() {
     }
     getPageList();
   }, [pageInfo.pageId, pageList]);
+
+  const getExcel = async () => {
+    try {
+      const res = await axios.get(
+        `${EXCEL_API.DOWNLOAD}/${pageInfo.pageId}`,
+
+        {
+          responseType: "blob",
+          headers: { Authorization: localStorage.getItem("accessToken") },
+        }
+      );
+
+      const blob = res.data;
+      const fileObjectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = fileObjectUrl;
+      link.style.display = "none";
+
+      link.download = `${pageList[pageInfo.idx].name}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(fileObjectUrl);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Container>
@@ -118,25 +175,27 @@ export default function ViewPage() {
                     }),
                   }}
                 />
-
-                <div
-                  style={{
-                    height: "15px",
-                    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-                  }}
-                ></div>
+                {index !== pageTagList.length - 1 && (
+                  <div
+                    style={{
+                      height: "15px",
+                      borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                    }}
+                  ></div>
+                )}
               </TagContainer>
             )
           );
         })
       ) : (
-        <div>Welcome O:RE</div>
+        <ImageContainer>
+          <img src="/images/welcome.png" width={"100%"} height={"100%"} />
+        </ImageContainer>
       )}
-      {isInput && (
-        <ButtonWrapper>
-          <Button onClick={handleClick}>저장</Button>
-        </ButtonWrapper>
-      )}
+      <ButtonGroupWrapper>
+        {isTable && <Button onClick={getExcel}>내보내기</Button>}
+        {isInput && <Button onClick={handleClick}>제출하기</Button>}
+      </ButtonGroupWrapper>
     </Container>
   );
 }

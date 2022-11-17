@@ -25,6 +25,7 @@ layoutInfo.withOnlyNavBar.add(PATH.CREATE_PAGE);
 layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
 layoutInfo.withOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
 layoutInfo.withOnlyNavBar.add(PATH.MANAGE_TEAM);
+layoutInfo.withOnlyNavBar.add(PATH.MAIN);
 
 export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
 
@@ -96,6 +97,10 @@ export const USER_INPUT_API = {
   GET: API + USER_INPUT + "/list",
 };
 
+export const EXCEL_API = {
+  DOWNLOAD: API + "/excel" + "/download",
+};
+
 export const SERVER_ROLE = {
   OWNER: ["OWNER"],
   ADMIN: ["OWNER", "ADMIN"],
@@ -116,6 +121,7 @@ export const PAGE_ROLE = {
 export const TAG_LIST: TagType[] = [
   {
     type: "text",
+    name: "텍스트",
     tagProps: {
       header: "내용",
       style: {
@@ -128,6 +134,7 @@ export const TAG_LIST: TagType[] = [
   },
   {
     type: "date picker",
+    name: "날짜",
     tagProps: {
       type: "date",
       header: "날짜 제목",
@@ -141,7 +148,7 @@ export const TAG_LIST: TagType[] = [
   },
   {
     type: "input",
-
+    name: "입력",
     tagProps: {
       header: "인풋 제목",
       placeholder: "내용을 입력하세요",
@@ -153,6 +160,7 @@ export const TAG_LIST: TagType[] = [
   },
   {
     type: "table",
+    name: "테이블",
     tagProps: {
       header: "테이블 제목",
       title: [],
@@ -166,20 +174,22 @@ export const TAG_LIST: TagType[] = [
   },
   {
     type: "check box",
+    name: "체크박스",
     tagProps: {
       type: "checkbox",
       header: "체크박스 버튼 제목",
-      label: ["one", "two", "three"],
+      label: ["보기1", "보기2", "보기3"],
       style: { width: "", height: "" },
     },
   },
   {
     type: "radio button",
+    name: "단일 선택",
     tagProps: {
       type: "radio",
       header: "라디오 버튼 제목",
       name: "",
-      label: ["one", "two", "three"],
+      label: ["보기1", "보기2", "보기3"],
       style: { width: "", height: "" },
     },
   },

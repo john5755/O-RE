@@ -103,16 +103,17 @@ export default function TeamOptionDropDown() {
               Router.push(PATH.MANAGE_TEAM);
               clickOther();
             }}
+            style={{ fontSize: "14px" }}
           >
             팀 설정
           </MenuItem>
         )}
         <MenuItem
-          style={{ color: "red" }}
           onClick={() => {
             handleClose();
             handleTeamLeave();
           }}
+          style={{ color: "red", fontSize: "14px" }}
         >
           팀 떠나기
         </MenuItem>
