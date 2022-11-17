@@ -197,7 +197,7 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
     buttonText: string,
     id: number
   ): void => {
-    if (buttonText === "추가") {
+    if (buttonText === "초대") {
       setAddMemberList((prev) => {
         return [...prev, id];
       });
@@ -225,7 +225,7 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
   return teamId !== -1 ? (
     <TeamMemberManageContainer>
       <MemberLabelContainer>
-        <Label>멤버 추가</Label>
+        <Label>멤버 초대</Label>
       </MemberLabelContainer>
       <SearchBarTab
         category={nameCategoryAll}

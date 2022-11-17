@@ -26,6 +26,7 @@ layoutInfo.withOnlyNavBar.add(PATH.CREATE_TEAM);
 layoutInfo.withOnlyNavBar.add(PATH.ACCOUNT_OPTIONS);
 layoutInfo.withOnlyNavBar.add(PATH.MANAGE_TEAM);
 layoutInfo.withOnlyNavBar.add(PATH.MAIN);
+layoutInfo.withOnlyNavBar.add(PATH.MANAGE_PAGE);
 
 export const INPUT_LIST = ["input", "date picker", "check box", "radio button"];
 

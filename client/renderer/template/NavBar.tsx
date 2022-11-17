@@ -64,15 +64,17 @@ export default function NavBar() {
         {navInfo.isTeam && teamIdx !== -1 && <TeamOptionDropDown />}
       </LeftContainer>
       <RightContainer>
-        <UserProfileImg
-          src={userProfile.profileImage}
-          onClick={() => {
-            Router.push(PATH.ACCOUNT_OPTIONS);
-            resetPage();
-            clickOther();
-            dispatch(setNavName("O:RE 설정"));
-          }}
-        ></UserProfileImg>
+        {userProfile.profileImage !== "" && (
+          <UserProfileImg
+            src={userProfile.profileImage}
+            onClick={() => {
+              Router.push(PATH.ACCOUNT_OPTIONS);
+              resetPage();
+              clickOther();
+              dispatch(setNavName("O:RE 설정"));
+            }}
+          ></UserProfileImg>
+        )}
       </RightContainer>
     </Container>
   );

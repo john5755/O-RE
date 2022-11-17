@@ -195,7 +195,7 @@ export default function TeamMemberAdd() {
     buttonText: string,
     id: number
   ): void => {
-    if (buttonText === "추가") {
+    if (buttonText === "초대") {
       setAddMemberList((prev) => {
         return [...prev, id];
       });
@@ -220,7 +220,7 @@ export default function TeamMemberAdd() {
   return teamId !== -1 ? (
     <TeamMemberManageContainer>
       <MemberLabelContainer>
-        <Label>팀원 추가</Label>
+        <Label>팀원 초대</Label>
       </MemberLabelContainer>
       <SearchBarTab
         category={nameCategoryAll}
@@ -249,7 +249,7 @@ export default function TeamMemberAdd() {
       )}
       <ButtonContainer>
         <Button borderRadius="10px" onClick={submitTeamMember}>
-          저장
+          초대
         </Button>
       </ButtonContainer>
     </TeamMemberManageContainer>

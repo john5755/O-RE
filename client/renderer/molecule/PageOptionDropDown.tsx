@@ -9,6 +9,7 @@ import { PAGE_ROLE, PAGE_USER_API, PATH, PAGE_API } from "../constants";
 import axios from "../utils/axios";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { delPageState, setSelectPageState } from "../slices/pageSlice";
+import { setNavName } from "../slices/navNameSlice";
 
 const ITEM_HEIGHT = 48;
 
@@ -22,11 +23,13 @@ const IconContainer = styled.div`
 type PageOptionDropDown = {
   role: string;
   pageId: number;
+  pageName: string;
 };
 
 export default function PageOptionDropDown({
   role,
   pageId,
+  pageName,
 }: PageOptionDropDown) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -90,6 +93,7 @@ export default function PageOptionDropDown({
                 query: { role: role, pageId: pageId },
               });
               clickOther();
+              dispatch(setNavName(`${pageName} 페이지 설정`));
             }}
             style={{ fontSize: "12px" }}
           >
@@ -102,13 +106,17 @@ export default function PageOptionDropDown({
               handleClose();
               handlePageLeave(pageId);
             }}
+            style={{ fontSize: "12px" }}
           >
             페이지 떠나기
           </MenuItem>
         )}
 
         {PAGE_ROLE.MAINTAINER.includes(role) && (
-          <MenuItem onClick={deletePage} style={{ color: "red" }}>
+          <MenuItem
+            onClick={deletePage}
+            style={{ color: "red", fontSize: "12px" }}
+          >
             페이지 삭제
           </MenuItem>
         )}

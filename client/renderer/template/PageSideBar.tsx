@@ -155,7 +155,11 @@ export default function PageSideBar() {
             <IconContainer
               onClick={() => handleClickPage(idx, v.pageId, v.name)}
             >
-              <PageOptionDropDown role={v.role} pageId={v.pageId} />
+              <PageOptionDropDown
+                role={v.role}
+                pageId={v.pageId}
+                pageName={v.name}
+              />
             </IconContainer>
           </ButtonContainer>
         ))}

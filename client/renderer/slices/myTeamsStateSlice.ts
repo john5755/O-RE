@@ -8,14 +8,7 @@ export interface MyTeamsState {
 }
 
 const initialState: MyTeamsState = {
-  myTeamsState: [
-    {
-      teamId: 0,
-      name: "",
-      imageUrl: "",
-      teamUserRole: "",
-    },
-  ],
+  myTeamsState: [],
   selectTeamState: {
     idx: -1,
     teamId: -1,
