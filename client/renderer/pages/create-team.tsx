@@ -32,12 +32,6 @@ const Container = styled.div`
   max-width: 560px;
 `;
 
-const TextContainer = styled.div`
-  width: 100%;
-  height: 30px;
-  margin: 10px 0 20px 0;
-`;
-
 const NameContainer = styled.div`
   width: 100%;
   margin-bottom: 15px;

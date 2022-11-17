@@ -49,6 +49,8 @@ const NoProfileContainer = styled.div`
   text-align: center;
   margin: 8px auto;
   cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const PlusButtonContainer = styled.div`
