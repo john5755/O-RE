@@ -10,6 +10,7 @@ export const PATH = {
   CREATE_TEAM: "/create-team",
   VIEW_PAGE: "/view-page",
   MANAGE_TEAM: "/manage-team",
+  MANAGE_PAGE: "/manage-page",
 };
 
 export const layoutInfo = {
@@ -62,6 +63,9 @@ export const TEAM_USER_API = {
   NICKNAME: API + TEAM_USER + USERS + "/nickname" + "/list",
   INVITE: API + TEAM_USER,
   REMOVE: API + TEAM_USER + "/removal",
+  PAGELIST: API + TEAM_USER + "/page" + "/list",
+  PAGENAME: API + TEAM_USER + "/page" + "/name" + "/list",
+  PAGENICKNAME: API + TEAM_USER + "/page" + "/nickname" + "/list",
 };
 
 export const TEAM_API = {
@@ -73,6 +77,12 @@ export const TEAM_API = {
 export const PAGE_USER_API = {
   ALL: API + PAGE_USER + "/list/p",
   LEAVE: API + PAGE_USER + "/leave",
+  LIST: API + PAGE_USER,
+  SEARCH: API + PAGE_USER + "/list/u",
+  NAME: API + PAGE_USER + "/name",
+  NICKNAME: API + PAGE_USER + "/nickname",
+  DELETE: API + PAGE_USER + "/delete",
+  INVITE: API + PAGE_USER + "/invite",
 };
 
 export const PAGE_API = {

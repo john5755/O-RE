@@ -97,9 +97,6 @@ export default function UserOption() {
   };
   return (
     <>
-      <TextContainer>
-        <H2 style={{ fontWeight: "bold" }}>계정 설정</H2>
-      </TextContainer>
       <ProfilePhotos
         photo={photo}
         setPhoto={setPhoto}

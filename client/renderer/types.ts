@@ -11,6 +11,16 @@ export interface TeamUserType {
   profileImage?: string;
 }
 
+export interface PageUserType {
+  pageUserId: number;
+  userId: number;
+  email: string;
+  name: string;
+  nickname: string;
+  pageUserRole: string;
+  profileImage: string;
+}
+
 export interface TeamOptions {
   teamId: number;
   name: string;
@@ -96,4 +106,11 @@ export interface TeamRoleMenues {
   LEADER: string;
   MANAGER: string;
   MEMBER: string;
+}
+
+export interface PageRoleMenues {
+  OWNER: string;
+  MAINTAINER: string;
+  EDITOR: string;
+  VIEWER: string;
 }

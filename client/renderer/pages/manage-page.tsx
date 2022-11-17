@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
-import { useClickTeam } from "../hooks/resetPageHook";
 import { Tab, Tabs, Box } from "@mui/material";
-import TeamMemberAdd from "../molecule/TeamMemberAdd";
-import TeamMemberSet from "../molecule/TeamMemberSet";
-import TeamProfile from "../molecule/TeamProfile";
+import { useRouter } from "next/router";
+import PageMemberAdd from "../molecule/PageMemberAdd";
+import PageMemberRole from "../molecule/PageMemberRole";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,15 +56,17 @@ function a11yProps(index: number) {
   };
 }
 
-export default function ManageTeam() {
+export default function ManagePage() {
   const [tabValue, setTabValue] = useState<number>(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-  const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
-    .teamId;
+  const router = useRouter();
+  const pageId =
+    typeof router.query.pageId === "string" ? router.query.pageId : "";
+  const role = typeof router.query.role === "string" ? router.query.role : "";
 
-  return teamId !== -1 ? (
+  return (
     <LayoutContainer>
       <Container>
         <Box sx={{ width: "100%" }}>
@@ -90,35 +90,25 @@ export default function ManageTeam() {
               }}
             >
               <Tab
-                label="팀 프로필 설정"
+                label="멤버 초대"
                 {...a11yProps(0)}
-                sx={{ fontWeight: "bold" }}
-              />
-              <Tab
-                label="팀원 관리"
-                {...a11yProps(1)}
                 sx={{ fontWeight: "bold" }}
               />{" "}
               <Tab
-                label="팀원 추가"
-                {...a11yProps(2)}
+                label="멤버 관리"
+                {...a11yProps(1)}
                 sx={{ fontWeight: "bold" }}
               />
             </Tabs>
           </Box>
           <TabPanel value={tabValue} index={0}>
-            <TeamProfile></TeamProfile>
+            <PageMemberAdd pageId={pageId}></PageMemberAdd>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            <TeamMemberSet></TeamMemberSet>
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <TeamMemberAdd></TeamMemberAdd>
+            <PageMemberRole pageId={pageId} role={role}></PageMemberRole>
           </TabPanel>
         </Box>
       </Container>
     </LayoutContainer>
-  ) : (
-    <></>
   );
 }

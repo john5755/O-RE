@@ -5,10 +5,10 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import styled from "@emotion/styled";
 import Router from "next/router";
 import { useClickOther } from "../hooks/resetPageHook";
-import { PAGE_ROLE, PAGE_USER_API, PATH } from "../constants";
+import { PAGE_ROLE, PAGE_USER_API, PATH, PAGE_API } from "../constants";
 import axios from "../utils/axios";
 import { useAppDispatch } from "../hooks/reduxHook";
-import { delPageState } from "../slices/pageSlice";
+import { delPageState, setSelectPageState } from "../slices/pageSlice";
 
 const ITEM_HEIGHT = 48;
 
@@ -45,9 +45,20 @@ export default function PageOptionDropDown({
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
       dispatch(delPageState(pageId));
+      dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e: any) {
       alert(e?.response?.data?.message);
     }
+  };
+
+  const deletePage = async () => {
+    try {
+      await axios.delete(`${PAGE_API.ADD}/${pageId}`, {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+      dispatch(delPageState(pageId));
+      dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
+    } catch (error) {}
   };
 
   return (
@@ -74,22 +85,32 @@ export default function PageOptionDropDown({
           <MenuItem
             onClick={() => {
               handleClose();
-              Router.push(PATH.MANAGE_TEAM);
+              Router.push({
+                pathname: PATH.MANAGE_PAGE,
+                query: { role: role, pageId: pageId },
+              });
               clickOther();
             }}
           >
             페이지 설정
           </MenuItem>
         )}
-        <MenuItem
-          style={{ color: "red" }}
-          onClick={() => {
-            handleClose();
-            handlePageLeave(pageId);
-          }}
-        >
-          페이지 떠나기
-        </MenuItem>
+        {!PAGE_ROLE.OWNER.includes(role) && (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handlePageLeave(pageId);
+            }}
+          >
+            페이지 떠나기
+          </MenuItem>
+        )}
+
+        {PAGE_ROLE.MAINTAINER.includes(role) && (
+          <MenuItem onClick={deletePage} style={{ color: "red" }}>
+            페이지 삭제
+          </MenuItem>
+        )}
       </Menu>
     </div>
   );
