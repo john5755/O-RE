@@ -1,6 +1,11 @@
 site_name: O:RE
-theme: windmill
+theme: 
+  name: material
 nav:
   - Home: index.md
-  - Getting Started: getting_started.md
-  - Download: download.md
+  - 시작하기- 💻관리자편: for_owner.md
+  - 시작하기- 🙋🏻사용자편: for_user.md
+  - O:RE 체험해보기: test.md
+
+extra_css:
+  - stylesheets/extra.css
