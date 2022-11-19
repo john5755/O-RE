@@ -1,6 +1,7 @@
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
+import tray from "./helpers/tray";
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -18,6 +19,8 @@ if (isProd) {
     height: 600,
   });
 
+  tray.init(mainWindow);
+
   if (isProd) {
     await mainWindow.loadURL("app://./home.html");
   } else {
@@ -26,7 +29,7 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
   }
   ipcMain.on("closeApp", () => {
-    mainWindow.close();
+    mainWindow.hide();
   });
   ipcMain.on("window-toggle-maximize", () => {
     if (mainWindow.isMaximized()) {
@@ -39,7 +42,3 @@ if (isProd) {
     mainWindow.minimize();
   });
 })();
-
-app.on("window-all-closed", () => {
-  app.quit();
-});
