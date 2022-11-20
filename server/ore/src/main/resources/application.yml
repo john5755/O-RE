@@ -18,8 +18,12 @@ spring:
           ssl:
             enable: true
   redis:
-    host: ${DOMAIN}
-    port: 6379
+    master:
+      host: ${DOMAIN}
+      port: 6379,6479,6579
+    sentinel:
+      master: redis
+      nodes: ${DOMAIN}:26379,${DOMAIN}:26380,${DOMAIN}:26381
 
   #mysql
   jpa:
