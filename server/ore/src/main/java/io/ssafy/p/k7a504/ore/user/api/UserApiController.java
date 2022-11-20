@@ -126,7 +126,7 @@ public class UserApiController {
     }
 
     @PutMapping("/mypage/pw")
-    public ResponseEntity<? extends BasicResponse> modifyUserPassword(@RequestBody UserPasswordRequestDto userPasswordRequestDto) {
+    public ResponseEntity<? extends BasicResponse> modifyUserPassword(@Valid @RequestBody UserPasswordRequestDto userPasswordRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponse<>(userService.modifyUserPassword(userPasswordRequestDto)));
     }
