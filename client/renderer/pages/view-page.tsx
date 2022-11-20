@@ -153,9 +153,7 @@ export default function ViewPage() {
       link.remove();
 
       window.URL.revokeObjectURL(fileObjectUrl);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   return (

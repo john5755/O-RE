@@ -4,6 +4,7 @@ export const PATH = {
   MAIN: "/",
   LOGIN: "/login",
   FIND_PASSWORD: "/find-password",
+  CHANGE_PASSWORD: "/change-password",
   CREATE_PAGE: "/create-page",
   SIGNUP: "/signup",
   ACCOUNT_OPTIONS: "/account-options",
@@ -57,6 +58,8 @@ export const USERS_API = {
   NAME: API + USERS + "/name",
   NICKNAME: API + USERS + "/nickname",
   AUTH: API + USERS + "/auth",
+  FIND: API + USERS + "/password",
+  CHANGE: API + USERS + "/mypage" + "/pw",
 };
 export const TEAM_USER_API = {
   LIST: API + TEAM_USER + TEAMS + "/list",

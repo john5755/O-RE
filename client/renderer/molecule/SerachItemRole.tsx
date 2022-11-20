@@ -4,6 +4,8 @@ import { H4 } from "../styles";
 import TeamDropDown from "./TeamDropdown";
 import { TeamUserType, ServerRoleMenues, TeamRoleMenues } from "../types";
 import { useAppSelector } from "../hooks/reduxHook";
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -48,6 +50,9 @@ interface ItemProps {
 }
 
 export default function SearchItemRole(props: ItemProps) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
@@ -62,7 +67,6 @@ export default function SearchItemRole(props: ItemProps) {
   const [itemRole, setItemRole] = useState<string>(props.member.role);
   const [buttonText, setButtonText] = useState<string>("변경");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
-  const [dropDownDisabled, setDropDownDisabled] = useState<boolean>(false);
   const id =
     props.member.teamUserId !== undefined
       ? props.member.teamUserId
@@ -75,12 +79,10 @@ export default function SearchItemRole(props: ItemProps) {
     if (buttonColor === "#4F68A6") {
       setButtonColor("#C74E4E");
       setButtonText("취소");
-      setDropDownDisabled(true);
     } else {
       setButtonColor("#4F68A6");
       setButtonText("변경");
       setItemRole(props.member.role);
-      setDropDownDisabled(false);
     }
   };
 
@@ -93,7 +95,9 @@ export default function SearchItemRole(props: ItemProps) {
   const cantDel = cantDelOwner || cantDelLeader || cantDelSame;
   const delButtonUIChange = () => {
     if (cantDel) {
-      alert("권한이 없습니다.");
+      setAlertMessage("권한이 없습니다.");
+      setSeverity("warning");
+      setAlertOpen(true);
       return;
     }
     if (delButtonText === "삭제") {
@@ -115,9 +119,17 @@ export default function SearchItemRole(props: ItemProps) {
 
   return (
     <SearchItemContainer>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <ItemProfileConatiner>
         <CurrentProfile src={props.member.profileImage}></CurrentProfile>
-        <H4>
+        <H4
+          style={{ marginLeft: "5px", paddingTop: "3px", whiteSpace: "nowrap" }}
+        >
           {props.member.name}({props.member.nickname})
         </H4>
       </ItemProfileConatiner>
@@ -126,7 +138,6 @@ export default function SearchItemRole(props: ItemProps) {
           category={itemRole}
           setCategory={setItemRole}
           MenuItems={props.MenuItems}
-          disabled={dropDownDisabled}
         ></TeamDropDown>
         <TextButtonContainer
           style={{ color: buttonColor }}

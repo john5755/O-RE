@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Label, Button } from "../styles";
 import { TEAM_USER_API, PAGE_USER_API } from "../constants";
-import { PageUserType } from "../types";
+import { PageUserType, TeamUserType } from "../types";
 import SearchBarTab from "../molecule/SearchBarTab";
 import axios from "../utils/axios";
 import { useAppSelector } from "../hooks/reduxHook";
 import SearchPageRole from "./SearchPageRole";
+import DelMemberAdd from "./DelMemberAdd";
+import { Tab, Tabs, Box } from "@mui/material";
+import RoleMemberAdd from "./RoleMemeverAdd";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 const TeamMemberManageContainer = styled.div`
   width: 100%;
@@ -40,7 +49,7 @@ const ButtonContainer = styled.div`
 const searchMenues = { name: "이름", nickName: "닉네임" };
 
 const pageRoleMenues = {
-  OWNER: "오너",
+  OWNER: "OWNER",
   MAINTAINER: "MAINTAINER",
   EDITOR: "EDITOR",
   VIEWER: "VIEWER",
@@ -51,7 +60,34 @@ type PageMemberRole = {
   role: string | string[];
 };
 
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export default function PageMemberRole(props: PageMemberRole) {
+  const [tabValue, setTabValue] = useState<number>(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
   const teamId = useAppSelector((state) => state.myTeamsState).selectTeamState
     .teamId;
   const pageId = typeof props.pageId === "string" ? props.pageId : "";
@@ -68,6 +104,12 @@ export default function PageMemberRole(props: PageMemberRole) {
   const [searchResultList, setSearchResultList] = useState<Array<PageUserType>>(
     []
   );
+  const [currentChangeRole, setCurrentChangeRole] = useState<string>("");
+  const [roleChangeList, setRoleChangeList] = useState<Array<PageUserType>>([]);
+  const [memberRemoveList, setMemberRemoveList] = useState<Array<PageUserType>>(
+    []
+  );
+
   const registerObservingEl = (el: Element) => {
     if (io !== null) {
       io.observe(el);
@@ -119,6 +161,16 @@ export default function PageMemberRole(props: PageMemberRole) {
     }
   }, [searchInput]);
 
+  useEffect(() => {
+    setIsSearchLast(false);
+    if (userPage === 1) {
+      setUserPage(-1);
+    } else {
+      setUserPage(userPage - 1);
+    }
+    fetchResultList();
+  }, [roleChangeList.length, memberRemoveList.length]);
+
   const fetchResultList = async () => {
     if (isSearchLast === true || userPage === 0) {
       return;
@@ -135,8 +187,31 @@ export default function PageMemberRole(props: PageMemberRole) {
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
         if (userPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: PageUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.pageUserId === user.pageUserId
+                ) &&
+                !memberRemoveList.some(
+                  (removeUser) => removeUser.pageUserId === user.pageUserId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = searchResultList.filter((user: PageUserType) => {
+            return (
+              !roleChangeList.some(
+                (changeUser) => changeUser.pageUserId === user.pageUserId
+              ) &&
+              !memberRemoveList.some(
+                (removeUser) => removeUser.pageUserId === user.pageUserId
+              )
+            );
+          });
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -163,8 +238,31 @@ export default function PageMemberRole(props: PageMemberRole) {
           },
         });
         if (userPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.pageUserId === user.pageUserId
+                ) &&
+                !memberRemoveList.some(
+                  (removeUser) => removeUser.pageUserId === user.pageUserId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = searchResultList.filter((user: PageUserType) => {
+            return (
+              !roleChangeList.some(
+                (changeUser) => changeUser.pageUserId === user.pageUserId
+              ) &&
+              !memberRemoveList.some(
+                (removeUser) => removeUser.pageUserId === user.pageUserId
+              )
+            );
+          });
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -191,8 +289,31 @@ export default function PageMemberRole(props: PageMemberRole) {
           },
         });
         if (userPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: PageUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.pageUserId === user.pageUserId
+                ) &&
+                !memberRemoveList.some(
+                  (removeUser) => removeUser.pageUserId === user.pageUserId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = searchResultList.filter((user: PageUserType) => {
+            return (
+              !roleChangeList.some(
+                (changeUser) => changeUser.pageUserId === user.pageUserId
+              ) &&
+              !memberRemoveList.some(
+                (removeUser) => removeUser.pageUserId === user.pageUserId
+              )
+            );
+          });
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -206,7 +327,9 @@ export default function PageMemberRole(props: PageMemberRole) {
     }
   };
   const [userRoleMap, setUserRoleMap] = useState<{ [key: number]: string }>({});
-  const [memberRemoveList, setMemberRemoveList] = useState<Array<number>>([]);
+  const [memberRemoveIdList, setMemberRemoveIdList] = useState<Array<number>>(
+    []
+  );
 
   const tempChangeCurrentPage = (
     event: React.MouseEvent,
@@ -219,28 +342,53 @@ export default function PageMemberRole(props: PageMemberRole) {
       const target: { [key: number]: string } = {};
       target[keyId] = role;
       setUserRoleMap((userRoleMap) => ({ ...userRoleMap, ...target }));
+      setCurrentChangeRole(role);
+      const targetOb = searchResultList.find(
+        (member) => member.pageUserId === userId
+      );
+      if (targetOb !== undefined) {
+        setRoleChangeList((prev) => {
+          return [...prev, targetOb];
+        });
+        setTabValue(0);
+      }
     } else if (buttonText === "취소") {
       let copyUserRoleMap = { ...userRoleMap };
       delete copyUserRoleMap[userId];
       setUserRoleMap({ ...copyUserRoleMap });
+      setRoleChangeList((prev) =>
+        prev.filter((user) => user.pageUserId !== userId)
+      );
     } else if (buttonText === "삭제") {
-      setMemberRemoveList((prev) => {
+      setMemberRemoveIdList((prev) => {
         return [...prev, userId];
       });
+      const targetOb = searchResultList.find(
+        (member) => member.pageUserId === userId
+      );
+      if (targetOb !== undefined) {
+        setMemberRemoveList((prev) => {
+          return [...prev, targetOb];
+        });
+        setTabValue(1);
+      }
     } else if (buttonText === "복구") {
-      setMemberRemoveList((prev) => prev.filter((id) => id !== userId));
+      setMemberRemoveIdList((prev) => prev.filter((id) => id !== userId));
+      setMemberRemoveList((prev) =>
+        prev.filter((user) => user.pageUserId !== userId)
+      );
     }
   };
 
   const submitPageRoleChange = async () => {
     const body = { pageId: pageId, userRoleMapList: userRoleMap };
     try {
-      console.log(body);
       const { data } = await axios.put(PAGE_USER_API.LIST, body, {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
       setUserRoleMap({});
       setSearchResultList([]);
+      setRoleChangeList([]);
       setUserPage(-1);
       setIsSearchLast(false);
     } catch {}
@@ -248,13 +396,14 @@ export default function PageMemberRole(props: PageMemberRole) {
 
   const submitRemovePageMember = async () => {
     try {
-      const body = { pageId: pageId, pageUserIdList: memberRemoveList };
+      const body = { pageId: pageId, pageUserIdList: memberRemoveIdList };
       const { data } = await axios.delete(PAGE_USER_API.DELETE, {
         data: body,
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      setMemberRemoveList([]);
+      setMemberRemoveIdList([]);
       setSearchResultList([]);
+      setMemberRemoveList([]);
       setUserPage(-1);
       setIsSearchLast(false);
     } catch (error) {}
@@ -293,6 +442,58 @@ export default function PageMemberRole(props: PageMemberRole) {
             )}
           </ResultContainer>
         )}
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "white" }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              sx={{
+                ".MuiButtonBase-root": {
+                  color: "gray",
+                  "&.Mui-selected": {
+                    color: "var(--main-color)",
+                  },
+                },
+              }}
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: "var(--main-color)",
+                },
+              }}
+            >
+              <Tab
+                label="변경 목록"
+                {...a11yProps(0)}
+                sx={{ fontWeight: "bold" }}
+              />
+              <Tab
+                label="삭제 목록"
+                {...a11yProps(1)}
+                sx={{ fontWeight: "bold" }}
+              />
+            </Tabs>
+          </Box>
+          <TabPanel value={tabValue} index={0}>
+            {roleChangeList.map((member, idx) => (
+              <RoleMemberAdd
+                key={idx}
+                member={member}
+                role={currentChangeRole}
+                buttonFunction={tempChangeCurrentPage}
+              ></RoleMemberAdd>
+            ))}
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            {memberRemoveList.map((member, idx) => (
+              <DelMemberAdd
+                key={idx}
+                member={member}
+                buttonFunction={tempChangeCurrentPage}
+              ></DelMemberAdd>
+            ))}
+          </TabPanel>
+        </Box>
         <ButtonContainer>
           <Button
             width="45%"

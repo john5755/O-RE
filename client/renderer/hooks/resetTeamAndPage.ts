@@ -18,7 +18,7 @@ export const useResetTeamAndPage = () => {
         },
       ])
     );
-    dispatch(setNavName("Welcome O:RE"));
+    dispatch(setNavName("O:RE에 오신 것을 환영합니다."));
   };
   return reset;
 };

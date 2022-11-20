@@ -60,6 +60,7 @@ export default function SearchBarTab(props: searchBarProps) {
       <Button
         width="60px"
         height="40px"
+        borderRadius="10px"
         onClick={() => {
           props.fetchResultList();
         }}
