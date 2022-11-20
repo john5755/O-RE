@@ -1,11 +1,42 @@
 site_name: O:RE
-theme: 
+theme:
   name: material
+  palette:
+    primary: white
+    accent: light blue
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  icon:
+    repo: fontawesome/brands/gitlab
+  language: kr
+  features:
+    - header.autohide
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
 nav:
-  - Home: index.md
-  - 시작하기- 💻관리자편: for_owner.md
-  - 시작하기- 🙋🏻사용자편: for_user.md
+  - About O:RE: index.md
+  - 시작하기:
+      - 🧑🏻‍💻 관리자편: for_owner.md
+      - 🙋🏻 사용자편: for_user.md
   - O:RE 체험해보기: test.md
+  - 기능 확장을 위한 가이드: extension.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://lab.ssafy.com/s07-final/S07P31A504.git
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:<oreofficialcontact@naver.com>
 
 extra_css:
   - stylesheets/extra.css
+
+copyright: Copyright &copy; 2022 SSAFY 7기 마지막잎새
