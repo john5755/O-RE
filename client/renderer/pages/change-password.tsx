@@ -72,7 +72,6 @@ export default function ChangePassword() {
   const submitNewPw = async () => {
     const credentials = { oldPassword: originalPw, newPassword: newPw };
     try {
-      console.log(credentials);
       await axios.put(USERS_API.CHANGE, credentials, {
         headers: {
           Authorization: localStorage.getItem("accessToken"),

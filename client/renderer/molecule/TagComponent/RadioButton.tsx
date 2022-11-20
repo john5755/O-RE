@@ -82,7 +82,7 @@ const RadioButton = ({
               id={`${v}-${idx}`}
               {...props}
               onChange={(e) => handleChange(e)}
-              name="garner"
+              name={header}
             ></InputBox>
             <TextBox>{v}</TextBox>
           </LabelBox>

@@ -70,7 +70,6 @@ export default function TeamOptionDropDown() {
         dispatch(setNavName(myTeams[0].name));
       }
     } catch (e: any) {
-      console.log(e);
       alert(e?.response?.data?.message);
     }
   };

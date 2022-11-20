@@ -69,9 +69,7 @@ export default function ServerInvite() {
           Authorization: accessToken,
         },
       });
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   return (

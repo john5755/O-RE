@@ -125,9 +125,7 @@ export default function PageSideBar() {
       );
       dispatch(setPageState(data.data.content));
       dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {

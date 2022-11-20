@@ -95,13 +95,13 @@ export default function ManageTeam() {
                 sx={{ fontWeight: "bold" }}
               />
               <Tab
-                label="팀원 관리"
-                {...a11yProps(1)}
-                sx={{ fontWeight: "bold" }}
-              />{" "}
-              <Tab
                 label="팀원 초대"
                 {...a11yProps(2)}
+                sx={{ fontWeight: "bold" }}
+              />
+              <Tab
+                label="팀원 관리"
+                {...a11yProps(1)}
                 sx={{ fontWeight: "bold" }}
               />
             </Tabs>
@@ -110,10 +110,10 @@ export default function ManageTeam() {
             <TeamProfile></TeamProfile>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            <TeamMemberSet></TeamMemberSet>
+            <TeamMemberAdd></TeamMemberAdd>
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <TeamMemberAdd></TeamMemberAdd>
+            <TeamMemberSet></TeamMemberSet>
           </TabPanel>
         </Box>
       </Container>
