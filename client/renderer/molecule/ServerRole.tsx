@@ -36,9 +36,9 @@ const ResultContainer = styled.div`
 
 const searchMenues = { name: "이름", nickName: "닉네임" };
 const serverRoleMenues = {
-  OWNER: "오너",
-  ADMIN: "관리자",
-  USER: "사용자",
+  OWNER: "OWNER",
+  ADMIN: "ADMIN",
+  USER: "USER",
 };
 
 function TabPanel(props: TabPanelProps) {

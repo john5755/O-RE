@@ -4,6 +4,7 @@ import axios from "../utils/axios";
 import { H4, Button } from "../styles";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { USERS_API } from "../constants";
+import CustomAlert from "./CustomAlert";
 
 const AddUserContainer = styled.div`
   width: 100%;
@@ -48,6 +49,8 @@ const excelUrl =
   "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
 
 export default function ServerInvite() {
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [userExcel, setUserExcel] = useState<File | null>(null);
   const excelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null && event.target.files.length !== 0) {
@@ -69,11 +72,19 @@ export default function ServerInvite() {
           Authorization: accessToken,
         },
       });
+      setAlertMessage(`${res.data.data}명의 초대가 완료되었습니다.`);
+      setOpenAlert(true);
     } catch (e) {}
   };
 
   return (
     <AddUserContainer>
+      <CustomAlert
+        open={openAlert}
+        setOpen={setOpenAlert}
+        severity="success"
+        message={alertMessage}
+      ></CustomAlert>
       <H4 style={{ fontWeight: "bold" }}>회원 초대 가이드</H4>
       <ExplainContainer>
         <ExplainItem>

@@ -48,10 +48,10 @@ const ButtonContainer = styled.div`
 
 const searchMenues = { name: "이름", nickName: "닉네임" };
 const teamRoleMenues = {
-  OWNER: "오너",
-  LEADER: "리더",
-  MANAGER: "관리자",
-  MEMBER: "사용자",
+  OWNER: "OWNER",
+  LEADER: "LEADER",
+  MANAGER: "MANAGER",
+  MEMBER: "MEMBER",
 };
 
 function TabPanel(props: TabPanelProps) {
