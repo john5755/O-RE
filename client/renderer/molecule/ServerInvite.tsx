@@ -69,7 +69,9 @@ export default function ServerInvite() {
           Authorization: accessToken,
         },
       });
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -77,7 +79,7 @@ export default function ServerInvite() {
       <H4 style={{ fontWeight: "bold" }}>회원 초대 가이드</H4>
       <ExplainContainer>
         <ExplainItem>
-          엑셀을
+          엑셀을&nbsp;
           <DownLoadLink href={excelUrl}>
             다운로드(
             <DownLoadIconSpan>
@@ -85,7 +87,7 @@ export default function ServerInvite() {
             </DownLoadIconSpan>
             )
           </DownLoadLink>
-          해주세요.
+          &nbsp;해주세요.
         </ExplainItem>
         <ExplainItem>
           엑셀에 추가할 이메일을 입력하신 후 <strong>파일선택</strong>을 눌러
