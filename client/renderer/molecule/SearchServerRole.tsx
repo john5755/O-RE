@@ -57,28 +57,17 @@ export default function SearchServerRole(props: ItemProps) {
   }, []);
   const [buttonText, setButtonText] = useState<string>("변경");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
-  const [dropDownDiabled, setDropDownDisabled] = useState<boolean>(false);
   const id = props.member.userId;
 
   useEffect(() => {
     setItemRole(props.member.role);
     setButtonText("변경");
     setButtonColor("#4F68A6");
-  }, [props.member.role]);
+  }, [props.member.userId]);
 
   const buttonUIChange = () => {
     if (itemRole === props.member.role) {
       return;
-    }
-    if (buttonColor === "#4F68A6") {
-      setButtonColor("#C74E4E");
-      setButtonText("취소");
-      setDropDownDisabled(true);
-    } else {
-      setButtonColor("#4F68A6");
-      setButtonText("변경");
-      setItemRole(props.member.role);
-      setDropDownDisabled(false);
     }
   };
 
@@ -94,20 +83,15 @@ export default function SearchServerRole(props: ItemProps) {
       alert("권한이 없습니다.");
       return;
     }
-    if (delButtonText === "삭제") {
-      setDelButtonText("복구");
-      setDelButtonColor("#4F68A6");
-    } else {
-      setDelButtonText("삭제");
-      setDelButtonColor("#C74E4E");
-    }
   };
 
   return (
     <SearchItemContainer>
       <ItemProfileConatiner>
         <CurrentProfile src={props.member.profileImage}></CurrentProfile>
-        <H4 style={{ marginLeft: "5px", paddingTop: "3px" }}>
+        <H4
+          style={{ marginLeft: "5px", paddingTop: "3px", whiteSpace: "nowrap" }}
+        >
           {props.member.name}({props.member.nickname})
         </H4>
       </ItemProfileConatiner>
@@ -116,7 +100,6 @@ export default function SearchServerRole(props: ItemProps) {
           category={itemRole}
           setCategory={setItemRole}
           MenuItems={props.MenuItems}
-          disabled={dropDownDiabled}
         ></TeamDropDown>
         <TextButtonContainer
           style={{ color: buttonColor }}

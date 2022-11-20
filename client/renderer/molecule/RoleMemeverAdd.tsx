@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
-import { TeamUserType } from "../types";
+import { TeamUserType, PageUserType } from "../types";
+import DelMemberAdd from "./DelMemberAdd";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -22,6 +23,13 @@ const ItemChangeContainer = styled.div`
   display: flex;
 `;
 
+const RoleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+`;
+
 const TextButtonContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -35,30 +43,37 @@ const CurrentProfile = styled.img`
 `;
 
 interface ItemProps {
-  member: TeamUserType;
-  isAdded: boolean;
+  member: TeamUserType | PageUserType;
+  role: string;
   buttonFunction: (
     event: React.MouseEvent,
     buttonText: string,
-    userId: number
+    userId: number,
+    role: string
   ) => void;
 }
 
-export default function SearchTeamAdd(props: ItemProps) {
-  const [buttonText, setButtonText] = useState<string>("초대");
+export default function RoleMemberAdd(props: ItemProps) {
+  const [buttonText, setButtonText] = useState<string>("취소");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
-  const id =
-    props.member.teamUserId !== undefined
-      ? props.member.teamUserId
-      : props.member.userId;
-
-  useEffect(() => {
-    if (props.isAdded === true) {
-      setButtonText("초대");
-      setButtonColor("#4F68A6");
+  const itemRole = useMemo(() => {
+    if (props.role === "ADMIN" || props.role === "MANAGER") {
+      return "관리자";
+    } else if (props.role === "LEADER") {
+      return "리더";
+    } else if (props.role === "USER") {
+      return "사용자";
     } else {
-      setButtonText("취소");
-      setButtonColor("#C74E4E");
+      return props.role;
+    }
+  }, []);
+  const id = useMemo(() => {
+    if (props.member.teamUserId !== undefined) {
+      return props.member.teamUserId;
+    } else if (props.member.pageUserId !== undefined) {
+      return props.member.pageUserId;
+    } else {
+      return props.member.userId;
     }
   }, [props.member]);
 
@@ -71,10 +86,11 @@ export default function SearchTeamAdd(props: ItemProps) {
         </H4>
       </ItemProfileConatiner>
       <ItemChangeContainer>
+        <RoleContainer>{itemRole}</RoleContainer>
         <TextButtonContainer
           style={{ color: buttonColor }}
           onClick={(e) => {
-            props.buttonFunction(e, buttonText, id);
+            props.buttonFunction(e, buttonText, id, itemRole);
           }}
         >
           {buttonText}

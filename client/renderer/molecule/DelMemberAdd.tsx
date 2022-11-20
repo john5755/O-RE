@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
-import { TeamUserType } from "../types";
+import { TeamUserType, PageUserType } from "../types";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -35,30 +35,25 @@ const CurrentProfile = styled.img`
 `;
 
 interface ItemProps {
-  member: TeamUserType;
-  isAdded: boolean;
+  member: TeamUserType | PageUserType;
   buttonFunction: (
     event: React.MouseEvent,
     buttonText: string,
-    userId: number
+    userId: number,
+    role: string
   ) => void;
 }
 
-export default function SearchTeamAdd(props: ItemProps) {
-  const [buttonText, setButtonText] = useState<string>("초대");
+export default function DelMemberAdd(props: ItemProps) {
+  const [buttonText, setButtonText] = useState<string>("복구");
   const [buttonColor, setButtonColor] = useState<string>("#4F68A6");
-  const id =
-    props.member.teamUserId !== undefined
-      ? props.member.teamUserId
-      : props.member.userId;
-
-  useEffect(() => {
-    if (props.isAdded === true) {
-      setButtonText("초대");
-      setButtonColor("#4F68A6");
+  const id = useMemo(() => {
+    if (props.member.teamUserId !== undefined) {
+      return props.member.teamUserId;
+    } else if (props.member.pageUserId !== undefined) {
+      return props.member.pageUserId;
     } else {
-      setButtonText("취소");
-      setButtonColor("#C74E4E");
+      return props.member.userId;
     }
   }, [props.member]);
 
@@ -74,7 +69,7 @@ export default function SearchTeamAdd(props: ItemProps) {
         <TextButtonContainer
           style={{ color: buttonColor }}
           onClick={(e) => {
-            props.buttonFunction(e, buttonText, id);
+            props.buttonFunction(e, buttonText, id, "삭제");
           }}
         >
           {buttonText}

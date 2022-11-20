@@ -173,8 +173,6 @@ export default function CreatePage() {
         content: pageTagList,
       };
 
-      console.log(data);
-
       await axios.post(PAGE_API.ADD, data, {
         headers: {
           Authorization: localStorage.getItem("accessToken"),
