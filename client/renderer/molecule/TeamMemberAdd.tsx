@@ -25,6 +25,10 @@ const ResultContainer = styled.div`
   overflow-y: auto;
 `;
 
+const AddedMemberContianer = styled.div`
+  margin-top: 20px;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -48,7 +52,8 @@ export default function TeamMemberAdd() {
   const [searchAllUserResultList, setSearchAllUserResultList] = useState<
     Array<TeamUserType>
   >([]);
-  const [addMemberList, setAddMemberList] = useState<Array<number>>([]);
+  const [addMemberIdList, setAddMemberIdList] = useState<Array<number>>([]);
+  const [addMemberList, setAddMemberList] = useState<Array<TeamUserType>>([]);
   const [allMemberPage, setAllMemberPage] = useState<number>(-1);
   const [allIo, setAllIo] = useState<IntersectionObserver | null>(null);
   const [isLoadedAll, setIsLoadedAll] = useState<boolean>(true);
@@ -105,6 +110,16 @@ export default function TeamMemberAdd() {
     }
   }, [searchAllUserInput]);
 
+  useEffect(() => {
+    setIsSearchLastAll(false);
+    if (allMemberPage === 1) {
+      setAllMemberPage(-1);
+    } else {
+      setAllMemberPage(allMemberPage - 1);
+    }
+    fetchAllUserResultList();
+  }, [addMemberList.length]);
+
   const fetchAllUserResultList = async () => {
     if (isSearchLastAll === true || allMemberPage === 0) {
       return;
@@ -121,8 +136,23 @@ export default function TeamMemberAdd() {
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.userId === user.userId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -137,19 +167,35 @@ export default function TeamMemberAdd() {
       const page = allMemberPage === -1 ? 0 : allMemberPage;
       try {
         const params = {
+          teamId: teamId,
           keyword: searchAllUserInput,
           page: page,
           size: 20,
         };
-        const { data } = await axios.get(USERS_API.NAME, {
+        const { data } = await axios.get(`${USERS_API.NAME}/list`, {
           params,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.userId === user.userId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -164,19 +210,35 @@ export default function TeamMemberAdd() {
       const page = allMemberPage === -1 ? 0 : allMemberPage;
       try {
         const params = {
+          teamId: teamId,
           keyword: searchAllUserInput,
           page: page,
           size: 20,
         };
-        const { data } = await axios.get(USERS_API.NICKNAME, {
+        const { data } = await axios.get(`${USERS_API.NICKNAME}/list`, {
           params,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.userId === user.userId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -194,24 +256,34 @@ export default function TeamMemberAdd() {
     e: React.MouseEvent,
     buttonText: string,
     id: number
-  ): void => {
+  ) => {
     if (buttonText === "초대") {
-      setAddMemberList((prev) => {
+      setAddMemberIdList((prev) => {
         return [...prev, id];
       });
+      const target = searchAllUserResultList.find(
+        (member) => member.userId === id
+      );
+      if (target !== undefined) {
+        setAddMemberList((prev) => {
+          return [...prev, target];
+        });
+      }
     } else {
-      setAddMemberList((prev) => prev.filter((id) => id !== id));
+      setAddMemberIdList((prev) => prev.filter((id) => id !== id));
+      setAddMemberList((prev) => prev.filter((user) => user.userId !== id));
     }
   };
 
   const submitTeamMember = async () => {
     try {
-      const body = { teamId: teamId, userIdList: addMemberList };
+      const body = { teamId: teamId, userIdList: addMemberIdList };
       const { data } = await axios.post(TEAM_USER_API.INVITE, body, {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      setAddMemberList([]);
+      setAddMemberIdList([]);
       setSearchAllUserResultList([]);
+      setAddMemberList([]);
       setAllMemberPage(-1);
       setIsSearchLastAll(false);
     } catch (error) {}
@@ -235,6 +307,7 @@ export default function TeamMemberAdd() {
         <ResultContainer>
           {searchAllUserResultList.map((member, idx) => (
             <SearchTeamAdd
+              isAdded={true}
               key={idx}
               member={member}
               buttonFunction={tempAddTeamMember}
@@ -246,6 +319,23 @@ export default function TeamMemberAdd() {
             </div>
           )}
         </ResultContainer>
+      )}
+      {addMemberList.length === 0 ? (
+        <></>
+      ) : (
+        <AddedMemberContianer>
+          <Label>초대 된 멤버</Label>
+          <ResultContainer>
+            {addMemberList.map((member, idx) => (
+              <SearchTeamAdd
+                isAdded={false}
+                key={idx}
+                member={member}
+                buttonFunction={tempAddTeamMember}
+              ></SearchTeamAdd>
+            ))}
+          </ResultContainer>
+        </AddedMemberContianer>
       )}
       <ButtonContainer>
         <Button borderRadius="10px" onClick={submitTeamMember}>

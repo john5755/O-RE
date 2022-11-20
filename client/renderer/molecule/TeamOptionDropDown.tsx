@@ -1,7 +1,8 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { AlertColor } from "@mui/material";
 import styled from "@emotion/styled";
 import Router from "next/router";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
@@ -12,6 +13,7 @@ import axios from "../utils/axios";
 import { TeamOptions } from "../types";
 import { setSelectTeamState, setTeamState } from "../slices/myTeamsStateSlice";
 import { useResetTeamAndPage } from "../hooks/resetTeamAndPage";
+import CustomAlert from "./CustomAlert";
 
 const ITEM_HEIGHT = 48;
 
@@ -23,6 +25,9 @@ const IconContainer = styled.div`
 `;
 
 export default function TeamOptionDropDown() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -70,13 +75,20 @@ export default function TeamOptionDropDown() {
         dispatch(setNavName(myTeams[0].name));
       }
     } catch (e: any) {
-      console.log(e);
-      alert(e?.response?.data?.message);
+      setAlertMessage(e?.response?.data?.message);
+      setSeverity("error");
+      setAlertOpen(true);
     }
   };
 
   return (
     <div>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <IconContainer onClick={handleClick}>
         <SettingsIcon />
       </IconContainer>

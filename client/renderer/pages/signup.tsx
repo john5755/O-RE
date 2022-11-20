@@ -8,6 +8,8 @@ import UserFormLink from "../molecule/UserFormLink";
 import axios from "../utils/axios";
 import { isAxiosError } from "../utils/axios";
 import { USERS_API } from "../constants";
+import CustomAlert from "../molecule/CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -124,6 +126,9 @@ const LinkOptions = [
 ];
 
 export default function Signup() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const [nameInput, setNameInput] = useState<string>("");
   const conditionName: boolean = /^[가-힣]{2,10}$/.test(nameInput);
   const [emailInput, setEmailInput] = useState<string>("");
@@ -141,13 +146,14 @@ export default function Signup() {
       const res = await axios.get(USERS_API.VERIFICATION, {
         params,
       });
-      setIsEmailDuplicated(false);
       setIsCodeSent(true);
       setOpenEmailModal(true);
     } catch (e: unknown) {
       if (isAxiosError<DuplicateResponseType>(e)) {
         if (e.response?.data.code === 40901) {
-          setOpenEmailModal(true);
+          setAlertMessage(emailModalText[1].title);
+          setSeverity("error");
+          setAlertOpen(true);
         }
       }
     }
@@ -169,9 +175,15 @@ export default function Signup() {
       );
       if (data.success === true) {
         setIsEmailVerificated(true);
-        setOpenCodeModal(true);
+        setAlertMessage(codeModalText[0].title);
+        setSeverity("success");
+        setAlertOpen(true);
       }
-    } catch {}
+    } catch {
+      setAlertMessage(codeModalText[1].title);
+      setSeverity("error");
+      setAlertOpen(true);
+    }
   };
 
   const [pwInput, setPwInput] = useState<string>("");
@@ -211,9 +223,6 @@ export default function Signup() {
   };
 
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
-  const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean>(true);
-
-  const [openCodeModal, setOpenCodeModal] = useState<boolean>(false);
   const [isEmailVerificated, setIsEmailVerificated] = useState<boolean>(false);
 
   const [openSignupModal, setOpenSignupModal] = useState<boolean>(false);
@@ -232,6 +241,12 @@ export default function Signup() {
     <LayoutContainer>
       <Container>
         <SignupContainer>
+          <CustomAlert
+            open={alertOpen}
+            setOpen={setAlertOpen}
+            message={alertMessage}
+            severity={severity}
+          ></CustomAlert>
           <TextContainer>
             <H1 style={{ color: "var(--main-color)" }}>O:RE</H1>
           </TextContainer>
@@ -293,47 +308,15 @@ export default function Signup() {
             <UserModal
               open={openEmailModal}
               setOpen={setOpenEmailModal}
-              needImage={
-                isEmailDuplicated
-                  ? emailModalText[1].needImage
-                  : emailModalText[0].needImage
-              }
-              imgSrc={
-                isEmailDuplicated
-                  ? emailModalText[1].imgSrc
-                  : emailModalText[0].imgSrc
-              }
+              needImage={true}
+              imgSrc={emailModalText[0].imgSrc}
               needButton={true}
-              title={
-                isEmailDuplicated
-                  ? emailModalText[1].title
-                  : emailModalText[0].title
-              }
-              content={
-                isEmailDuplicated
-                  ? emailModalText[1].content
-                  : emailModalText[0].content
-              }
+              title={emailModalText[0].title}
+              content={emailModalText[0].content}
             ></UserModal>
           </InputContainer>
           <InputContainer>
             <Label htmlFor="code">인증번호</Label>
-            <UserModal
-              needImage={false}
-              needButton={true}
-              open={openCodeModal}
-              setOpen={setOpenCodeModal}
-              title={
-                isEmailVerificated
-                  ? codeModalText[0].title
-                  : codeModalText[1].title
-              }
-              content={
-                isEmailVerificated
-                  ? codeModalText[0].content
-                  : codeModalText[1].content
-              }
-            ></UserModal>
             <VeriContainer>
               <Input
                 id="code"

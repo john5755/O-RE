@@ -33,11 +33,12 @@ public class UserInput {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="page_user_id")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private PageUser pageUser;
 
     private String inputValue;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "input_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date inputDate;

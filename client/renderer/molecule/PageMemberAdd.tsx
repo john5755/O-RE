@@ -25,6 +25,10 @@ const ResultContainer = styled.div`
   overflow-y: auto;
 `;
 
+const AddedMemberContianer = styled.div`
+  margin-top: 20px;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -47,16 +51,13 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
   const handleAllSearchUserInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (allMemberPage !== -1) {
-      setIsSearchLastAll(false);
-      setAllMemberPage(-1);
-    }
     setSearchAllUserInput(event.target.value);
   };
   const [searchAllUserResultList, setSearchAllUserResultList] = useState<
     Array<TeamUserType>
   >([]);
-  const [addMemberList, setAddMemberList] = useState<Array<number>>([]);
+  const [addMemberIdList, setAddMemberIdList] = useState<Array<number>>([]);
+  const [addMemberList, setAddMemberList] = useState<Array<TeamUserType>>([]);
   const [allMemberPage, setAllMemberPage] = useState<number>(-1);
   const [allIo, setAllIo] = useState<IntersectionObserver | null>(null);
   const [isLoadedAll, setIsLoadedAll] = useState<boolean>(true);
@@ -104,6 +105,25 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
     fetchAllUserResultList();
   }, [allMemberPage]);
 
+  useEffect(() => {
+    if (searchAllUserInput !== "" || allMemberPage !== -1) {
+      setSearchAllUserResultList([]);
+      setAllMemberPage(-1);
+      setIsSearchLastAll(false);
+      fetchAllUserResultList();
+    }
+  }, [searchAllUserInput]);
+
+  useEffect(() => {
+    setIsSearchLastAll(false);
+    if (allMemberPage === 1) {
+      setAllMemberPage(-1);
+    } else {
+      setAllMemberPage(allMemberPage - 1);
+    }
+    fetchAllUserResultList();
+  }, [addMemberList.length]);
+
   const fetchAllUserResultList = async () => {
     if (isSearchLastAll === true || allMemberPage === 0) {
       return;
@@ -121,8 +141,23 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -149,8 +184,23 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
           },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -177,8 +227,23 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
           },
         });
         if (allMemberPage === -1) {
-          setSearchAllUserResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
         } else {
+          const filteredList = searchAllUserResultList.filter(
+            (user: TeamUserType) => {
+              return !addMemberList.some(
+                (addedUser) => addedUser.teamUserId === user.teamUserId
+              );
+            }
+          );
+          setSearchAllUserResultList(filteredList);
           setSearchAllUserResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -198,28 +263,35 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
     id: number
   ): void => {
     if (buttonText === "초대") {
-      setAddMemberList((prev) => {
+      setAddMemberIdList((prev) => {
         return [...prev, id];
       });
+      const target = searchAllUserResultList.find(
+        (member) => member.teamUserId === id
+      );
+      if (target !== undefined) {
+        setAddMemberList((prev) => {
+          return [...prev, target];
+        });
+      }
     } else {
-      setAddMemberList((prev) => prev.filter((id) => id !== id));
+      setAddMemberIdList((prev) => prev.filter((id) => id !== id));
+      setAddMemberList((prev) => prev.filter((user) => user.teamUserId !== id));
     }
   };
 
   const submitPageMember = async () => {
     try {
-      const body = { pageId: pageId, teamUserIdList: addMemberList };
-      console.log(body);
+      const body = { pageId: pageId, teamUserIdList: addMemberIdList };
       const { data } = await axios.post(PAGE_USER_API.INVITE, body, {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      setAddMemberList([]);
+      setAddMemberIdList([]);
       setSearchAllUserResultList([]);
+      setAddMemberList([]);
       setAllMemberPage(-1);
       setIsSearchLastAll(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return teamId !== -1 ? (
@@ -243,6 +315,7 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
               key={idx}
               member={member}
               buttonFunction={tempAddPageMember}
+              isAdded={true}
             ></SearchTeamAdd>
           ))}
           {searchAllUserResultList.length !== 0 && isLoadedAll && (
@@ -252,9 +325,26 @@ export default function PageMemberAdd({ pageId }: PageMemberAdd) {
           )}
         </ResultContainer>
       )}
+      {addMemberList.length === 0 ? (
+        <></>
+      ) : (
+        <AddedMemberContianer>
+          <Label>초대 된 멤버</Label>
+          <ResultContainer>
+            {addMemberList.map((member, idx) => (
+              <SearchTeamAdd
+                isAdded={false}
+                key={idx}
+                member={member}
+                buttonFunction={tempAddPageMember}
+              ></SearchTeamAdd>
+            ))}
+          </ResultContainer>
+        </AddedMemberContianer>
+      )}
       <ButtonContainer>
         <Button borderRadius="10px" onClick={submitPageMember}>
-          저장
+          초대
         </Button>
       </ButtonContainer>
     </TeamMemberManageContainer>

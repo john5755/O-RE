@@ -59,12 +59,20 @@ public class ExcelServiceImpl implements ExcelService {
         for(MakeExcelDto makeExcelDto: makeExcelDtoList) {
             Sheet sheet = workbook.createSheet(makeExcelDto.getTableName());
 
+            Font headerFont = workbook.createFont();
+            headerFont.setFontName("나눔고딕");
+            headerFont.setFontHeight((short)260);
+            headerFont.setBold(true);
+
             CellStyle headStyle = workbook.createCellStyle();
             headStyle.setBorderTop(BorderStyle.THIN);
             headStyle.setBorderBottom(BorderStyle.THIN);
             headStyle.setBorderLeft(BorderStyle.THIN);
             headStyle.setBorderRight(BorderStyle.THIN);
             headStyle.setAlignment(HorizontalAlignment.CENTER);
+            headStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headStyle.setFont(headerFont);
 
             CellStyle bodyStyle = workbook.createCellStyle();
             bodyStyle.setBorderTop(BorderStyle.THIN);
@@ -76,10 +84,19 @@ public class ExcelServiceImpl implements ExcelService {
             Cell headerCell;
             int headerCellNo = 0;
 
+            headerCell = header.createCell(headerCellNo++);
+            headerCell.setCellValue("번호");
+            headerCell.setCellStyle(headStyle);
+
             for (String key : makeExcelDto.getTitleList()) {
                 headerCell = header.createCell(headerCellNo++);
                 headerCell.setCellValue(key);
                 headerCell.setCellStyle(headStyle);
+            }
+
+            for (int i=0;i<headerCellNo;i++){
+                sheet.autoSizeColumn(i);
+                sheet.setColumnWidth(i, (sheet.getColumnWidth(i))+512 );
             }
 
             Row row;
@@ -90,6 +107,11 @@ public class ExcelServiceImpl implements ExcelService {
                 List<Object> data = (List<Object>) list.get(i);
                 row = sheet.createRow(rowNo++);
                 int cellNo = 0;
+
+                cell = row.createCell(cellNo++);
+                cell.setCellStyle(bodyStyle);
+                cell.setCellValue(i+1);
+
                 for (Object object : data) {
                     cell = row.createCell(cellNo++);
                     cell.setCellStyle(bodyStyle);

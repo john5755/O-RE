@@ -13,7 +13,7 @@ const SearchItemContainer = styled.div`
 `;
 
 const ItemProfileConatiner = styled.div`
-  width: 50%;
+  width: 70%;
   display: flex;
   justify-content: flex-start;
 `;
@@ -36,6 +36,7 @@ const CurrentProfile = styled.img`
 
 interface ItemProps {
   member: TeamUserType;
+  isAdded: boolean;
   buttonFunction: (
     event: React.MouseEvent,
     buttonText: string,
@@ -51,26 +52,21 @@ export default function SearchTeamAdd(props: ItemProps) {
       ? props.member.teamUserId
       : props.member.userId;
 
-  const buttonUIChange = () => {
-    if (buttonColor === "#4F68A6") {
-      setButtonColor("#C74E4E");
-      setButtonText("취소");
-    } else {
-      setButtonColor("#4F68A6");
-      setButtonText("초대");
-    }
-  };
-
   useEffect(() => {
-    setButtonText("초대");
-    setButtonColor("#4F68A6");
+    if (props.isAdded === true) {
+      setButtonText("초대");
+      setButtonColor("#4F68A6");
+    } else {
+      setButtonText("취소");
+      setButtonColor("#C74E4E");
+    }
   }, [props.member]);
 
   return (
     <SearchItemContainer>
       <ItemProfileConatiner>
         <CurrentProfile src={props.member.profileImage}></CurrentProfile>
-        <H4>
+        <H4 style={{ marginLeft: "5px", paddingTop: "3px" }}>
           {props.member.name}({props.member.nickname})
         </H4>
       </ItemProfileConatiner>
@@ -79,7 +75,6 @@ export default function SearchTeamAdd(props: ItemProps) {
           style={{ color: buttonColor }}
           onClick={(e) => {
             props.buttonFunction(e, buttonText, id);
-            buttonUIChange();
           }}
         >
           {buttonText}

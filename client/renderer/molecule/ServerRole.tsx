@@ -5,13 +5,16 @@ import { H3, H4, Button } from "../styles";
 import { USERS_API } from "../constants";
 import SearchBarTab from "./SearchBarTab";
 import SearchServerRole from "./SearchServerRole";
+import DelMemberAdd from "./DelMemberAdd";
 import { TeamUserType } from "../types";
+import { Tab, Tabs, Box } from "@mui/material";
+import RoleMemberAdd from "./RoleMemeverAdd";
 
-const TextContainer = styled.div`
-  width: 100%;
-  height: 30px;
-  margin: 10px 0 20px 0;
-`;
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 const AddRoleContainer = styled.div`
   width: 100%;
@@ -31,16 +34,41 @@ const ResultContainer = styled.div`
   overflow-y: auto;
 `;
 
-const excelUrl =
-  "https://ore-s3.s3.ap-northeast-2.amazonaws.com/application/ORE.xlsx";
-
 const searchMenues = { name: "이름", nickName: "닉네임" };
 const serverRoleMenues = {
-  OWNER: "오너",
-  ADMIN: "관리자",
-  USER: "사용자",
+  OWNER: "OWNER",
+  ADMIN: "ADMIN",
+  USER: "USER",
 };
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export default function ServerRole() {
+  const [tabValue, setTabValue] = useState<number>(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
   const [nameCategory, setNameCategory] = useState<string>("name");
   const [searchInput, setSearchInput] = useState<string>("");
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,10 +80,13 @@ export default function ServerRole() {
   const [searchPage, setSearchPage] = useState<number>(-1);
   const [io, setIo] = useState<IntersectionObserver | null>(null);
   const [isSearchLoaded, setIsSearchLoaded] = useState<boolean>(true);
-  const [roleChangeList, setRoleChangeList] = useState<
+  const [roleChangeIdList, setRoleChangeIdList] = useState<
     Array<{ userId: number; role: string }>
   >([]);
-  const [removeList, setRemoveList] = useState<Array<number>>([]);
+  const [currentChangeRole, setCurrentChangeRole] = useState<string>("");
+  const [roleChangeList, setRoleChangeList] = useState<Array<TeamUserType>>([]);
+  const [removeIdList, setRemoveIdList] = useState<Array<number>>([]);
+  const [removeList, setRemoveList] = useState<Array<TeamUserType>>([]);
   const [isSearchLast, setIsSearchLast] = useState<boolean>(false);
 
   const registerObservingEl = (el: Element) => {
@@ -108,6 +139,16 @@ export default function ServerRole() {
     }
   }, [searchInput]);
 
+  useEffect(() => {
+    setIsSearchLast(false);
+    if (searchPage === 1) {
+      setSearchPage(-1);
+    } else {
+      setSearchPage(searchPage - 1);
+    }
+    fetchResultList();
+  }, [roleChangeList.length, removeList.length]);
+
   const fetchResultList = async () => {
     if (isSearchLast === true || searchPage === 0) {
       return;
@@ -124,8 +165,31 @@ export default function ServerRole() {
           headers: { Authorization: localStorage.getItem("accessToken") },
         });
         if (searchPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.userId === user.userId
+                ) &&
+                !removeList.some(
+                  (removeUser) => removeUser.userId === user.userId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = searchResultList.filter((user: TeamUserType) => {
+            return (
+              !roleChangeList.some(
+                (changeUser) => changeUser.userId === user.userId
+              ) &&
+              !removeList.some(
+                (removeUser) => removeUser.userId === user.userId
+              )
+            );
+          });
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -151,8 +215,31 @@ export default function ServerRole() {
           },
         });
         if (searchPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.userId === user.userId
+                ) &&
+                !removeList.some(
+                  (removeUser) => removeUser.userId === user.userId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = searchResultList.filter((user: TeamUserType) => {
+            return (
+              !roleChangeList.some(
+                (changeUser) => changeUser.userId === user.userId
+              ) &&
+              !removeList.some(
+                (removeUser) => removeUser.userId === user.userId
+              )
+            );
+          });
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -178,8 +265,33 @@ export default function ServerRole() {
           },
         });
         if (searchPage === -1) {
-          setSearchResultList(data.data.content);
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.userId === user.userId
+                ) &&
+                !removeList.some(
+                  (removeUser) => removeUser.userId === user.userId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
         } else {
+          const filteredList = data.data.content.filter(
+            (user: TeamUserType) => {
+              return (
+                !roleChangeList.some(
+                  (changeUser) => changeUser.userId === user.userId
+                ) &&
+                !removeList.some(
+                  (removeUser) => removeUser.userId === user.userId
+                )
+              );
+            }
+          );
+          setSearchResultList(filteredList);
           setSearchResultList((prev) => {
             return [...prev, ...data.data.content];
           });
@@ -200,29 +312,53 @@ export default function ServerRole() {
     role: string
   ) => {
     if (buttonText === "변경") {
-      setRoleChangeList((prev) => {
+      setRoleChangeIdList((prev) => {
         return [...prev, { userId: userId, role: role }];
       });
+      setCurrentChangeRole(role);
+      const target = searchResultList.find(
+        (member) => member.userId === userId
+      );
+      if (target !== undefined) {
+        setRoleChangeList((prev) => {
+          return [...prev, target];
+        });
+        setTabValue(0);
+      }
     } else if (buttonText === "취소") {
+      setRoleChangeIdList((prev) =>
+        prev.filter((user) => user.userId !== userId)
+      );
       setRoleChangeList((prev) =>
         prev.filter((user) => user.userId !== userId)
       );
     } else if (buttonText === "삭제") {
-      setRemoveList((prev) => {
+      setRemoveIdList((prev) => {
         return [...prev, userId];
       });
+      const target = searchResultList.find(
+        (member) => member.userId === userId
+      );
+      if (target !== undefined) {
+        setRemoveList((prev) => {
+          return [...prev, target];
+        });
+        setTabValue(1);
+      }
     } else if (buttonText === "복구") {
-      setRemoveList((prev) => prev.filter((id) => id !== userId));
+      setRemoveIdList((prev) => prev.filter((id) => id !== userId));
+      setRemoveList((user) => user.filter((user) => user.userId !== userId));
     }
   };
 
   const submitRoleChange = async () => {
     try {
-      const { data } = await axios.put(USERS_API.AUTH, roleChangeList, {
+      const { data } = await axios.put(USERS_API.AUTH, roleChangeIdList, {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      setRoleChangeList([]);
+      setRoleChangeIdList([]);
       setSearchResultList([]);
+      setRoleChangeList([]);
       setSearchPage(-1);
       setIsSearchLast(false);
     } catch {}
@@ -231,11 +367,12 @@ export default function ServerRole() {
   const submitRemoveMember = async () => {
     try {
       const { data } = await axios.delete(USERS_API.LIST, {
-        data: removeList,
+        data: removeIdList,
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      setRemoveList([]);
+      setRemoveIdList([]);
       setSearchResultList([]);
+      setRemoveList([]);
       setSearchPage(-1);
       setIsSearchLast(false);
     } catch (error) {}
@@ -267,6 +404,58 @@ export default function ServerRole() {
           )}
         </ResultContainer>
       )}
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "white" }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            sx={{
+              ".MuiButtonBase-root": {
+                color: "gray",
+                "&.Mui-selected": {
+                  color: "var(--main-color)",
+                },
+              },
+            }}
+            TabIndicatorProps={{
+              style: {
+                backgroundColor: "var(--main-color)",
+              },
+            }}
+          >
+            <Tab
+              label="변경 목록"
+              {...a11yProps(0)}
+              sx={{ fontWeight: "bold" }}
+            />
+            <Tab
+              label="삭제 목록"
+              {...a11yProps(1)}
+              sx={{ fontWeight: "bold" }}
+            />
+          </Tabs>
+        </Box>
+        <TabPanel value={tabValue} index={0}>
+          {roleChangeList.map((member, idx) => (
+            <RoleMemberAdd
+              key={idx}
+              member={member}
+              role={currentChangeRole}
+              buttonFunction={tempChangeUser}
+            ></RoleMemberAdd>
+          ))}
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          {removeList.map((member, idx) => (
+            <DelMemberAdd
+              key={idx}
+              member={member}
+              buttonFunction={tempChangeUser}
+            ></DelMemberAdd>
+          ))}
+        </TabPanel>
+      </Box>
       <ButtonContainer>
         <Button width="45%" borderRadius="10px" onClick={submitRoleChange}>
           권한 변경

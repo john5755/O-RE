@@ -99,15 +99,15 @@ export default function AccountOptions() {
               />
               {isRole && (
                 <Tab
-                  label="회원 관리"
-                  {...a11yProps(1)}
+                  label="회원 초대"
+                  {...a11yProps(2)}
                   sx={{ fontWeight: "bold" }}
                 />
               )}
               {isRole && (
                 <Tab
-                  label="회원 초대"
-                  {...a11yProps(2)}
+                  label="회원 관리"
+                  {...a11yProps(1)}
                   sx={{ fontWeight: "bold" }}
                 />
               )}
@@ -117,10 +117,10 @@ export default function AccountOptions() {
             <UserOption></UserOption>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            <ServerRole></ServerRole>
+            <ServerInvite></ServerInvite>
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <ServerInvite></ServerInvite>
+            <ServerRole></ServerRole>
           </TabPanel>
         </Box>
       </Container>

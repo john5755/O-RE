@@ -4,6 +4,7 @@ import { SetStateAction, Dispatch } from "react";
 export interface TeamUserType {
   userId: number;
   teamUserId?: number;
+  pageUserId?: number;
   name: string;
   email: string;
   nickname: string;
@@ -13,6 +14,7 @@ export interface TeamUserType {
 
 export interface PageUserType {
   pageUserId: number;
+  teamUserId?: number;
   userId: number;
   email: string;
   name: string;

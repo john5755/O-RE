@@ -8,12 +8,8 @@ import axios from "../utils/axios";
 import { USERS_API } from "../constants";
 import { persistor } from "../store";
 import Router from "next/router";
-
-const TextContainer = styled.div`
-  width: 100%;
-  height: 30px;
-  margin: 10px 0 20px 0;
-`;
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const InfoContainer = styled.div`
   width: 100%;
@@ -25,14 +21,29 @@ const ButtonContainer = styled.div`
   margin: 5px auto;
 `;
 
+const RedButton = styled.button`
+  background: white;
+  color: #c74e4e;
+  border: 2px solid #c74e4e;
+  border-radius: 10px;
+  :hover {
+    background: #c74e4e;
+    color: white;
+    cursor: pointer;
+  }
+`;
+
 const roles = {
-  OWNER: "오너",
-  LEADER: "리더",
-  ADMIN: "관리자",
-  USER: "사용자",
+  OWNER: "OWNER",
+  LEADER: "LEADER",
+  ADMIN: "ADMIN",
+  USER: "USER",
 };
 
 export default function UserOption() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const dispatch = useAppDispatch();
   const userProfile = useAppSelector(
     (state) => state.userProfileState
@@ -73,6 +84,9 @@ export default function UserOption() {
         },
       });
       dispatch(setUserProfileState(data.data));
+      setAlertMessage("프로필 변경이 완료되었습니다.");
+      setSeverity("success");
+      setAlertOpen(true);
     } catch (e) {}
   };
 
@@ -97,6 +111,12 @@ export default function UserOption() {
   };
   return (
     <>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <ProfilePhotos
         photo={photo}
         setPhoto={setPhoto}
@@ -116,31 +136,28 @@ export default function UserOption() {
         <Label>직책</Label>
         <H3 style={{ margin: "5px auto" }}>{roles[userProfile.role]}</H3>
         <Label style={{ display: "block" }}>비밀번호 변경</Label>
-        <Button
-          width="120px"
-          height="35px"
-          style={{ background: "#C74E4E", margin: "3px 0 3px" }}
+        <RedButton
+          style={{ width: "120px", height: "35px", borderRadius: "0" }}
+          onClick={() => {
+            Router.push("/change-password");
+          }}
         >
           비밀번호 변경
-        </Button>
+        </RedButton>
       </InfoContainer>
+
       <ButtonContainer>
-        <Button
-          height="50px"
-          style={{
-            background: "white",
-            color: "#C74E4E",
-            border: "2px solid #C74E4E",
-          }}
-          onClick={submitLogout}
-        >
-          로그아웃
+        <Button height="50px" onClick={submitEditProfile} borderRadius="10px">
+          저장
         </Button>
       </ButtonContainer>
       <ButtonContainer>
-        <Button height="50px" onClick={submitEditProfile}>
-          저장
-        </Button>
+        <RedButton
+          style={{ width: "100%", height: "50px" }}
+          onClick={submitLogout}
+        >
+          로그아웃
+        </RedButton>
       </ButtonContainer>
     </>
   );
