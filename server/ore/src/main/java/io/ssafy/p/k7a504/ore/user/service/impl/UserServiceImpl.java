@@ -120,6 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean logout() {
         String data = redisUtil.getData("[RefreshToken]" + SecurityUtil.getCurrentUserId());
         if(data == null)
