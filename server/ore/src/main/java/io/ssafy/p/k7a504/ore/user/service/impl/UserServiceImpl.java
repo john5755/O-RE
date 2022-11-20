@@ -244,7 +244,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(!encoder.encode(userPasswordRequestDto.getOldPassword()).equals(user.getPassword()))
+        if(!encoder.matches(userPasswordRequestDto.getOldPassword(), user.getPassword()))
             throw new CustomException(ErrorCode.NOT_VALID_PASSWORD);
 
         if(userPasswordRequestDto.getOldPassword().equals(userPasswordRequestDto.getNewPassword()))
