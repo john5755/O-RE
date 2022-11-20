@@ -107,7 +107,7 @@ export default function SearchServerRole(props: ItemProps) {
     <SearchItemContainer>
       <ItemProfileConatiner>
         <CurrentProfile src={props.member.profileImage}></CurrentProfile>
-        <H4>
+        <H4 style={{ marginLeft: "5px", paddingTop: "3px" }}>
           {props.member.name}({props.member.nickname})
         </H4>
       </ItemProfileConatiner>

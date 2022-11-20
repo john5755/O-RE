@@ -67,10 +67,11 @@ export const Button = styled.button<ButtonProps>`
   border-width: 0;
   font-size: ${({ fontSize }) => fontSize || "15px"};
   border-radius: ${({ borderRadius }) => borderRadius || 0};
-  cursor: pointer;
+  :hover:enabled {
+    cursor: pointer;
+  }
   :disabled {
     background-color: var(--light-gray-color);
-    cursor: none;
   }
 `;
 

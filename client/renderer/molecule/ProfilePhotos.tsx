@@ -52,6 +52,18 @@ const ButtonContainer = styled.div`
   margin: auto auto 0 30px;
 `;
 
+const BasicPhotoButton = styled.button`
+  width: 190px;
+  height: 35px;
+  margin-left: 10px;
+  color: #48a3a9;
+  background: white;
+  border: 2px solid #48a3a9;
+  :hover& {
+    cursor: pointer;
+  }
+`;
+
 interface PhotoProps {
   photo: File | null;
   setPhoto: Dispatch<SetStateAction<File | null>>;
@@ -129,21 +141,11 @@ export default function ProfilePhotos(props: PhotoProps) {
             onChange={photoChange}
             ref={photoInput}
           ></input>
-          <Button
-            width="190px"
-            height="35px"
-            style={{
-              marginLeft: 10,
-              color: "#48a3a9",
-              background: "white",
-              border: "2px solid #48a3a9",
-            }}
-            onClick={basicPhotoChange}
-          >
+          <BasicPhotoButton onClick={basicPhotoChange}>
             {teamName === undefined
               ? "기본 프로필로 변경"
               : "프로필 사진 없애기"}
-          </Button>
+          </BasicPhotoButton>
         </ButtonContainer>
       </PhotoContainer>
     </Container>
