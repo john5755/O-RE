@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import {
+  AlertColor,
   Box,
   MenuItem,
   FormControl,
@@ -19,6 +20,7 @@ import {
   TeamRoleMenues,
 } from "../types";
 import { useAppSelector } from "../hooks/reduxHook";
+import CustomAlert from "./CustomAlert";
 
 interface SearchDropDownProps {
   category: string;
@@ -29,6 +31,9 @@ interface SearchDropDownProps {
 }
 
 export default function TeamDropDown(props: SearchDropDownProps) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
@@ -53,7 +58,9 @@ export default function TeamDropDown(props: SearchDropDownProps) {
     const cantChangeLeader: boolean =
       originalRole === "LEADER" && userProfile.role !== "OWNER";
     if (cantChangeOwner || cantChangeSameRole || cantChangeLeader) {
-      alert("권한을 변경할 수 없습니다.");
+      setAlertMessage("권한을 변경할 수 없습니다.");
+      setSeverity("warning");
+      setAlertOpen(true);
       return;
     }
     props.setCategory(event.target.value as string);
@@ -66,6 +73,12 @@ export default function TeamDropDown(props: SearchDropDownProps) {
 
   return (
     <Box sx={{ minWidth: 120 }}>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <FormControl sx={{ width: 100, height: 38 }}>
         <Select
           id="demo-simple-select"

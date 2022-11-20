@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import {
+  AlertColor,
   Box,
   MenuItem,
   FormControl,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 import { PageRoleMenues } from "../types";
 import { useAppSelector } from "../hooks/reduxHook";
+import CustomAlert from "./CustomAlert";
 
 interface PageDropDownProps {
   role: string;
@@ -23,6 +25,9 @@ interface PageDropDownProps {
 }
 
 export default function PageDropDown(props: PageDropDownProps) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
@@ -39,7 +44,9 @@ export default function PageDropDown(props: PageDropDownProps) {
     const cantChangeMaintainer: boolean =
       originalRole === "MAINTAINER" && userProfile.role !== "OWNER";
     if (cantChangeOwner || cantChangeSameRole || cantChangeMaintainer) {
-      alert("권한을 변경할 수 없습니다.");
+      setAlertMessage("권한을 변경할 수 없습니다.");
+      setSeverity("warning");
+      setAlertOpen(true);
       return;
     }
     props.setCategory(event.target.value as string);
@@ -52,6 +59,12 @@ export default function PageDropDown(props: PageDropDownProps) {
 
   return (
     <Box sx={{ minWidth: 120 }}>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <FormControl sx={{ width: 100, height: 38 }}>
         <Select
           id="demo-simple-select"

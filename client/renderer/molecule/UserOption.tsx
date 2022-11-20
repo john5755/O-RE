@@ -8,12 +8,8 @@ import axios from "../utils/axios";
 import { USERS_API } from "../constants";
 import { persistor } from "../store";
 import Router from "next/router";
-
-const TextContainer = styled.div`
-  width: 100%;
-  height: 30px;
-  margin: 10px 0 20px 0;
-`;
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const InfoContainer = styled.div`
   width: 100%;
@@ -38,13 +34,16 @@ const RedButton = styled.button`
 `;
 
 const roles = {
-  OWNER: "오너",
-  LEADER: "리더",
-  ADMIN: "관리자",
-  USER: "사용자",
+  OWNER: "OWNER",
+  LEADER: "LEADER",
+  ADMIN: "ADMIN",
+  USER: "USER",
 };
 
 export default function UserOption() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const dispatch = useAppDispatch();
   const userProfile = useAppSelector(
     (state) => state.userProfileState
@@ -85,6 +84,9 @@ export default function UserOption() {
         },
       });
       dispatch(setUserProfileState(data.data));
+      setAlertMessage("프로필 변경이 완료되었습니다.");
+      setSeverity("success");
+      setAlertOpen(true);
     } catch (e) {}
   };
 
@@ -109,6 +111,12 @@ export default function UserOption() {
   };
   return (
     <>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <ProfilePhotos
         photo={photo}
         setPhoto={setPhoto}

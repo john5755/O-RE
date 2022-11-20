@@ -9,6 +9,8 @@ import { delTeamState, editTeamState } from "../slices/myTeamsStateSlice";
 import Router from "next/router";
 import { useClickTeam } from "../hooks/resetPageHook";
 import { setNavName } from "../slices/navNameSlice";
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const TeamProfileContainer = styled.div`
   width: 100%;
@@ -25,6 +27,9 @@ const ButtonContainer = styled.div`
 `;
 
 export default function TeamProfile() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const teamList = useAppSelector((state) => state.myTeamsState).myTeamsState;
   const teamIdx = useAppSelector((state) => state.myTeamsState).selectTeamState
     .idx;
@@ -64,6 +69,9 @@ export default function TeamProfile() {
       const action = { name: data.data.name, imageUrl: data.data.imageUrl };
       dispatch(editTeamState(action));
       dispatch(setNavName(`${teamName}팀 관리`));
+      setAlertMessage("프로필 변경이 완료되었습니다.");
+      setSeverity("success");
+      setAlertOpen(true);
     } catch (error) {}
   };
 
@@ -82,6 +90,12 @@ export default function TeamProfile() {
 
   return (
     <TeamProfileContainer>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <ProfilePhotos
         photo={photo}
         setPhoto={setPhoto}

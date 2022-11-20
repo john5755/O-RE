@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -10,6 +10,8 @@ import axios from "../utils/axios";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { delPageState, setSelectPageState } from "../slices/pageSlice";
 import { setNavName } from "../slices/navNameSlice";
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const ITEM_HEIGHT = 48;
 
@@ -31,6 +33,9 @@ export default function PageOptionDropDown({
   pageId,
   pageName,
 }: PageOptionDropDown) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -50,7 +55,9 @@ export default function PageOptionDropDown({
       dispatch(delPageState(pageId));
       dispatch(setSelectPageState({ idx: -1, pageId: -1 }));
     } catch (e: any) {
-      alert(e?.response?.data?.message);
+      setAlertMessage(e?.response?.data?.message);
+      setSeverity("error");
+      setAlertOpen(true);
     }
   };
 
@@ -66,6 +73,12 @@ export default function PageOptionDropDown({
 
   return (
     <div>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <IconContainer onClick={handleClick}>
         <SettingsIcon fontSize="small" style={{ fill: "#fff4f4" }} />
       </IconContainer>

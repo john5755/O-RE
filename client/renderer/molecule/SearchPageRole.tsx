@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import { H4 } from "../styles";
-import TeamDropDown from "./TeamDropdown";
 import PageDropDown from "./PageDropDown";
 import {
   PageUserType,
@@ -10,6 +9,8 @@ import {
   TeamRoleMenues,
 } from "../types";
 import { useAppSelector } from "../hooks/reduxHook";
+import CustomAlert from "./CustomAlert";
+import { AlertColor } from "@mui/material";
 
 const SearchItemContainer = styled.div`
   border-bottom: 0.3px solid var(--light-main-color);
@@ -55,6 +56,9 @@ interface ItemProps {
 }
 
 export default function SearchPageRole(props: ItemProps) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const userProfile = useAppSelector(
     (state) => state.userProfileState
   ).userProfileState;
@@ -90,7 +94,9 @@ export default function SearchPageRole(props: ItemProps) {
   const cantDel = cantDelOwner || cantDelMaintainer || cantDelSame;
   const delButtonUIChange = () => {
     if (cantDel) {
-      alert("권한이 없습니다.");
+      setAlertMessage("권한이 없습니다.");
+      setSeverity("warning");
+      setAlertOpen(true);
       return;
     }
     if (delButtonText === "삭제") {
@@ -112,6 +118,12 @@ export default function SearchPageRole(props: ItemProps) {
 
   return (
     <SearchItemContainer>
+      <CustomAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        message={alertMessage}
+        severity={severity}
+      ></CustomAlert>
       <ItemProfileConatiner>
         <CurrentProfile src={props.member.profileImage}></CurrentProfile>
         <H4

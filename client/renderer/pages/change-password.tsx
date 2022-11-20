@@ -5,6 +5,8 @@ import { PATH } from "../constants";
 import UserFormLink from "../molecule/UserFormLink";
 import axios from "../utils/axios";
 import { USERS_API } from "../constants";
+import { AlertColor } from "@mui/material";
+import CustomAlert from "../molecule/CustomAlert";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -50,6 +52,9 @@ const ButtonContainer = styled.div`
 `;
 
 export default function ChangePassword() {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
   const [originalPw, setOriginalPw] = useState<string>("");
   const handleOriginalInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOriginalPw(event.target.value);
@@ -77,13 +82,21 @@ export default function ChangePassword() {
           Authorization: localStorage.getItem("accessToken"),
         },
       });
-      alert("비밀번호가 변경되었습니다.");
+      setAlertMessage("비밀번호가 변경되었습니다.");
+      setSeverity("success");
+      setAlertOpen(true);
     } catch (error) {}
   };
 
   return (
     <LayoutContainer>
       <Container>
+        <CustomAlert
+          open={alertOpen}
+          setOpen={setAlertOpen}
+          message={alertMessage}
+          severity={severity}
+        ></CustomAlert>
         <FindContainer>
           <TextContainer>
             <H1 style={{ color: "var(--main-color)" }}>O:RE</H1>
