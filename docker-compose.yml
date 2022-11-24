@@ -10,7 +10,7 @@ services:
     container_name: mysql-ore
     restart: always
     ports:
-    - "3306:3306"
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
@@ -19,7 +19,14 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      
+
+  frontend:
+    image: whiterisi/ore
+    container_name: frontend-ore
+    restart: always
+    ports:
+      - "3000:3000"
+
   backend:
     build:
       context: ./server/ore
@@ -30,7 +37,7 @@ services:
       - "8080:8080"
     depends_on:
       - mysql-test
-    environment: 
+    environment:
       - DOMAIN=${DOMAIN}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
@@ -42,9 +49,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
 
-
   redis:
-    image: 'bitnami/redis:latest'
+    image: "bitnami/redis:latest"
     hostname: redis
     environment:
       - REDIS_REPLICATION_MODE=master
@@ -53,9 +59,9 @@ services:
       - app-tier
     ports:
       - 6379:6379
-      
+
   redis-slave-1:
-    image: 'bitnami/redis:latest'
+    image: "bitnami/redis:latest"
     hostname: redis-slave-1
     environment:
       - REDIS_REPLICATION_MODE=slave
@@ -67,9 +73,9 @@ services:
       - redis
     networks:
       - app-tier
-      
+
   redis-slave-2:
-    image: 'bitnami/redis:latest'
+    image: "bitnami/redis:latest"
     hostname: redis-slave-2
     environment:
       - REDIS_REPLICATION_MODE=slave
@@ -83,7 +89,7 @@ services:
       - app-tier
 
   redis-sentinel:
-    image: 'bitnami/redis-sentinel:latest'
+    image: "bitnami/redis-sentinel:latest"
     environment:
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis
@@ -100,7 +106,7 @@ services:
       - app-tier
 
   redis-sentinel-2:
-    image: 'bitnami/redis-sentinel:latest'
+    image: "bitnami/redis-sentinel:latest"
     environment:
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis
@@ -117,7 +123,7 @@ services:
       - app-tier
 
   redis-sentinel-3:
-    image: 'bitnami/redis-sentinel:latest'
+    image: "bitnami/redis-sentinel:latest"
     environment:
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis
@@ -132,5 +138,3 @@ services:
       - 26381:26379
     networks:
       - app-tier
-   
-  
